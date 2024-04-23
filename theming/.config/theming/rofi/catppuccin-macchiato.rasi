@@ -1,0 +1,11 @@
+// https://github.com/catppuccin/rofi
+
+* {
+    bg-col:  #24273a;
+    bg-col-light: @bg-col;
+    border-col: #5B6078;
+    selected-col: @bg-col;
+    fg-col: #cad3f5;
+    fg-col2: #8aadf4;
+    grey: #6e738d;
+}

@@ -1,0 +1,30 @@
+create-dirs:
+  - ~/.local/bin
+
+clone:
+  - { repo: "https://github.com/tmux-plugins/tpm", dest: "~/.cache/tmux/plugins/tpm" }
+
+packages:
+  - git
+  - bat
+  - python3
+  - zsh
+  # - alacritty
+  - tmux
+  - htop
+  - ripgrep
+  - jq
+  - zip
+  - unzip
+  - unrar
+  - curl
+  - wget
+  - polybar
+  - i3
+
+fonts:
+  - { url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip",
+      file_patterns: ['JetBrainsMonoNerdFontMono-*', 'JetBrainsMonoNerdFont-*']
+  }
+
+shell: "/usr/bin/zsh"

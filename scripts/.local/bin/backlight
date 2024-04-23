@@ -1,0 +1,17 @@
+#!/bin/bash
+
+case "$1" in
+    min)
+    xbacklight -set 0.1
+    ;;
+    med)
+    xbacklight -set 50
+    ;;
+    max)
+    xbacklight -set 100
+    ;;
+    *)
+	echo "Unknown option: $1"
+    ;;
+esac
+exit 0

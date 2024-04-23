@@ -1,0 +1,9 @@
+###############################################################################
+# Startup applications
+###############################################################################
+
+exec --no-startup-id scratch
+exec --no-startup-id dunst
+exec --no-startup-id gnome-flashback
+exec --no-startup-id nm-applet
+exec_always --no-startup-id launch_polybar

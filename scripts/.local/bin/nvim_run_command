@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+import pynvim
+import os
+from pathlib import Path
+import argparse
+
+
+BASE_PATH = Path("/run/user/", str(os.getuid()))
+
+
+def run_command(command: str):
+    for path in BASE_PATH.glob("nvim*"):
+        with pynvim.attach('socket', path=str(path)) as nvim:
+            print(f"Running '{command}' in {path}")
+            nvim.command(command)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Run command in all open nvim instances')
+    parser.add_argument('command')
+    args = parser.parse_args()
+    run_command(args.command)
+
+
+if __name__ == "__main__":
+    main()

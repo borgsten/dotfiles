@@ -1,0 +1,35 @@
+import = ["~/.cache/theming/alacritty.toml"]
+
+[bell]
+animation = "EaseOutCirc"
+color = "#d54e53"
+duration = 180
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 10
+
+[font.bold]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Italic"
+
+[font.normal]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Regular"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[window]
+decorations = "none"
+
+[window.padding]
+x = 5
+y = 5

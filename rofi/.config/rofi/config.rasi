@@ -1,0 +1,97 @@
+configuration{
+    modi: "drun,run,window";
+    combi-hide-mode-prefix: true;
+    drun-display-format: "{icon} {name}";
+    icon-theme: "Oranchelo";
+    show-icons: true;
+    terminal: "alacritty";
+    location: 0;
+    disable-history: false;
+    hide-scrollbar: true;
+    display-drun: "   Apps ";
+    display-run: "   Run ";
+    display-window: "   Window";
+    display-combi: "   Combi";
+    sidebar-mode: true;
+}
+
+@theme "~/.cache/theming/rofi.rasi"
+
+* {
+    font: "JetBrainsMono Nerd Font 12";
+    background-color: @bg-col;
+    text-color: @fg-col;
+    border-radius: 0px;
+}
+
+element-text, element-icon , mode-switcher {
+    background-color: inherit;
+    text-color: inherit;
+}
+
+window {
+    height: 450px;
+    width: 600px;
+    border: 3px;
+    border-color: @border-col;
+}
+
+inputbar {
+    children: [textbox-prompt-colon,entry];
+    margin: 0px 10px 10px 10px;
+    border: 0px 0px 1px 0px;
+    border-color: @fg-col2;
+    spacing: 0;
+}
+
+textbox-prompt-colon {
+    expand: false;
+    padding: 5px 0px 5px 10px;
+    content: " ";
+}
+
+entry {
+    padding: 5px 0px 5px 5px;
+}
+
+listview {
+    margin: 0px 10px 0px;
+    columns: 1;
+    lines: 8;
+}
+
+element {
+    padding: 5px;
+}
+
+element-icon {
+    size: 20px;
+}
+
+element selected {
+    text-color: @fg-col2;
+}
+
+mode-switcher {
+    spacing: 0;
+}
+
+button {
+    padding: 10px;
+    vertical-align: 0.5;
+    horizontal-align: 0.5;
+}
+
+button selected {
+    text-color: @fg-col2;
+}
+
+message {
+    margin: 2px;
+    padding: 2px;
+}
+
+textbox {
+    padding: 6px;
+    margin: 20px 0px 0px 20px;
+}

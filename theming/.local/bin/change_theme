@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -e
+
+CONFIG_PATH="${XDG_CONFIG_HOME}/theming"
+OUT_PATH="${XDG_CACHE_HOME}/theming"
+
+mkdir -p "${OUT_PATH}"
+
+theme=$(fzf < "${CONFIG_PATH}/themes.txt")
+
+echo "Picked theme: ${theme}"
+
+# change settings
+printf "import = ['%s/alacritty/%s.toml']\n" "${CONFIG_PATH}" "${theme}" > "${OUT_PATH}/alacritty.toml"
+
+printf "#include \"%s/xresources/%s.Xresources\"\n" "${CONFIG_PATH}" "${theme}" > "${OUT_PATH}/xresources"
+echo "themename: ${theme}" >> "${OUT_PATH}/xresources"
+
+printf "@theme \"%s/rofi/%s.rasi\"\n" "${CONFIG_PATH}" "${theme}" > "${OUT_PATH}/rofi.rasi"
+
+# # Reload
+xrdb -merge "${OUT_PATH}/xresources"
+nvim_run_command "colorscheme ${theme}"
+i3-msg restart
+# Sometimes alacritty doesn't notice changes in included files
+touch "${XDG_CONFIG_HOME}/alacritty/alacritty.toml"
+
+# Reload tmux config from the outside
+tmux source "${XDG_CONFIG_HOME}/tmux/tmux.conf"

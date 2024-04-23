@@ -1,0 +1,45 @@
+###############################################################################
+# i3 Colors and Fonts
+###############################################################################
+
+# Create variables from Xresources for i3's look.
+# Colours
+set_from_resource $fg           foreground      #f0f0f0
+set_from_resource $bg           background      #0f0f0f
+set_from_resource $color0       color0          #51576D
+set_from_resource $color1       color1          #E78284
+set_from_resource $color2       color2          #A6D189
+set_from_resource $color3       color3          #E5C890
+set_from_resource $color4       color4          #8CAAEE
+set_from_resource $color5       color5          #F4B8E4
+set_from_resource $color6       color6          #81C8BE
+set_from_resource $color7       color7          #B5BFE2
+set_from_resource $color8       color8          #626880
+set_from_resource $color9       color9          #E78284
+set_from_resource $color10      color10         #A6D189
+set_from_resource $color11      color11         #E5C890
+set_from_resource $color12      color12         #8CAAEE
+set_from_resource $color13      color13         #F4B8E4
+set_from_resource $color14      color14         #81C8BE
+set_from_resource $color15      color15         #A5ADCE
+
+# class                 border   backgr.  text     indictr. child_border
+client.focused          $color8  $color7  $color11 $color6  $color7
+client.focused_inactive $color8  $color8  $color11 $color6  $color8
+client.unfocused        $color8  $color8  $color8  $color10 $color8
+client.urgent           $color13 $color12 $color4  $color14 $color12
+client.placeholder      $color8  $color8  $color8  $color10 $color8
+
+client.background       $bg
+
+# Sets i3 font for dialogs
+font pango:inconsolata 12
+
+# Set titlebar mode
+new_window pixel
+new_float pixel
+
+smart_borders on
+hide_edge_borders on
+
+for_window [class=".*"] border pixel

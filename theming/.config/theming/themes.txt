@@ -1,0 +1,7 @@
+catppuccin-frappe
+catppuccin-latte
+catppuccin-macchiato
+catppuccin-mocha
+rose-pine-dawn
+rose-pine-main
+rose-pine-moon

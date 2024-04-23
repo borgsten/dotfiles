@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+MONITORS=$(polybar -m | grep -v primary | sed 's/\(.*\)\: .*/\1/')
+NO_MONITORS=$(echo $MONITORS | wc -l)
+NO_POLYBAR_PROC=$(pgrep -x polybar | wc -l)
+
+if [[ $((NO_MONITORS + 1)) == $NO_POLYBAR_PROC ]]; then
+    polybar-msg cmd restart
+    exit 0
+fi
+
+pkill polybar
+polybar primary &
+for monitor in ${MONITORS}; do
+    MONITOR=$monitor polybar secondary &
+done
