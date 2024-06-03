@@ -8,18 +8,15 @@ return {
       local harpoon = require('harpoon')
       harpoon:setup({})
 
-      vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end, { desc = "Append file to harpoon list" })
-      vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end,
-        { desc = "Toggle harpoon list" })
+      vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end,
+        { desc = "[H]arpoon: [A]ppend file to list" })
+      vim.keymap.set("n", "<leader>hl", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end,
+        { desc = "[H]arpoon: Toggle [L]ist" })
 
       for i = 1, 5, 1 do
         vim.keymap.set("n", "<C-" .. i .. ">", function() harpoon:list():select(i) end,
-          { desc = "Change to harpoon file " .. i })
+          { desc = "Harpoon: Change to harpoon file " .. i })
       end
-
-      -- Toggle previous & next buffers stored within harpoon list
-      vim.keymap.set("n", "<C-S-[>", function() harpoon:list():prev() end, { desc = "Previous harpoon file" })
-      vim.keymap.set("n", "<C-S-]>", function() harpoon:list():next() end, { desc = "Next harpoon file" })
     end
   },
 }
