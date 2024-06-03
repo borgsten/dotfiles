@@ -9,14 +9,14 @@ return {
     end,
   },
   { "rose-pine/neovim", name = "rose-pine" },
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim",  name = "catppuccin", priority = 1000 },
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     main = 'ibl',
     opts = {},
   },
-  {"brenoprata10/nvim-highlight-colors", opts={}},
+  { "brenoprata10/nvim-highlight-colors", opts = {} },
   {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",

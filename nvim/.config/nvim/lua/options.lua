@@ -49,3 +49,8 @@ vim.o.scrolloff = 10
 -- Ruler
 vim.o.ruler = true
 vim.opt.colorcolumn = '80,120'
+
+-- Default tabwidth
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
