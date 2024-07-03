@@ -24,6 +24,7 @@ return {
       local cmp = require('cmp')
       local luasnip = require('luasnip')
       require('luasnip.loaders.from_vscode').lazy_load()
+      require("luasnip.loaders.from_snipmate").load()
       luasnip.config.setup {}
 
       cmp.setup {
@@ -69,7 +70,7 @@ return {
           { name = 'luasnip' },
           { name = 'path' },
           { name = 'nvim_lsp_signature_help' },
-          { name = "copilot", group_index = 2 },
+          { name = "copilot",                group_index = 2 },
         },
       }
     end
