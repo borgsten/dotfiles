@@ -61,11 +61,18 @@ return {
   config = function()
     require('telescope').setup({
       defaults = {
+        file_ignore_patterns = { ".git/", ".cache", "%.o", "%.a", "%.out", "%.class", "%.pyc" },
         mappings = {
           i = {
             ['<C-u>'] = false,
             ['<C-d>'] = false,
           },
+        },
+      },
+      pickers = {
+        find_files = {
+          hidden = true,
+          git_ignore = false,
         },
       },
     })
@@ -90,7 +97,9 @@ return {
     vim.keymap.set('n', '<leader>fs', builtin.builtin, { desc = '[F]ind [S]elect Telescope' })
     vim.keymap.set('n', '<leader>gf', builtin.git_files, { desc = 'Search [G]it [F]iles' })
     vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
-    vim.keymap.set('n', '<leader>fa', function () builtin.find_files({no_ignore=true, follow=true, hidden=true}) end, { desc = '[F]ind [A]ll Files' })
+    vim.keymap.set('n', '<leader>fa',
+      function() builtin.find_files({ no_ignore = true, follow = true, hidden = true }) end,
+      { desc = '[F]ind [A]ll Files' })
     vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
     vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
     vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind current [W]ord' })
