@@ -49,7 +49,20 @@ function glog() {
     git log --graph --color=always --abbrev-commit \
         --format='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' "$@" |
         fzf --ansi --no-sort --reverse --tiebreak=index --toggle-sort=\` \
-        --bind "ctrl-m:execute:
-            echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % | less -R'"
-            }
+        --bind "ctrl-m:execute: echo {} | grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % sh -c 'git show --color=always % | less -R'"
+}
+
+function venv() {
+    if [ -e venv ]; then
+        source venv/bin/activate
+        return 0
+    fi
+
+    if [ -e .venv ]; then
+        source .venv/bin/activate
+        return 0
+    fi
+
+    echo "No virtual environment found"
+    return 1
+}
