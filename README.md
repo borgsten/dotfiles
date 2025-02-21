@@ -22,3 +22,4 @@
 - [ ] Redo installation script
     - Ansible
     - bash
+    - Bare repo in $HOME
