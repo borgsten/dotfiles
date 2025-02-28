@@ -20,6 +20,15 @@ local ft_handler = {
   end
 }
 
+local function default_handler()
+  local shebang = get_shebang()
+  if not shebang then
+    return nil
+  end
+
+  return string.format("%s %s", shebang, vim.api.nvim_buf_get_name(0))
+end
+
 --- Run the current file
 --- Will save file on call
 function M.run_file()
@@ -31,11 +40,17 @@ function M.run_file()
   end
 
   local handler = ft_handler[ft]
+  local command
+
   if not handler then
-    vim.notify(string.format("No run handler for: %s", ft))
-    return
+    command = default_handler()
+    if not command then
+      vim.notify(string.format("No run handler for: %s", ft))
+      return
+    end
+  else
+    command = handler()
   end
-  local command = handler()
   term.open_term({ name = term_name, focus = false, cmd = command })
 end
 
