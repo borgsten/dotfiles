@@ -61,7 +61,7 @@ return {
   config = function()
     require('telescope').setup({
       defaults = {
-        file_ignore_patterns = { ".git/", ".cache", "%.o", "%.a", "%.out", "%.class", "%.pyc" },
+        file_ignore_patterns = { "%.git/", "%.cache/", "%.o", "%.a", "%.out", "%.class", "%.pyc" },
         mappings = {
           i = {
             ['<C-u>'] = false,
