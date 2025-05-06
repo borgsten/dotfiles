@@ -93,8 +93,8 @@ return {
       })
 
       -- LSP log level
-      -- Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
-      vim.lsp.set_log_level("warn")
+      vim.lsp.set_log_level(vim.log.levels.WARN)
+      vim.lsp.log.set_format_func(vim.inspect)
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
@@ -104,7 +104,7 @@ return {
           filetypes = { "c", "cpp", "objc", "objcpp", "cuda" }
         },
         -- gopls = {},
-        pyright = {},
+        basedpyright = {},
         rust_analyzer = {},
         -- tsserver = {},
         -- html = { filetypes = { 'html', 'twig', 'hbs'} },
