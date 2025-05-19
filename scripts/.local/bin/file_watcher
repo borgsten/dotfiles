@@ -1,0 +1,41 @@
+#!/bin/bash
+
+show_help() {
+    echo "Usage: $0 <file-path> <command>"
+    echo
+    echo "Arguments:"
+    echo "  <file-path>   Path to the file to watch for changes."
+    echo "  <command>     Command to execute when the file changes."
+    echo
+    echo "Example:"
+    echo "  $0 /path/to/file 'echo File changed!'"
+    exit 0
+}
+
+trap "echo 'Exiting...'; exit 0" SIGINT
+
+if [[ $# -lt 2 ]]; then
+    echo "Error: Missing arguments."
+    show_help
+fi
+
+FILE=$1
+shift
+COMMAND=$@
+
+if [[ ! -f $FILE ]]; then
+    echo "Error: File '$FILE' does not exist."
+    exit 1
+fi
+
+if ! command -v inotifywait &> /dev/null; then
+    echo "Error: inotifywait is not installed"
+    exit 1
+fi
+
+echo "Watching '$FILE' for changes. Press Ctrl+C to stop."
+while inotifywait -e modify "$FILE"; do
+    echo "File changed. Running command..."
+    eval "$COMMAND"
+done
+
