@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
 configs=(
-    "zsh" 
-    "tmux" 
-    "nvim" 
-    "scripts" 
-    "alacritty" 
-    "i3" 
-    "polybar" 
-    "rofi" 
+    "zsh"
+    "tmux"
+    "nvim"
+    "scripts"
+    "alacritty"
+    "i3"
+    "polybar"
+    "rofi"
     "theming"
+    "hypr"
 )
 
 for config in "${configs[@]}"; do

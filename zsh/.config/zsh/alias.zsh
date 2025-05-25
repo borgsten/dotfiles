@@ -45,6 +45,7 @@ fi
 
 # pacman alias
 alias pacin='sudo pacman -S'
+alias pacsearch='pacman -Ss'
 alias pacupd='sudo pacman -Sy'
 alias pacupg='sudo pacman -Syu'
 alias pacrem='sudo pacman -Rns'
