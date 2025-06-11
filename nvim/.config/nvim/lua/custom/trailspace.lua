@@ -21,10 +21,20 @@ local function get_hl_id()
   return nil
 end
 
+-- Only enable highlight if the buffer is not a special buffer and it is modifiable
+local function hl_allowed()
+  return vim.bo.buftype == '' and vim.bo.modifiable
+end
+
+local function recheck_allowed(e)
+  print(vim.inspect(e.match))
+  if not hl_allowed() then
+    M.disableHL()
+  end
+end
+
 function M.enableHL()
-  -- Only enable highlight if the buffer is not a special buffer and doesn't alreay exist
-  local buftype = vim.bo.buftype
-  if buftype == '' and not get_hl_id() then
+  if hl_allowed() and not get_hl_id() then
     vim.fn.matchadd(HIGHLIGHT_NAME, FIND_PATTERN)
   end
 end
@@ -60,6 +70,9 @@ function M.setup()
     { group = autogroup, callback = M.enableHL, desc = "(Re)Enable highlight" })
   vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave', 'InsertEnter' },
     { group = autogroup, callback = M.disableHL, desc = "Disable highlight" })
+
+  vim.api.nvim_create_autocmd('OptionSet',
+    { group = autogroup, pattern = { 'modifiable', 'buftype' }, callback = recheck_allowed, desc = "Check buftype" })
 
   -- Reload color from colorscheme
   vim.api.nvim_create_autocmd("ColorScheme",
