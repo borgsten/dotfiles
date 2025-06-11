@@ -42,11 +42,12 @@ return_status() {
 }
 
 venv_status() {
-    if [[ -z $VIRTUAL_ENV_PROMPT ]]; then
+    if [[ -z $VIRTUAL_ENV ]]; then
         return
     fi
+    VENV_NAME=$(basename $VIRTUAL_ENV)
     echo -n "%{$fg_bold[yellow]%}"
-    echo -n "%B${VIRTUAL_ENV_PROMPT}%b"
+    echo -n "%B(${VENV_NAME})%b"
     echo -n "%{$reset_color%}"
 }
 
