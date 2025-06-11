@@ -159,7 +159,7 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+q kill
 
 ## Session // Lock Screen // <Mod> Escape ##
-bindsym $mod+Escape exec dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock
+bindsym $mod+Escape exec "playerctl pause; dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock"
 
 ## Session // Session mode // <Mod> Delete ##
 set $mode_system System (l) lock, (e) logout, (s) suspend, (r) reboot, (Shift+s) shutdown
