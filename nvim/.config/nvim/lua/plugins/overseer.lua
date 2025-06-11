@@ -10,6 +10,8 @@ end
 
 return {
   'stevearc/overseer.nvim',
+  commands = { "OverseerToggle", "OverseerRun" },
+  dependencies = { "nvim-telescope/telescope.nvim", "stevearc/dressing.nvim" },
   opts = {},
   keys = {
     { "<leader>os", "<cmd>OverseerToggle!<cr>" },

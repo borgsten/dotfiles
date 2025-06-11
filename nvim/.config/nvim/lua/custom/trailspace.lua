@@ -27,7 +27,6 @@ local function hl_allowed()
 end
 
 local function recheck_allowed(e)
-  print(vim.inspect(e.match))
   if not hl_allowed() then
     M.disableHL()
   end

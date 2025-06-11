@@ -27,8 +27,6 @@ return {
       'neovim/nvim-lspconfig',
       'williamboman/mason-lspconfig.nvim',
       { 'j-hui/fidget.nvim', opts = {} },
-
-      'folke/neodev.nvim',
     },
     lazy = false,
     config = function()
@@ -139,8 +137,6 @@ return {
       if local_lsp ~= nil and local_lsp.lsp_servers ~= nil then
         servers = vim.tbl_deep_extend('force', servers, local_lsp.lsp_servers)
       end
-
-      require('neodev').setup()
 
       -- mason-lspconfig requires that these setup functions are called in this order
       -- before setting up the servers.
