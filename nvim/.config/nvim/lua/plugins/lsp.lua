@@ -23,10 +23,11 @@ return {
   {
     -- LSP Configuration & Plugins
     'williamboman/mason.nvim',
+    version = "^1.0.0",
     dependencies = {
       'neovim/nvim-lspconfig',
-      'williamboman/mason-lspconfig.nvim',
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'williamboman/mason-lspconfig.nvim', version = "^1.0.0" },
+      { 'j-hui/fidget.nvim',                 opts = {} },
     },
     lazy = false,
     config = function()
@@ -92,7 +93,9 @@ return {
 
       -- LSP log level
       vim.lsp.set_log_level(vim.log.levels.WARN)
-      vim.lsp.log.set_format_func(vim.inspect)
+
+      -- Show diagnostics in virtual text
+      vim.diagnostic.config({ virtual_text = true })
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
