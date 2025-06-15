@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 source "$ZDOTDIR/exports.zsh"
-source "$ZDOTDIR/plugins.zsh"
 source "$ZDOTDIR/options.zsh"
 source "$ZDOTDIR/completion.zsh"
 source "$ZDOTDIR/functions.zsh"
@@ -19,3 +18,6 @@ done
 [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 (( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
+
+# Snytax highlighting needs to be loaded last
+source "$ZDOTDIR/plugins.zsh"
