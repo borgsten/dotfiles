@@ -25,6 +25,7 @@ return {
     'williamboman/mason.nvim',
     version = "^1.0.0",
     dependencies = {
+      'saghen/blink.cmp',
       'neovim/nvim-lspconfig',
       { 'williamboman/mason-lspconfig.nvim', version = "^1.0.0" },
       { 'j-hui/fidget.nvim',                 opts = {} },
@@ -97,9 +98,6 @@ return {
       -- Show diagnostics in virtual text
       vim.diagnostic.config({ virtual_text = true })
 
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-
       local servers = {
         clangd = {
           filetypes = { "c", "cpp", "objc", "objcpp", "cuda" }
@@ -147,13 +145,15 @@ return {
 
       require('mason').setup()
       mason_lspconfig.setup({
+        automatic_installation = false,
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+
+            server.capabilities = require('blink.cmp').get_lsp_capabilities(server.capabilities)
             require('lspconfig')[server_name].setup(server)
           end,
         },
