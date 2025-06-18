@@ -57,6 +57,8 @@ return {
         return vim.fn.executable 'make' == 1
       end,
     },
+    { 'nvim-telescope/telescope-ui-select.nvim' },
+    { "debugloop/telescope-undo.nvim" },
   },
   config = function()
     local telescope = require('telescope')
@@ -80,6 +82,8 @@ return {
 
     -- Enable telescope fzf native, if installed
     pcall(telescope.load_extension, 'fzf')
+    pcall(telescope.load_extension, 'ui-select')
+    pcall(telescope.load_extension, 'undo')
 
     vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
@@ -108,5 +112,6 @@ return {
     vim.keymap.set('n', '<leader>fG', ':LiveGrepGitRoot<cr>', { desc = '[F]ind by [G]rep on Git Root' })
     vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
     vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
+    vim.keymap.set('n', '<leader>fu', telescope.extensions.undo.undo, { desc = '[F]ind [U]ndo' })
   end
 }
