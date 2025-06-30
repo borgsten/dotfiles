@@ -43,10 +43,20 @@ function plugin-load {
 ZPLUGINDIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh_plugins"
 mkdir -p "$ZPLUGINDIR"
 
+# Reload fzf keybindings after VI mode plugin
+function reload_fzf_keybinds() {
+    [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
+    [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+}
+zvm_after_init_commands+=(reload_fzf_keybinds)
+
 plugins=(
     # Async git prompt
     woefe/git-prompt.zsh@0193adeb09fbc51fac738081a4718a3cf8427ff8
     zsh-users/zsh-completions@e07f6fb780725e9c0f50a7666700cf91ded30222
+
+    # VI mode
+    jeffreytse/zsh-vi-mode@f82c4c8f4b2bdd9c914653d8f21fbb32e7f2ea6c
 
     # Should be last
     zsh-users/zsh-syntax-highlighting@5eb677bb0fa9a3e60f0eff031dc13926e093df92
