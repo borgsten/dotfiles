@@ -21,11 +21,11 @@ end
 return {
   {
     -- LSP Configuration & Plugins
-    'williamboman/mason.nvim',
+    'mason-org/mason.nvim',
     dependencies = {
       'saghen/blink.cmp',
       'neovim/nvim-lspconfig',
-      'williamboman/mason-lspconfig.nvim',
+      'mason-org/mason-lspconfig.nvim',
       { 'j-hui/fidget.nvim', opts = {} },
     },
     lazy = false,
