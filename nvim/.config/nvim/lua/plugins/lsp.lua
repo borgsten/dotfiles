@@ -1,34 +1,32 @@
 local function switch_source_header_splitcmd(bufnr, splitcmd)
-  local lspconfig = require('lspconfig')
-  bufnr = lspconfig.util.validate_bufnr(bufnr)
-  local clangd_client = lspconfig.util.get_active_client_by_name(bufnr, 'clangd')
-  local params = { uri = vim.uri_from_bufnr(bufnr) }
-  if clangd_client then
-    clangd_client.request("textDocument/switchSourceHeader", params, function(err, result)
-      if err then
-        error(tostring(err))
-      end
-      if not result then
-        print("Corresponding file can’t be determined")
-        return
-      end
-      vim.api.nvim_command(splitcmd .. " " .. vim.uri_to_fname(result))
-    end, bufnr)
-  else
-    print 'textDocument/switchSourceHeader is not supported by the clangd server active on the current buffer'
+  local method_name = 'textDocument/switchSourceHeader'
+  local client = vim.lsp.get_clients({ bufnr = bufnr, name = 'clangd' })[1]
+  if not client then
+    return vim.notify(('method %s is not supported by any servers active on the current buffer'):format(method_name))
   end
+
+  local params = vim.lsp.util.make_text_document_params(bufnr)
+  client.request(method_name, params, function(err, result)
+    if err then
+      error(tostring(err))
+    end
+    if not result then
+      vim.notify('corresponding file cannot be determined')
+      return
+    end
+    vim.api.nvim_command(splitcmd .. " " .. vim.uri_to_fname(result))
+  end, bufnr)
 end
 
 return {
   {
     -- LSP Configuration & Plugins
     'williamboman/mason.nvim',
-    version = "^1.0.0",
     dependencies = {
       'saghen/blink.cmp',
       'neovim/nvim-lspconfig',
-      { 'williamboman/mason-lspconfig.nvim', version = "^1.0.0" },
-      { 'j-hui/fidget.nvim',                 opts = {} },
+      'williamboman/mason-lspconfig.nvim',
+      { 'j-hui/fidget.nvim', opts = {} },
     },
     lazy = false,
     config = function()
@@ -100,7 +98,9 @@ return {
 
       local servers = {
         clangd = {
-          filetypes = { "c", "cpp", "objc", "objcpp", "cuda" }
+          filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+          -- Skip cretaing clangd utility user commands
+          on_attach = function(_, _) end,
         },
         -- gopls = {},
         basedpyright = {},
@@ -139,26 +139,22 @@ return {
         servers = vim.tbl_deep_extend('force', servers, local_lsp.lsp_servers)
       end
 
-      -- mason-lspconfig requires that these setup functions are called in this order
-      -- before setting up the servers.
-      local mason_lspconfig = require('mason-lspconfig')
-
       require('mason').setup()
-      mason_lspconfig.setup({
-        automatic_installation = false,
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
-
-            server.capabilities = require('blink.cmp').get_lsp_capabilities(server.capabilities)
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
+      require('mason-lspconfig').setup({
+        automatic_enable = true,
         ensure_installed = vim.tbl_keys(servers),
       })
+
+      for server_name, config in pairs(servers) do
+        config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
+        vim.lsp.config(server_name, config)
+      end
+
+      -- Add blink capabilities to all LSPs not explicitly configured
+      vim.lsp.config("*", {
+        capabilities = require('blink.cmp').get_lsp_capabilities(),
+      })
     end
+
   },
 }
