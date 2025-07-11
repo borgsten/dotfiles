@@ -12,6 +12,7 @@ packages=(
     hyprland
     hyprlock
     hyprpaper
+    hyprsunset
     swaync
     waybar
     wl-clipboard
