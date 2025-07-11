@@ -66,3 +66,10 @@ function venv() {
     echo "No virtual environment found"
     return 1
 }
+
+# Remove non-unique entries from an environment variable
+function remove_non_unique_env_list() {
+    variable_name=$1
+    unique_entries=$(echo "${!variable_name}" | tr ':' '\n' | awk '!seen[$0]++' | tr '\n' ':' | sed 's/:\+$//')
+    export "$variable_name=$unique_entries"
+}
