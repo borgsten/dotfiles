@@ -6,16 +6,19 @@ packages=(
     ttf-jetbrains-mono-nerd
     udiskie
     brightnessctl
+    zsh
     # WM Hyprland
     deskflow
     hypridle
     hyprland
     hyprlock
     hyprpaper
+    hyprpolkitagent
     hyprsunset
     swaync
     waybar
     wl-clipboard
+    walker-bin
     # Dev
     cmake
     # Neovim
@@ -30,6 +33,9 @@ packages=(
     ripgrep
     tmux
     unzip
+    firefox
+    nodejs
+    libqalculate
 )
 
-sudo pacman -S --needed ${packages[@]}
+paru -S --needed ${packages[@]}
