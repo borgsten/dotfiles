@@ -26,3 +26,8 @@ less_opts=(
     --dumb
 )
 export LESS="${less_opts[*]}"
+
+(( $+commands[dircolors] )) && source <(dircolors -b)
+
+# Ctrl+w deletes whole words
+WORDCHARS='-_'
