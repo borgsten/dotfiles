@@ -1,31 +1,34 @@
 @import "../theming/current/waybar.css";
 
+@define-color warning orange;
+@define-color critical red;
+
 @keyframes blink-warning {
     70% {
-        color: white;
+        color: @foreground;
     }
 
     to {
-        color: white;
-        background-color: orange;
+        color: @foreground;
+        background-color: @warning;
     }
 }
 
 @keyframes blink-critical {
     70% {
-      color: white;
+      color: @foreground;
     }
 
     to {
-        color: white;
-        background-color: red;
+        color: @foreground;
+        background-color: @ciritcal;
     }
 }
 
 /* Reset all styles */
 * {
     border: none;
-    font-family: JetBrainsMonoNerdFont;
+    font-family: 'JetBrainsMono Nerd Font';
     border-radius: 0;
     min-height: 0;
     margin: 0;
@@ -45,6 +48,7 @@
 #network,
 #pulseaudio,
 #temperature,
+#idle_inhibitor,
 #tray {
     padding-left: 10px;
     padding-right: 10px;
@@ -54,6 +58,14 @@
 /* -----------------------------------------------------------------------------
  * Module styles
  * -------------------------------------------------------------------------- */
+
+#idle_inhibitor.activated {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-name: blink-warning;
+    animation-duration: 3s;
+}
 
 #battery {
     animation-timing-function: linear;
@@ -79,14 +91,14 @@
 }
 
 #network.disconnected {
-    color: orange;
+    color: @warning;
 }
 
 #pulseaudio {
 }
 
 #pulseaudio.muted {
-    color: red;
+    color: @critical;
 }
 
 #tray {
@@ -102,7 +114,7 @@
 }
 
 #workspaces button.urgent {
-    border-color: orange;
+    border-color: @warning;
 }
 
 tooltip {
