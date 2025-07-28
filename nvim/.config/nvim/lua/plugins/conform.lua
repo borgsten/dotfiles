@@ -5,7 +5,7 @@ return {
       require('conform').setup({
         notify_on_error = false,
         format_on_save = function(bufnr)
-          local autofortmat_ft = { 'lua' }
+          local autofortmat_ft = { 'lua', 'go' }
           if not vim.tbl_contains(autofortmat_ft, vim.bo[bufnr].filetype) then
             return
           end

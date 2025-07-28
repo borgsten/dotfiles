@@ -102,7 +102,7 @@ return {
           -- Skip cretaing clangd utility user commands
           on_attach = function(_, _) end,
         },
-        -- gopls = {},
+        gopls = {},
         basedpyright = {},
         rust_analyzer = {},
         -- tsserver = {},
