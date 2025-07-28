@@ -31,3 +31,5 @@ export LESS="${less_opts[*]}"
 
 # Ctrl+w deletes whole words
 WORDCHARS='-_'
+
+[[ -S "$XDG_RUNTIME_DIR/ssh-agent.socket" ]] && export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"

@@ -28,6 +28,7 @@ packages=(
     # Util
     bat
     fd
+    eza
     fzf
     less
     ripgrep
@@ -36,6 +37,17 @@ packages=(
     firefox
     nodejs
     libqalculate
+    gnome-keyring
+    seahorse
+    libsecret
 )
 
 paru -S --needed ${packages[@]}
+
+if [[ ! -d ~/.cache/tmux/plugins/tpm ]]; then
+    git clone https://github.com/tmux-plugins/tpm ~/.cache/tmux/plugins/tpm
+fi
+
+if [[ "$(systemctl --user is-enabled ssh-agent.service)" != "enabled" ]]; then
+    systemctl --user enable --now ssh-agent.service
+fi
