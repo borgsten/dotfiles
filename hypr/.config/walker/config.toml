@@ -1,7 +1,7 @@
 app_launch_prefix = "uwsm app -- "
 terminal_title_flag = ""
 locale = ""
-close_when_open = true                                             # Toggle on reopen
+close_when_open = true
 theme = "omarchy-default"
 theme_base = []
 theme_location = ["~/.config/walker/themes/"]
@@ -93,6 +93,7 @@ name = "bookmarks"
 icon = "bookmark"
 switcher_only = true
 hidden = true
+prefix = '!b'
 
 [[builtins.bookmarks.entries]]
 label = "Walker"
@@ -124,6 +125,7 @@ name = "ai"
 icon = "help-browser"
 switcher_only = true
 show_sub_when_single = true
+hidden = true
 
 [[builtins.ai.anthropic.prompts]]
 model = "claude-3-7-sonnet-20250219"
@@ -138,7 +140,8 @@ weight = 5
 name = "Calculator"
 icon = "accessories-calculator"
 placeholder = "Calculator"
-min_chars = 3                   # Min chars to calculate. 3 allows "3+3"
+min_chars = 3
+prefix = '='
 
 [builtins.windows]
 weight = 5
@@ -190,7 +193,7 @@ prefix = ":"
 [builtins.symbols]
 after_copy = ""
 weight = 5
-name = "symbols"
+name = "Symbols"
 placeholder = "Symbols"
 switcher_only = true
 history = true
@@ -203,7 +206,7 @@ fd_flags = "--ignore-vcs --type file --type directory"
 cmd_alt = "xdg-open $(dirname ~/%RESULT%)"
 weight = 5
 icon = "file"
-name = "finder"
+name = "Finder"
 placeholder = "Finder"
 switcher_only = true
 ignore_gitignore = true
@@ -211,13 +214,14 @@ refresh = true
 concurrency = 8
 show_icon_when_single = true
 preview_images = false
-hidden = true
+hidden = false
+prefix = '!f'
 
 [builtins.runner]
 eager_loading = true
 weight = 5
 icon = "utilities-terminal"
-name = "runner"
+name = "Runner"
 placeholder = "Runner"
 typeahead = true
 history = true
@@ -227,6 +231,7 @@ refresh = true
 use_fd = false
 switcher_only = true
 hidden = true
+prefix = '!c'
 
 [builtins.ssh]
 weight = 5
@@ -240,7 +245,7 @@ hidden = true
 
 [builtins.switcher]
 weight = 5
-name = "switcher"
+name = "Switcher"
 placeholder = "Switcher"
 prefix = "/"
 
@@ -252,15 +257,20 @@ name = "websearch"
 placeholder = "Websearch"
 switcher_only = true
 hidden = true
+prefix = '!s'
 
 [[builtins.websearch.entries]]
 name = "Google"
 url = "https://www.google.com/search?q=%TERM%"
+prefix = '!g'
 
 [[builtins.websearch.entries]]
 name = "DuckDuckGo"
 url = "https://duckduckgo.com/?q=%TERM%"
-switcher_only = true
+
+[[builtins.websearch.entries]]
+name = "CPP Reference"
+url = "https://duckduckgo.com/?q=%TERM%%20site:cppreference.com"
 
 [builtins.dmenu]
 hidden = true
@@ -279,3 +289,33 @@ placeholder = "Translation"
 switcher_only = true
 provider = "googlefree"
 hidden = true
+prefix = '!t'
+
+[[plugins]]
+keep_sort = false
+name = "power"
+placeholder = "Power"
+recalculate_score = true
+show_icon_when_single = true
+switcher_only = true
+prefix = "sys "
+
+[[plugins.entries]]
+exec = "shutdown now"
+icon = "system-shutdown-symbolic"
+label = "Shutdown"
+
+[[plugins.entries]]
+exec = "reboot"
+icon = "system-reboot-symbolic"
+label = "Reboot"
+
+[[plugins.entries]]
+exec = "hyprctl dispatch exit"
+icon = "system-log-out-symbolic"
+label = "Logout"
+
+[[plugins.entries]]
+exec = "playerctl --all-players pause; hyprlock"
+icon = "system-lock-screen-symbolic"
+label = "Lock Screen"
