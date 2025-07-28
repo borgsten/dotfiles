@@ -1,9 +1,1 @@
-return {
-	{ "rose-pine/neovim", name = "rose-pine" },
-	{
-		"LazyVim/LazyVim",
-		opts = {
-			colorscheme = "rose-pine-dawn",
-		},
-	},
-}
+vim.cmd.colorscheme('rose-pine-dawn')

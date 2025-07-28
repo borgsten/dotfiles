@@ -1,9 +1,1 @@
-return {
-	{ "EdenEast/nightfox.nvim" },
-	{
-		"LazyVim/LazyVim",
-		opts = {
-			colorscheme = "nordfox",
-		},
-	},
-}
+vim.cmd.colorscheme('nordfox')

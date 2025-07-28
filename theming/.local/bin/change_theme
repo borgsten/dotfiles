@@ -50,10 +50,12 @@ hyprctl reload || true
 
 hyprctl hyprpaper reload ,"$CURRENT_THEME_DIR/wallpaper"
 
-# nvim_run_command "colorscheme ${theme}" || true
+nvim_run_command "lua DoFileIfExists(\"$CURRENT_THEME_DIR/neovim.lua\")" || true
+
+# TODO: Add swaync
+
 # pkill swayosd-server
 # setsid uwsm app -- swayosd-server &>/dev/null &
-# makoctl reload
 
 # Reload tmux config from the outside
 tmux source "${XDG_CONFIG_HOME}/tmux/tmux.conf"

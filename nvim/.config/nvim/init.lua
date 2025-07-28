@@ -31,12 +31,23 @@ require('util')
 require('custom.run_file')
 require('custom.trailspace').setup()
 
--- Read colorscheme form xresources to support dynamic switching
-local colorscheme = 'kanagawa'
-local color = require('custom.helpers').readFromXResources("themename")
-if color ~= nil then
-  colorscheme = color
+function DoFileIfExists(file_path)
+  if vim.fn.filereadable(file_path) == 0 then
+    vim.notify("Could not run dofile on '" .. file_path .. "'")
+    return false
+  end
+
+  local ok, res = pcall(dofile, file_path)
+  if not ok then
+    vim.notify("Could not run file:\n" .. res)
+  end
+  return ok
 end
-vim.cmd.colorscheme(colorscheme)
+
+-- Load current theme, if it doesn't exist load default
+local current_theme = vim.env.XDG_CONFIG_HOME .. '/theming/current/neovim.lua'
+if not DoFileIfExists(current_theme) then
+  vim.cmd.colorscheme('kanagawa')
+end
 
 -- vim: ts=2 sts=2 sw=2 et

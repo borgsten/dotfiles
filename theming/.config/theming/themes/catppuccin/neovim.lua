@@ -1,8 +1,1 @@
-return {
-	{
-		"LazyVim/LazyVim",
-		opts = {
-			colorscheme = "catppuccin",
-		},
-	},
-}
+vim.cmd.colorscheme('catppuccin-macchiato')

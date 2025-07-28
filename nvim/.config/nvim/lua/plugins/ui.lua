@@ -21,17 +21,6 @@ return {
     },
   },
   {
-    'rebelot/kanagawa.nvim',
-    priority = 1000,
-    config = function()
-      require("kanagawa").setup({
-        theme = "dragon"
-      })
-    end,
-  },
-  { "rose-pine/neovim", name = "rose-pine" },
-  { "catppuccin/nvim",  name = "catppuccin", priority = 1000 },
-  {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     main = 'ibl',
