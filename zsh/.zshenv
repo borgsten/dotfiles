@@ -17,3 +17,5 @@ export HISTSIZE=100000
 export SAVEHIST=100000
 
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+
+export GOPATH="$HOME/.local/go"
