@@ -40,6 +40,7 @@ packages=(
     gnome-keyring
     seahorse
     libsecret
+    jq
 )
 
 paru -S --needed ${packages[@]}
