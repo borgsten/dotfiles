@@ -311,6 +311,11 @@ icon = "system-reboot-symbolic"
 label = "Reboot"
 
 [[plugins.entries]]
+exec = "playerctl --all-players pause; systemctl suspend"
+icon = "view-conceal-symbolic"
+label = "Suspend"
+
+[[plugins.entries]]
 exec = "hyprctl dispatch exit"
 icon = "system-log-out-symbolic"
 label = "Logout"

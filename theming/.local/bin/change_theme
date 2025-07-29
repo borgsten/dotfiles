@@ -37,12 +37,9 @@ else
   gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
 fi
 
-echo 1
-
 # Trigger alacritty config reload
 touch "${XDG_CONFIG_HOME}/alacritty/alacritty.toml"
 
-echo 2
 # Restart components to apply new theme
 pkill -SIGUSR2 btop || true
 pkill -SIGUSR2 waybar || true
