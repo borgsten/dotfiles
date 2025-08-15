@@ -16,6 +16,7 @@ export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=100000
 export SAVEHIST=100000
 
-export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
-
 export GOPATH="$HOME/.local/go"
+
+export PATH="$GOPATH/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+
