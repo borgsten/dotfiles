@@ -52,3 +52,5 @@ background-opacity = 0.95
 shell-integration-features = no-cursor
 cursor-style = "block"
 cursor-style-blink = false
+
+app-notifications = false
