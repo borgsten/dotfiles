@@ -5,19 +5,26 @@ CURRENT_THEME_DIR="$HOME/.config/theming/current"
 CURRENT_THEME_NAME=$(basename "$(realpath "$CURRENT_THEME_DIR")")
 
 mapfile -t themes < <(ls $THEMES_DIR | while read -r theme; do
-    if [[ "$theme" == "$CURRENT_THEME_NAME" ]]; then
-        continue
-    fi
-
-    suffix=""
     if [[ -f "$THEMES_DIR$theme/light.mode" ]]; then
-        suffix="(light mode)"
+        theme+="(light mode)"
     fi
 
-    echo $theme$suffix
+    if [[ "$theme" == "$CURRENT_THEME_NAME" ]]; then
+        theme="> $theme <"
+    fi
+
+    echo $theme
 done)
 
 new_theme=$(printf '%s\n' "${themes[@]}" | walker --dmenu)
-new_theme=$(echo "$new_theme" | sed -E "s/\(.*\)//")
+new_theme=$(echo "$new_theme" | sed -E "s/^> //" | sed -E "s/ <$//" | sed -E "s/\(.*\)//")
+
+if [[ -z "$new_theme" ]]; then
+    exit 0
+fi
+
+if [[ "$new_theme" == "$CURRENT_THEME_NAME" ]]; then
+    exit 0
+fi
 
 $HOME/.local/bin/change_theme $new_theme
