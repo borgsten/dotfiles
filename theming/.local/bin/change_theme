@@ -3,18 +3,14 @@
 set -e
 
 CONFIG_PATH="${XDG_CONFIG_HOME}/theming"
-OUT_PATH="${XDG_CACHE_HOME}/theming"
-
-# omarchy-theme-set: Set a theme, specified by its name.
-# Usage: omarchy-theme-set <theme-name>
 
 if [[ -z "$1" ]]; then
   echo "Usage: $1 <theme-name>" >&2
   exit 1
 fi
 
-THEMES_DIR="$HOME/.config/theming/themes"
-CURRENT_THEME_DIR="$HOME/.config/theming/current"
+THEMES_DIR="$CONFIG_PATH/themes"
+CURRENT_THEME_DIR="$CONFIG_PATH/current"
 
 THEME_NAME="$1"
 THEME_PATH="$THEMES_DIR/$THEME_NAME"
@@ -22,11 +18,11 @@ THEME_PATH="$THEMES_DIR/$THEME_NAME"
 # Check if the theme entered exists
 if [[ ! -d "$THEME_PATH" ]]; then
   echo "Theme '$THEME_NAME' does not exist in $THEMES_DIR" >&2
-  exit 2
+  exit 1
 fi
 
 # Update theme symlinks
-ln -nsf "$THEME_PATH" "$CURRENT_THEME_DIR"
+ln -nsf "themes/$THEME_NAME" "$CURRENT_THEME_DIR"
 
 # Change gnome modes
 if [[ -f "$CURRENT_THEME_DIR/light.mode" ]]; then
@@ -45,7 +41,7 @@ pkill -SIGUSR2 btop || true
 pkill -SIGUSR2 waybar || true
 hyprctl reload || true
 
-hyprctl hyprpaper reload ,"$CURRENT_THEME_DIR/wallpaper"
+hyprctl hyprpaper reload ,"$CURRENT_THEME_DIR/wallpaper" || true
 
 nvim_run_command "lua DoFileIfExists(\"$CURRENT_THEME_DIR/neovim.lua\")" || true
 
