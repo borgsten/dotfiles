@@ -34,4 +34,4 @@ x = 5
 y = 5
 
 [general]
-import = ["~/.cache/theming/alacritty.toml"]
+import = ["~/.config/theming/current/alacritty.toml"]

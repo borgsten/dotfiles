@@ -39,6 +39,7 @@ touch "${XDG_CONFIG_HOME}/alacritty/alacritty.toml"
 # Restart components to apply new theme
 pkill -SIGUSR2 btop || true
 pkill -SIGUSR2 waybar || true
+polybar-msg cmd restart || true
 hyprctl reload || true
 
 hyprctl hyprpaper reload ,"$CURRENT_THEME_DIR/wallpaper" || true
