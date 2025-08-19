@@ -1,3 +1,8 @@
 #! /usr/bin/env bash
 
-uwsm app -- ghostty --class=com.scratch -e tmux &
+# Until all systems are migrated
+if command -v uwsm >/dev/null 2>&1; then
+    uwsm app -- ghostty --class=com.scratch -e tmux &
+else
+    alacritty --class term_scratchpad -e tmux &
+fi
