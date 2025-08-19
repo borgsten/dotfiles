@@ -15,12 +15,26 @@ configuration{
     sidebar-mode: true;
 }
 
-@theme "~/.cache/theming/rofi.rasi"
+@import "~/.config/theming/current/rofi.rasi"
+
 
 * {
+    scrollbar: false;
+    separatorcolor:              @foreground;
+    border-color:                @foreground;
+    selected-normal-foreground:  @lightbg;
+    selected-normal-background:  @lightfg;
+    selected-active-foreground:  @background;
+    selected-active-background:  @blue;
+    selected-urgent-foreground:  @background;
+    selected-urgent-background:  @red;
+    normal-foreground:           @foreground;
+    normal-background:           @lightbg;
+    spacing:                     2;
+
     font: "JetBrainsMono Nerd Font 12";
-    background-color: @bg-col;
-    text-color: @fg-col;
+    background-color: @lightbg;
+    text-color: @foreground;
     border-radius: 0px;
 }
 
@@ -33,21 +47,25 @@ window {
     height: 450px;
     width: 600px;
     border: 3px;
-    border-color: @border-col;
+    border-color: @border-color;
+    background-color: @background;
+    border:           1;
+    padding:          5;
+}
+
+textbox-prompt-colon {
+    expand: false;
+    str: " ";
+    margin: 0.30em 0px 0px 0px;
+    text-color: @lightfg;
 }
 
 inputbar {
     children: [textbox-prompt-colon,entry];
     margin: 0px 10px 10px 10px;
     border: 0px 0px 1px 0px;
-    border-color: @fg-col2;
+    border-color: @lightfg;
     spacing: 0;
-}
-
-textbox-prompt-colon {
-    expand: false;
-    padding: 5px 0px 5px 10px;
-    content: " ";
 }
 
 entry {
@@ -55,6 +73,7 @@ entry {
 }
 
 listview {
+    scrollbar: false;
     margin: 0px 10px 0px;
     columns: 1;
     lines: 8;
@@ -69,7 +88,7 @@ element-icon {
 }
 
 element selected {
-    text-color: @fg-col2;
+    text-color: @lightfg;
 }
 
 mode-switcher {
@@ -80,10 +99,6 @@ button {
     padding: 10px;
     vertical-align: 0.5;
     horizontal-align: 0.5;
-}
-
-button selected {
-    text-color: @fg-col2;
 }
 
 message {
