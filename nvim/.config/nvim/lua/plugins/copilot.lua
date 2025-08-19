@@ -23,7 +23,14 @@ return {
     },
     config = function()
       local chat = require('CopilotChat')
-      chat.setup({})
+      chat.setup({
+        mappings = {
+          reset = {
+            normal = '<C-S-l>',
+            insert = '<C-S-l>',
+          },
+        }
+      })
       vim.keymap.set('n', '<leader>cc', function() chat.toggle() end,
         { desc = 'Toggle [C]opilot [C]hat' })
     end
