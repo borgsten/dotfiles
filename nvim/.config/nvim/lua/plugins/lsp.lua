@@ -26,6 +26,7 @@ return {
       'saghen/blink.cmp',
       'neovim/nvim-lspconfig',
       'mason-org/mason-lspconfig.nvim',
+      "nvim-tree/nvim-web-devicons",
       { 'j-hui/fidget.nvim', opts = {} },
     },
     lazy = false,
@@ -93,8 +94,11 @@ return {
       -- LSP log level
       vim.lsp.set_log_level(vim.log.levels.WARN)
 
-      -- Show diagnostics in virtual text
-      vim.diagnostic.config({ virtual_text = true })
+      vim.diagnostic.config {
+        severity_sort = true,
+        float = { border = 'single', source = 'if_many' },
+        virtual_text = true,
+      }
 
       local servers = {
         clangd = {
