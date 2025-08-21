@@ -99,6 +99,9 @@ return {
       local servers = {
         clangd = {
           filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+          capabilities = {
+            offsetEncoding = { 'utf-16' },
+          },
           -- Skip cretaing clangd utility user commands
           on_attach = function(_, _) end,
         },
