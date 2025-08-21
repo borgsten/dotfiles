@@ -30,6 +30,7 @@ require('keymap')
 require('util')
 require('custom.run_file')
 require('custom.trailspace').setup()
+require('custom.snakify').setup()
 
 function DoFileIfExists(file_path)
   if vim.fn.filereadable(file_path) == 0 then
