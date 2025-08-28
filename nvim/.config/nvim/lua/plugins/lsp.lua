@@ -53,12 +53,12 @@ return {
           nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
           nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-          vim.keymap.set('n', "<leader>]e", function() switch_source_header_splitcmd(0, 'edit') end,
-            { noremap = true, desc = "Edit source/header in new tab" })
-          vim.keymap.set('n', "<leader>]h", function() switch_source_header_splitcmd(0, 'split') end,
-            { noremap = true, desc = "Edit source/header in hsplit" })
-          vim.keymap.set('n', "<leader>]v", function() switch_source_header_splitcmd(0, 'vsplit') end,
-            { noremap = true, desc = "Edit source/header in vsplit" })
+          nmap("<leader>]e", function() switch_source_header_splitcmd(0, 'edit') end,
+            "Edit source/header in new tab")
+          nmap("<leader>]h", function() switch_source_header_splitcmd(0, 'split') end,
+            "Edit source/header in hsplit")
+          nmap("<leader>]v", function() switch_source_header_splitcmd(0, 'vsplit') end,
+            "Edit source/header in vsplit")
 
           -- See `:help K` for why this keymap
           nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -87,6 +87,11 @@ return {
               buffer = event.buf,
               callback = vim.lsp.buf.clear_references,
             })
+          end
+          if client and client.server_capabilities.inlayHintProvider then
+            vim.lsp.inlay_hint.enable(true)
+            nmap('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
+              'Toggle Inlay Hints')
           end
         end,
       })
