@@ -71,3 +71,6 @@ alias addkey='ssh-add ~/.ssh/id_rsa'
 alias vim='nvim'
 
 alias vact='source venv/bin/activate'
+
+alias lzd='lazydocker'
+alias lzg='lazygit'
