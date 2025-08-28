@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+THEMES_DIR="${HOME}/.config/theming/themes/"
+CURRENT_THEME_DIR="${HOME}/.config/theming/current"
+CURRENT_THEME_NAME=$(basename "$(realpath "${CURRENT_THEME_DIR}")")
+
+menu=""
+if command -v walker >/dev/null 2>&1; then
+  menu="walker --dmenu"
+elif command -v rofi >/dev/null 2>&1; then
+  menu="rofi -dmenu"
+else
+  ehco "No menu exists"
+  exit 1
+fi
+
+mapfile -t themes < <(ls "${THEMES_DIR}" | while read -r theme; do
+    if [[ -f "${THEMES_DIR}${theme}/light.mode" ]]; then
+        theme+="(light mode)"
+    fi
+
+    if [[ "${theme}" == "${CURRENT_THEME_NAME}" ]]; then
+        theme="> ${theme} <"
+    fi
+
+    echo "${theme}"
+done)
+
+new_theme=$(printf '%s\n' "${themes[@]}" | ${menu})
+new_theme=$(echo "${new_theme}" | sed -E "s/^> //" | sed -E "s/ <$//" | sed -E "s/\(.*\)//")
+
+if [[ -z "${new_theme}" ]]; then
+    exit 0
+fi
+
+if [[ "${new_theme}" == "${CURRENT_THEME_NAME}" ]]; then
+    exit 0
+fi
+
+change_theme "${new_theme}"

@@ -2,30 +2,31 @@
 
 set -e
 
-CONFIG_PATH="${XDG_CONFIG_HOME}/theming"
+CONFIG_PATH=${XDG_CONFIG_HOME:-$HOME/.config}
+THEME_CONFIG_PATH="${CONFIG_PATH}/theming"
 
 if [[ -z "$1" ]]; then
   echo "Usage: $1 <theme-name>" >&2
   exit 1
 fi
 
-THEMES_DIR="$CONFIG_PATH/themes"
-CURRENT_THEME_DIR="$CONFIG_PATH/current"
+THEMES_DIR="${THEME_CONFIG_PATH}/themes"
+CURRENT_THEME_DIR="${THEME_CONFIG_PATH}/current"
 
 THEME_NAME="$1"
-THEME_PATH="$THEMES_DIR/$THEME_NAME"
+THEME_PATH="${THEMES_DIR}/${THEME_NAME}"
 
 # Check if the theme entered exists
-if [[ ! -d "$THEME_PATH" ]]; then
-  echo "Theme '$THEME_NAME' does not exist in $THEMES_DIR" >&2
+if [[ ! -d "${THEME_PATH}" ]]; then
+  echo "Theme '${THEME_NAME}' does not exist in ${THEMES_DIR}" >&2
   exit 1
 fi
 
 # Update theme symlinks
-ln -nsf "themes/$THEME_NAME" "$CURRENT_THEME_DIR"
+ln -nsf "themes/${THEME_NAME}" "${CURRENT_THEME_DIR}"
 
 # Change gnome modes
-if [[ -f "$CURRENT_THEME_DIR/light.mode" ]]; then
+if [[ -f "${CURRENT_THEME_DIR}/light.mode" ]]; then
   gsettings set org.gnome.desktop.interface color-scheme "prefer-light"
   gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
 else
@@ -33,23 +34,34 @@ else
   gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
 fi
 
-# Trigger alacritty config reload
-touch "${XDG_CONFIG_HOME}/alacritty/alacritty.toml"
-
 # Restart components to apply new theme
-pkill -SIGUSR2 btop || true
-pkill -SIGUSR2 waybar || true
-polybar-msg cmd restart || true
-hyprctl reload || true
 
-hyprctl hyprpaper reload ,"$CURRENT_THEME_DIR/wallpaper" || true
-
-nvim_run_command "lua DoFileIfExists(\"$CURRENT_THEME_DIR/neovim.lua\")" || true
-
-# TODO: Add swaync
-
-# pkill swayosd-server
-# setsid uwsm app -- swayosd-server &>/dev/null &
+# Trigger alacritty config reload
+if [[ -f "${CONFIG_PATH}/alacritty/alacritty.toml" ]]; then
+  touch "${CONFIG_PATH}/alacritty/alacritty.toml"
+fi
 
 # Reload tmux config from the outside
-tmux source "${XDG_CONFIG_HOME}/tmux/tmux.conf"
+if [[ -f "${CONFIG_PATH}/tmux/tmux.conf" ]]; then
+  tmux source "${CONFIG_PATH}/tmux/tmux.conf"
+fi
+
+if command -v polybar >/dev/null 2>&1; then
+  polybar-msg cmd restart || true
+fi
+
+if command -v hyprctl >/dev/null 2>&1; then
+  hyprctl reload || true
+  hyprctl hyprpaper reload ,"${CURRENT_THEME_DIR}/wallpaper" || true
+elif [[ "${DESKTOP_SESSION}" == "i3"* ]]; then
+    feh --bg-scale "${CURRENT_THEME_DIR}/wallpaper" || true
+fi
+
+pkill -SIGUSR2 btop || true
+pkill -SIGUSR2 waybar || true
+
+nvim_run_command "lua DoFileIfExists(\"${CURRENT_THEME_DIR}/neovim.lua\")" || true
+
+# TODO: Add swaync
+# pkill swayosd-server
+# setsid uwsm app -- swayosd-server &>/dev/null &
