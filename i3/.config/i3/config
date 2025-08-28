@@ -27,3 +27,4 @@ focus_follows_mouse yes
 
 # Load partial config files
 include $HOME/.config/i3/partials/*
+include $HOME/.config/i3/local/*

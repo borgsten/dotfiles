@@ -81,8 +81,8 @@ bindsym $mod+Shift+f floating toggle
 ## Modify // Tile/Float Focus Toggle // <Mod><Shift> t ##
 bindsym $mod+Shift+t focus mode_toggle
 
-## Modify // Window Layout Mode // <Mod> t ##
-bindsym $mod+t layout toggle tabbed splith splitv
+## Modify // Toggle tabbed // <Mod> t ##
+bindsym $mod+t layout toggle tabbed split
 
 ## Resize // Enter Resize Mode // <Mod> r ##
 mode "resize" {
@@ -203,3 +203,6 @@ bindsym XF86AudioMute exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ t
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20
 # Decrease screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20
+
+# Launch theme menu
+bindsym $mod+Shift+comma exec theme_menu

@@ -23,7 +23,6 @@ alias gdc='git diff --cached'
 alias gl='git pull'
 alias gp='git push'
 alias gst='git status'
-alias gcm='git checkout master'
 
 # ls/eza
 alias la='ls -lA'

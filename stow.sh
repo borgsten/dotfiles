@@ -20,5 +20,7 @@ for config in "${configs[@]}"; do
 done
 
 # Ignore the current theme symlink
-echo "Make git ignore current theme symlink"
-git update-index --assume-unchanged theming/.config/theming/current
+if git rev-parse --is-inside-work-tree &>/dev/null; then
+    echo "Make git ignore current theme symlink"
+    git update-index --assume-unchanged theming/.config/theming/current
+fi

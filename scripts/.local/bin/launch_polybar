@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 
 MONITORS=($(polybar -m | grep -v primary | sed 's/\(.*\)\: .*/\1/'))
-NO_MONITORS="${#MONITORS[@]}"
-NO_POLYBAR_PROC=$(pgrep -x polybar | wc -l)
-
-if [[ $((NO_MONITORS + 1)) == $NO_POLYBAR_PROC ]]; then
-    echo restarting polybars
-    polybar-msg cmd restart
-    exit 0
-fi
 
 echo killing and starting polybars
 pkill polybar

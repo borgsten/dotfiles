@@ -73,3 +73,13 @@ function remove_non_unique_env_list() {
     unique_entries=$(echo "${!variable_name}" | tr ':' '\n' | awk '!seen[$0]++' | tr '\n' ':' | sed 's/:\+$//')
     export "$variable_name=$unique_entries"
 }
+
+function gcm() {
+    if git show-ref --verify --quiet refs/remotes/origin/main; then
+        git checkout main
+    elif git show-ref --verify --quiet refs/remotes/origin/master; then
+        git checkout master
+    else
+      echo "Neither origin/main nor origin/master exists"
+    fi
+}
