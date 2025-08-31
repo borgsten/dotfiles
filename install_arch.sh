@@ -19,6 +19,7 @@ packages=(
     waybar
     wl-clipboard
     walker-bin
+    swayosd
     # Dev
     cmake
     # Neovim
@@ -41,6 +42,8 @@ packages=(
     seahorse
     libsecret
     jq
+    lazydocker
+    lazygit
 )
 
 paru -S --needed ${packages[@]}
