@@ -44,6 +44,7 @@ packages=(
     jq
     lazydocker
     lazygit
+    zoxide
 )
 
 paru -S --needed ${packages[@]}
