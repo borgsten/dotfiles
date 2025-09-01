@@ -31,6 +31,9 @@ return {
     },
     lazy = false,
     config = function()
+      -- Default enable/disable inlay hints
+      vim.g.inlay_hints_enabled = true
+
       --  This function gets run when an LSP connects to a particular buffer.
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
@@ -89,9 +92,15 @@ return {
             })
           end
           if client and client.server_capabilities.inlayHintProvider then
-            vim.lsp.inlay_hint.enable(true)
-            nmap('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
-              'Toggle Inlay Hints')
+            local toggle_inlay_hint = function()
+              vim.g.inlay_hints_enabled = not vim.g.inlay_hints_enabled
+              vim.lsp.inlay_hint.enable(vim.g.inlay_hints_enabled)
+            end
+
+            if vim.g.inlay_hints_enabled == true then
+              vim.lsp.inlay_hint.enable(true)
+            end
+            nmap('<leader>th', toggle_inlay_hint, 'Toggle Inlay Hints')
           end
         end,
       })
