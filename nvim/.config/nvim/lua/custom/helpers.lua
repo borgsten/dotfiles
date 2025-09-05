@@ -60,4 +60,24 @@ function M.tryRequire(module_name)
   end
 end
 
+--- Check if one path is a subpath of another
+---
+--- Will return true if child is the same as parent
+--- @param child string Child path
+--- @param parent string Parent path
+--- @return boolean true if child is a subpath of parent
+function M.isSubDirectory(child, parent)
+  return vim.fn.matchstr(child, "^" .. vim.fn.escape(parent, "\\") .. ".*") ~= ""
+end
+
+--- Check if current working directory is in a directory
+---
+--- Will return true if cwd is below or the same as directory
+--- @param directory string Directory to check
+--- @return boolean true if cwd is in directory
+function M.isInDirectory(directory)
+  local cwd = vim.fn.getcwd()
+  return M.isSubDirectory(cwd, directory)
+end
+
 return M
