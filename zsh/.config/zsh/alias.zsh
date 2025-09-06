@@ -68,7 +68,9 @@ alias please='sudo !!'
 
 alias addkey='ssh-add ~/.ssh/id_rsa'
 
-alias vim='nvim'
+if (( $+commands[nvim] )); then
+    alias vim='nvim'
+fi
 
 alias vact='source venv/bin/activate'
 
