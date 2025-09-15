@@ -49,6 +49,7 @@
 #pulseaudio,
 #temperature,
 #idle_inhibitor,
+#notification,
 #tray {
     padding-left: 10px;
     padding-right: 10px;
@@ -109,12 +110,18 @@
 }
 
 #workspaces button {
-    padding-left: 10px;
-    padding-right: 10px;
+    all: initial;
+    padding: 0 6px;
+    margin: 0 1.5px;
+    min-width: 9px;
 }
 
-#workspaces button.urgent {
-    border-color: @warning;
+#workspaces button.empty {
+    opacity: 0.5;
+}
+
+#workspaces button.urgent label {
+    color: @warning;
 }
 
 tooltip {
