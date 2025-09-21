@@ -62,6 +62,8 @@ pkill -SIGUSR2 waybar || true
 
 nvim_run_command "lua DoFileIfExists(\"${CURRENT_THEME_DIR}/neovim.lua\")" || true
 
+systemctl reload --user app-com.mitchellh.ghostty.service
+
 # TODO: Add swaync
 # pkill swayosd-server
 # setsid uwsm app -- swayosd-server &>/dev/null &

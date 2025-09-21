@@ -18,7 +18,18 @@ packages=(
     swaync
     waybar
     wl-clipboard
-    walker-bin
+    walker
+    elephant
+
+    elephant-calc
+    elephant-desktopapplications
+    elephant-files
+    elephant-menus
+    elephant-providerlist
+    elephant-runner
+    elephant-symbols
+    elephant-websearch
+
     swayosd
     # Dev
     cmake
@@ -53,6 +64,19 @@ if [[ ! -d ~/.cache/tmux/plugins/tpm ]]; then
     git clone https://github.com/tmux-plugins/tpm ~/.cache/tmux/plugins/tpm
 fi
 
-if [[ "$(systemctl --user is-enabled ssh-agent.service)" != "enabled" ]]; then
-    systemctl --user enable --now ssh-agent.service
+scriptpath="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+if [[ ! -f ~/.config/systemd/user/elephant.service ]]; then
+    install -D -m 644 ${scriptpath}/services/elephant.service ~/.config/systemd/user/elephant.service
 fi
+
+services=(
+    app-com.mitchellh.ghostty.service
+    ssh-agent.service
+    elephant.service
+)
+
+for service in ${services[@]}; do
+    if [[ "$(systemctl --user is-enabled ${service})" != "enabled" ]]; then
+        systemctl --user enable --now ${service}
+    fi
+done
