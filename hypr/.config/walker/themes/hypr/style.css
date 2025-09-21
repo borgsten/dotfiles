@@ -5,7 +5,7 @@
 }
 
 * {
-  font-family: monospace;
+  font-family: JetBrainsMono;
   font-size: 18px;
   color: @text;
 }
