@@ -32,7 +32,7 @@ return {
     lazy = false,
     config = function()
       -- Default enable/disable inlay hints
-      vim.g.inlay_hints_enabled = true
+      vim.g.inlay_hints_enabled = false
 
       --  This function gets run when an LSP connects to a particular buffer.
       vim.api.nvim_create_autocmd('LspAttach', {
