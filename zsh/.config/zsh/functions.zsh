@@ -83,3 +83,12 @@ function gcm() {
       echo "Neither origin/main nor origin/master exists"
     fi
 }
+
+function diffdelay() {
+    command="$1"
+    first=$($command)
+    echo "Press any key to continue..."
+    read
+    second=$($command)
+    diff <(echo "$first") <(echo "$second")
+}
