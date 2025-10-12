@@ -1,4 +1,4 @@
-@import url("file://~/.config/theming/current/walker.css");
+@import "../../..//theming/current/walker.css";
 
 * {
   all: unset;
