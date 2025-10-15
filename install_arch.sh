@@ -58,7 +58,7 @@ packages=(
     zoxide
 )
 
-paru -S --needed ${packages[@]}
+paru -S --needed "${packages[@]}"
 
 if [[ ! -d ~/.cache/tmux/plugins/tpm ]]; then
     git clone https://github.com/tmux-plugins/tpm ~/.cache/tmux/plugins/tpm
@@ -66,7 +66,7 @@ fi
 
 scriptpath="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 if [[ ! -f ~/.config/systemd/user/elephant.service ]]; then
-    install -D -m 644 ${scriptpath}/services/elephant.service ~/.config/systemd/user/elephant.service
+    install -D -m 644 "${scriptpath}/services/elephant.service ~/.config/systemd/user/elephant.service"
 fi
 
 services=(
@@ -75,8 +75,8 @@ services=(
     elephant.service
 )
 
-for service in ${services[@]}; do
-    if [[ "$(systemctl --user is-enabled ${service})" != "enabled" ]]; then
-        systemctl --user enable --now ${service}
+for service in "${services[@]}"; do
+    if [[ "$(systemctl --user is-enabled "${service}")" != "enabled" ]]; then
+        systemctl --user enable --now "${service}"
     fi
 done
