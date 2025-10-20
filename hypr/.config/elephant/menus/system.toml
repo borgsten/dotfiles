@@ -18,7 +18,7 @@ actions = { "suspend" = "playerctl pause; systemctl suspend" }
 
 [[entries]]
 icon = "system-log-out"
-text = "Relaunch"
+text = "Exit hyorland"
 actions = { "relaunch" = "uwsm stop" }
 
 [[entries]]

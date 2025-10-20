@@ -72,7 +72,6 @@ fi
 services=(
     app-com.mitchellh.ghostty.service
     ssh-agent.service
-    elephant.service
 )
 
 for service in "${services[@]}"; do
