@@ -67,7 +67,9 @@ end
 --- @param parent string Parent path
 --- @return boolean true if child is a subpath of parent
 function M.isSubDirectory(child, parent)
-  return vim.fn.matchstr(child, "^" .. vim.fn.escape(parent, "\\") .. ".*") ~= ""
+  local norm_parent = parent:gsub("[/\\]+$", "")
+  local norm_child = child:gsub("[/\\]+$", "")
+  return norm_child == norm_parent or norm_child:sub(1, #norm_parent + 1) == norm_parent .. "/"
 end
 
 --- Check if current working directory is in a directory
