@@ -124,10 +124,19 @@ return {
           on_attach = function(_, _) end,
         },
         gopls = {},
-        basedpyright = {},
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              analysis = {
+                diagnosticSeverityOverrides = {
+                  reportUnusedCallResult = "none",
+                  reportImplicitOverride = "none",
+                },
+              },
+            },
+          },
+        },
         rust_analyzer = {},
-        -- tsserver = {},
-        -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
         lua_ls = {
           settings = {
