@@ -169,7 +169,7 @@ mode "$mode_system" {
     ## Session // Session mode, Suspend // s ##
     bindsym s exec systemctl suspend, mode "default"
     ## Session // Session mode, Reboot // r ##
-    bindsym r exec /usr/bin/gnome-session-quit --reboot, mode "default"
+    bindsym r exec reboot, mode "default"
     ## Session // Session mode, Poweroff // <Shift> s ##
     bindsym Shift+s exec /usr/bin/gnome-session-quit --power-off, mode "default"
 

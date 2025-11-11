@@ -6,5 +6,6 @@ exec --no-startup-id scratch
 exec --no-startup-id dunst
 exec --no-startup-id nm-applet
 exec --no-startup-id waybar
-exec --no-startup-id elephant
+exec --no-startup-id systemctl --user start elephant
+exec --no-startup-id walker --gapplication-service
 # vim: filetype=swayconfig

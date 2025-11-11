@@ -66,7 +66,7 @@ fi
 
 scriptpath="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 if [[ ! -f ~/.config/systemd/user/elephant.service ]]; then
-    install -D -m 644 "${scriptpath}/services/elephant.service ~/.config/systemd/user/elephant.service"
+    elephant service enable
 fi
 
 services=(
