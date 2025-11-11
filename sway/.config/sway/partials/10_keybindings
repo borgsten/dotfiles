@@ -1,0 +1,204 @@
+###############################################################################
+# Navigation key bindings
+###############################################################################
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod normal
+
+# Switch back to previous workspaace by clicking the same key again
+workspace_auto_back_and_forth yes
+
+## Navigate // Relative Window // <Mod> k j h l ##
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+## Navigate // Relative Window // <Mod> ↑ ↓ ← → ##
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+## Modify // Window Position // <Mod><Shift> k j h l ##
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+## Modify // Window Position // <Mod><Shift> ↑ ↓ ← → ##
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+## Navigate // Relative Parent // <Mod> a ##/
+bindsym $mod+a focus parent
+## Navigate // Relative Child // <Mod> z ##/
+bindsym $mod+z focus child
+
+## Navigate // Workspaces 1-10 // <Mod> 0..9 ##
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+## Modify // Move Window to Workspace 1 - 10 // <Mod><Shift> 0..9 ##
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+###############################################################################
+# Layout key bindings
+###############################################################################
+## Modify // Horizontal Window Orientation // <Mod> g ##
+bindsym $mod+b splith
+
+## Modify // Vertical Window Orientation // <Mod> v ##
+bindsym $mod+v splitv
+
+## Modify // Window Fullscreen Toggle // <Mod> f ##
+bindsym $mod+f fullscreen toggle
+
+## Modify // Toggle Window Orientation // <Mod> e ##
+bindsym $mod+e layout toggle split
+
+## Modify // Window Floating Toggle // <Mod><Shift> f ##
+bindsym $mod+Shift+f floating toggle
+
+## Modify // Tile/Float Focus Toggle // <Mod><Shift> t ##
+bindsym $mod+Shift+t focus mode_toggle
+
+## Modify // Toggle tabbed // <Mod> t ##
+bindsym $mod+t layout toggle tabbed
+
+## Resize // Enter Resize Mode // <Mod> r ##
+mode "resize" {
+        ## Resize // Resize Window // k j h l ##
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        ## Resize // Resize Window // ↑ ↓ ← → ##
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        ## Resize // Exit Resize Mode // Escape or Enter ##
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+bindsym $mod+r mode "resize"
+
+## Resize // Center floating window and set to 80% // <Mod> s ##
+bindsym $mod+s resize set 80 ppt 80 ppt, move position center
+
+###############################################################################
+# Scratchpad
+###############################################################################
+for_window [app_id="com.scratch"] floating enable, border pixel
+for_window [app_id="com.scratch"] move position center, move scratchpad
+
+## Scratchpad // Show/Hide terminal scratchpad // <Mod> q ##
+bindsym $mod+q exec swaymsg [app_id='com.scratch'] scratchpad show
+
+## Scratchpad // Show/Hide scratchpad // <Mod> - ##
+bindsym $mod+minus [app_id="^(?!com.scratch)"] scratchpad show
+
+## Scratchpad // Move to scratchpad // <Mod><Shift> - ##
+bindsym $mod+Shift+minus move scratchpad
+
+## Scratchpad // Set floating picture in picture // <Mod> y ##
+bindsym $mod+y fullscreen disable; floating enable; resize set 640 480; sticky enable; move window to position 1270 590
+
+###############################################################################
+# Screen dumps
+###############################################################################
+## Screen dump // Screen selector // <PrintScreen> ##
+bindsym Print exec flameshot gui
+
+## Screen dump // Current monitor, saved to /tmp // <Mod><PrintScreen> ##
+bindsym $mod+Print exec flameshot screen -p /tmp/
+
+###############################################################################
+# Launcher
+###############################################################################
+## Launcher // Terminal // <Mod> Enter ##
+bindsym $mod+Return exec $term
+
+## Launcher // Application & Command // <Mod> d ##
+bindsym $mod+d exec $menu
+
+###############################################################################
+# Session keybindings
+###############################################################################
+## Session // Reload i3 Config // <Mod><Shift> c ##
+bindsym $mod+Shift+c reload
+
+## Session // Restart i3 // <Mod><Shift> r ##
+bindsym $mod+Shift+r restart
+
+## Session // Kill focused window // <Mod><Shift> q ##
+bindsym $mod+Shift+q kill
+
+## Session // Lock Screen // <Mod> Escape ##
+bindsym $mod+Escape exec "playerctl pause; swaylock"
+
+## Session // Session mode // <Mod> Delete ##
+set $mode_system System (l) lock, (e) logout, (s) suspend, (r) reboot, (Shift+s) shutdown
+mode "$mode_system" {
+    ## Session // Session mode, Lock Screen // l ##
+    bindsym l exec dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock, mode "default"
+    ## Session // Session mode, Logout // e ##
+    bindsym e  exit, mode "default"
+    ## Session // Session mode, Suspend // s ##
+    bindsym s exec systemctl suspend, mode "default"
+    ## Session // Session mode, Reboot // r ##
+    bindsym r exec /usr/bin/gnome-session-quit --reboot, mode "default"
+    ## Session // Session mode, Poweroff // <Shift> s ##
+    bindsym Shift+s exec /usr/bin/gnome-session-quit --power-off, mode "default"
+
+    ## Session // Exit Session mode // Escape or Enter ##
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+Delete mode "$mode_system"
+bindsym $mod+Pause mode "$mode_system"
+
+###############################################################################
+# Media keys
+###############################################################################
+## Media // Toggle play/pause // <Mod><Control><Space> ##
+bindsym $mod+Control+space exec "playerctl play-pause; pkill -RTMIN+10 i3blocks"
+## Media // Next // <Mod><Control> → ##
+bindsym $mod+Control+Right exec "playerctl next; pkill -RTMIN+10 i3blocks"
+## Media // Previous // <Mod><Control> ← ##
+bindsym $mod+Control+Left exec "playerctl previous; pkill -RTMIN+10 i3blocks"
+
+bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
+bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
+bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
+bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+# Special keys to adjust brightness via brightnessctl
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+
+# Launch theme menu
+bindsym $mod+Shift+comma exec theme_menu
+
+# vim: filetype=swayconfig

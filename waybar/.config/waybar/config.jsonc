@@ -8,7 +8,9 @@
 
     "modules-left": [
         "hyprland/workspaces",
-        "hyprland/submap"
+        "hyprland/submap",
+        "sway/workspaces",
+        "sway/mode"
     ],
     "modules-center": [
         "hyprland/window"
@@ -83,6 +85,14 @@
     "hyprland/language": {
         "format": "  {}",
         "format-sv-us": "SE(US)"
+    },
+
+    "sway/workspaces": {
+        "format": "{name} {icon}",
+        "format-icons": {
+            "focused": "",
+            "default": ""
+        }
     },
 
     "cpu": {

@@ -1,0 +1,7 @@
+###############################################################################
+# Application specific settings
+###############################################################################
+
+# Auto workspace assignments
+assign [class="(?i)firefox"] $ws2
+# vim: filetype=swayconfig

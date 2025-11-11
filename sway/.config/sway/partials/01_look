@@ -1,0 +1,46 @@
+###############################################################################
+# i3 Colors and Fonts
+###############################################################################
+
+# Create variables from Xresources for i3's look.
+# Colours
+set $fg           #f0f0f0
+set $bg           #0f0f0f
+set $color0       #51576D
+set $color1       #E78284
+set $color2       #A6D189
+set $color3       #E5C890
+set $color4       #8CAAEE
+set $color5       #F4B8E4
+set $color6       #81C8BE
+set $color7       #B5BFE2
+set $color8       #626880
+set $color9       #E78284
+set $color10      #A6D189
+set $color11      #E5C890
+set $color12      #8CAAEE
+set $color13      #F4B8E4
+set $color14      #81C8BE
+set $color15      #A5ADCE
+
+# class                 border   backgr.  text     indictr. child_border
+client.focused          $color8  $color7  $color11 $color6  $color7
+client.focused_inactive $color8  $color8  $color11 $color6  $color8
+client.unfocused        $color8  $color8  $color8  $color10 $color8
+client.urgent           $color13 $color12 $color4  $color14 $color12
+client.placeholder      $color8  $color8  $color8  $color10 $color8
+
+client.background       $bg
+
+# Sets i3 font for dialogs
+font pango:inconsolata 12
+
+# Set titlebar mode
+default_border pixel
+default_floating_border pixel
+
+smart_borders on
+hide_edge_borders smart
+
+for_window [class=".*"] border pixel
+# vim: filetype=swayconfig
