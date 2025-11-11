@@ -82,7 +82,7 @@ bindsym $mod+Shift+f floating toggle
 bindsym $mod+Shift+t focus mode_toggle
 
 ## Modify // Toggle tabbed // <Mod> t ##
-bindsym $mod+t layout toggle tabbed
+bindsym $mod+t layout toggle tabbed split
 
 ## Resize // Enter Resize Mode // <Mod> r ##
 mode "resize" {
