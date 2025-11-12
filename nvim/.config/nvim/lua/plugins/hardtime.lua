@@ -11,8 +11,10 @@ return {
       ["<Right>"] = { "n" },
     },
     restricted_keys = {
+      ["h"] = false,
       ["j"] = false,
       ["k"] = false,
+      ["l"] = false,
     },
   },
 }
