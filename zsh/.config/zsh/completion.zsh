@@ -33,6 +33,12 @@ zstyle ':completion:*' complete-options true
 # case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|=*' 'l:|=* r:|=*'
 
+# Autocomplete processes
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USERNAME -o pid,user,comm -w -w"
+
+# disable named-directories autocompletion
+zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
+
 # Colors
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
