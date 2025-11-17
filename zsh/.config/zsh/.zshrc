@@ -7,6 +7,7 @@ source "$ZDOTDIR/functions.zsh"
 source "$ZDOTDIR/alias.zsh"
 source "$ZDOTDIR/keybindings.zsh"
 source "$ZDOTDIR/prompt.zsh"
+source "$ZDOTDIR/try.zsh"
 
 for file in $ZDOTDIR/local/*.sh(N); do
     source "$file"
