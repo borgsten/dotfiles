@@ -18,19 +18,19 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require('lazy').setup({ import = 'plugins', },
-  {
-    change_detection = {
-      notify = false
-    },
-  })
-
 require('options')
 require('keymap')
 require('util')
 require('custom.run_file')
 require('custom.trailspace').setup()
 require('custom.snakify').setup()
+
+require('lazy').setup({ import = 'plugins', },
+  {
+    change_detection = {
+      notify = false
+    },
+  })
 
 function DoFileIfExists(file_path)
   if vim.fn.filereadable(file_path) == 0 then
