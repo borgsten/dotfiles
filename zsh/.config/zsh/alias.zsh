@@ -36,9 +36,7 @@ else
 fi
 
 # zoxide
-if (( $+commands[zoxide] )); then
-    alias cd='echo use z;cd'
-else
+if (( ! $+commands[zoxide] )); then
     alias z='cd'
 fi
 
