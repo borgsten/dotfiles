@@ -1,8 +1,21 @@
 #! /usr/bin/env bash
 
-# Until all systems are migrated
-if command -v uwsm >/dev/null 2>&1; then
-    uwsm app -- ghostty --class=com.scratch -e tmux &
-else
-    alacritty --class term_scratchpad -e tmux &
+prefix=""
+if [[ -n "$UWSM_FINALIZE_VARNAMES" ]]; then
+    prefix="uwsm app --"
 fi
+
+terminal=""
+if command -v ghostty >/dev/null 2>&1; then
+    terminal="ghostty --class=com.scratch -e tmux"
+fi
+if command -v alacritty >/dev/null 2>&1; then
+    terminal="alacritty --class com.scratch -e tmux"
+fi
+
+if [[ -z "$terminal" ]]; then
+    echo "No terminal emulator found. Please install 'ghostty' or 'alacritty'."
+    exit 1
+fi
+
+$prefix $terminal &
