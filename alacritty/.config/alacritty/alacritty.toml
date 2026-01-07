@@ -1,3 +1,4 @@
+import = ["~/.config/theming/current/alacritty.toml"]
 
 [bell]
 animation = "EaseOutCirc"
@@ -32,6 +33,3 @@ decorations = "none"
 [window.padding]
 x = 5
 y = 5
-
-[general]
-import = ["~/.config/theming/current/alacritty.toml"]
