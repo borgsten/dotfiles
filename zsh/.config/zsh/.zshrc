@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+# Debug startup time
+# zmodload zsh/zprof
+
 source "$ZDOTDIR/exports.zsh"
 source "$ZDOTDIR/options.zsh"
 source "$ZDOTDIR/completion.zsh"
@@ -22,3 +25,5 @@ done
 
 # Snytax highlighting needs to be loaded last
 source "$ZDOTDIR/plugins.zsh"
+
+# zprof

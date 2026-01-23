@@ -1,8 +1,13 @@
 #!/usr/bin/env zsh
 
-# https://thevaluable.dev/zsh-completion-guide-examples/
 
-autoload -Uz compinit && compinit
+# https://thevaluable.dev/zsh-completion-guide-examples/
+export ZSH_COMPLETION_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/completions"
+mkdir -p "$ZSH_COMPLETION_DIR"
+
+fpath=("$ZSH_COMPLETION_DIR" $fpath)
+
+autoload -Uz compinit && compinit -C
 
 # Include .* and .. in completion results unprovoked
 # _comp_options+=(globdots)
