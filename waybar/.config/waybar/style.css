@@ -5,23 +5,21 @@
 
 @keyframes blink-warning {
     70% {
-        color: @foreground;
+        color: @warning;
     }
 
     to {
         color: @foreground;
-        background-color: @warning;
     }
 }
 
 @keyframes blink-critical {
     70% {
-      color: @foreground;
+      color: @critical;
     }
 
     to {
         color: @foreground;
-        background-color: @critical;
     }
 }
 
@@ -81,7 +79,7 @@
 
 #battery.critical.discharging {
     animation-name: blink-critical;
-    animation-duration: 2s;
+    animation-duration: 1s;
 }
 
 #clock {
