@@ -3,7 +3,8 @@
 # Based on https://github.com/Kore29/hyprland-clamshell
 
 # Change this to your internal monitor name (use 'hyprctl monitors' to find it)
-INTERNAL_DISPLAY=${HYPR_INTERNAL_DISPLAY:-"eDP-1"}
+INTERNAL_DISPLAY="${HYPR_INTERNAL_DISPLAY:-"eDP-1"}"
+INTERNAL_DISPLAY_CONFIG="${HYPR_INTERNAL_DISPLAY_CONFIG:-"preferred, auto, 1"}"
 
 if ! hyprctl -j monitors all | jq -e ".[] | select(.name==\"$INTERNAL_DISPLAY\")" > /dev/null; then
     echo "Internal display '$INTERNAL_DISPLAY' not found. Please set INTERNAL_DISPLAY variable correctly." >&2
@@ -24,7 +25,7 @@ mode_close() {
 
 mode_open() {
     # Force enable internal screen
-    hyprctl keyword monitor "$INTERNAL_DISPLAY, preferred, auto, 1"
+    hyprctl keyword monitor "$INTERNAL_DISPLAY, $INTERNAL_DISPLAY_CONFIG"
 }
 
 if [[ "$1" == "close" ]]; then
