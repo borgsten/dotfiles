@@ -1,39 +1,34 @@
 return {
-  -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
-  dependencies = {
-    'nvim-treesitter/nvim-treesitter-textobjects',
-  },
+  lazy = false,
   build = ':TSUpdate',
   config = function()
-    require('nvim-treesitter.configs').setup({
-      ensure_installed = {
-        'c',
-        'cpp',
-        'lua',
-        'python',
-        'rust',
-        'vimdoc',
-        'vim',
-        'bash',
-        'markdown',
-        'markdown_inline',
-        'css',
-        'make',
-        'cmake',
-        'rust',
-        'vimdoc',
-        'yaml',
-        'json',
-        'luadoc',
-        'query',
-        'diff',
-        'go',
-      },
-
-      sync_install = false,
-      highlight = { enable = true },
-      indent = { enable = true },
+    local filetypes = {
+      'bash',
+      'c',
+      'cmake',
+      'cpp',
+      'css',
+      'diff',
+      'go',
+      'html',
+      'json',
+      'lua',
+      'luadoc',
+      'make',
+      'markdown',
+      'markdown_inline',
+      'python',
+      'query',
+      'rust',
+      'vim',
+      'vimdoc',
+      'yaml',
+    }
+    require('nvim-treesitter').install(filetypes)
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = filetypes,
+      callback = function() vim.treesitter.start() end,
     })
   end,
 }
