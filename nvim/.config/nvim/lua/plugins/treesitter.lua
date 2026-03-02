@@ -28,5 +28,11 @@ return {
     local ts = require('nvim-treesitter')
     ts.setup()
     ts.install(filetypes)
-  end,
+
+    -- Auto command to enable TS highlighting for installed languages
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = ts.get_installed(),
+      callback = function() vim.treesitter.start() end,
+    })
+  end
 }
