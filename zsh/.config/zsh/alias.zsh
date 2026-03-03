@@ -74,3 +74,6 @@ alias vact='source venv/bin/activate'
 
 alias lzd='lazydocker'
 alias lzg='lazygit'
+
+DOTFILES_DIR="$(dirname "$(realpath "$0")")/../../../"
+alias dot="cd "$DOTFILES_DIR" && ls"
