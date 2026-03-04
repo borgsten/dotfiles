@@ -31,6 +31,7 @@ focus_follows_mouse yes
 include $HOME/.config/sway/partials/*
 include $HOME/.config/sway/local/*
 
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
 ### Output configuration
 #
