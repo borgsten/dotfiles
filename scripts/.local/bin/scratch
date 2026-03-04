@@ -5,17 +5,4 @@ if [[ -n "$UWSM_FINALIZE_VARNAMES" ]]; then
     prefix="uwsm app --"
 fi
 
-terminal=""
-if command -v ghostty >/dev/null 2>&1; then
-    terminal="ghostty --class=com.scratch -e tmux"
-fi
-if command -v alacritty >/dev/null 2>&1; then
-    terminal="alacritty --class com.scratch -e tmux"
-fi
-
-if [[ -z "$terminal" ]]; then
-    echo "No terminal emulator found. Please install 'ghostty' or 'alacritty'."
-    exit 1
-fi
-
-$prefix $terminal &
+$prefix xdg-terminal-exec --app-id=com.scratch --title=Scratchpad tmux &
