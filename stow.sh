@@ -16,6 +16,7 @@ configs=(
     "hypr"
     "ghostty"
     "services"
+    "applications"
 )
 
 for config in "${configs[@]}"; do
