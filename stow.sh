@@ -15,6 +15,7 @@ configs=(
     "theming"
     "hypr"
     "ghostty"
+    "services"
 )
 
 for config in "${configs[@]}"; do

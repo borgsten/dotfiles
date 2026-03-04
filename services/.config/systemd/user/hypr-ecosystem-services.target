@@ -1,0 +1,8 @@
+[Unit]
+Description=Extra ecosystem services for Hyprland session
+BindsTo=wayland-session@hyprland.desktop.target
+After=wayland-session@hyprland.desktop.target
+Wants=elephant.service walker.service hypridle.service hyprpaper.service swaync.service swayosd.service hyprpolkitagent.service waybar.service
+
+[Install]
+WantedBy=wayland-session@hyprland.desktop.target
