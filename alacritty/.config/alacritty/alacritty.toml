@@ -1,4 +1,4 @@
-import = ["~/.config/theming/current/alacritty.toml"]
+general.import = ["~/.config/theming/current/alacritty.toml"]
 
 [bell]
 animation = "EaseOutCirc"
