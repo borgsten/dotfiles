@@ -1,25 +1,33 @@
-@import "../theming/current/waybar.css";
+@import "../../.cache/theming/waybar.css";
 
-@define-color warning orange;
-@define-color critical red;
+@define-color warning-color @tertiary;
+@define-color critical-color @error;
 
 @keyframes blink-warning {
-    70% {
-        color: @warning;
+    from {
+        /* The "Alert" state */
+        background-color: @tertiary_container;
+        color: @on_tertiary_container;
     }
 
     to {
-        color: @foreground;
+        /* The "Neutral" state */
+        background-color: @surface;
+        color: @on_surface;
     }
 }
 
 @keyframes blink-critical {
-    70% {
-        background-color: @critical;
+    from {
+        /* The "Alert" state */
+        background-color: @error_container;
+        color: @on_error_container;
     }
 
     to {
-        background-color: @background;
+        /* The "Neutral" state */
+        background-color: @surface;
+        color: @on_surface;
     }
 }
 
@@ -31,8 +39,8 @@
     min-height: 0;
     margin: 0;
     padding: 0;
-    background-color: @background;
-    color: @foreground;
+    background-color: @surface;
+    color: @on_surface_variant;
     font-size: 12px;
 }
 
@@ -59,15 +67,9 @@
  * -------------------------------------------------------------------------- */
 
 #idle_inhibitor.activated {
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
     animation-name: blink-warning;
     animation-duration: 3s;
-}
-
-#battery {
-    animation-timing-function: linear;
+    animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
     animation-direction: alternate;
 }
@@ -75,11 +77,17 @@
 #battery.warning.discharging {
     animation-name: blink-warning;
     animation-duration: 3s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 #battery.critical.discharging {
     animation-name: blink-critical;
-    animation-duration: 1s;
+    animation-duration: 2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 #clock {
@@ -90,14 +98,14 @@
 }
 
 #network.disconnected {
-    color: @warning;
+    color: @warning-color;
 }
 
 #pulseaudio {
 }
 
 #pulseaudio.muted {
-    color: @critical;
+    color: @warning-color;
 }
 
 #tray {
@@ -119,7 +127,7 @@
 }
 
 #workspaces button.urgent label {
-    color: @warning;
+    color: @warning-color;
 }
 
 tooltip {
