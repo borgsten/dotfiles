@@ -1,0 +1,32 @@
+[config]
+
+[templates.walker]
+input_path = '~/.config/matugen/templates/walker.css'
+output_path = '~/.cache/theming/walker.css'
+post_hook = 'systemctl --user restart walker'
+
+[templates.alacritty]
+input_path = '~/.config/matugen/templates/alacritty.toml'
+output_path = '~/.cache/theming/alacritty.toml'
+
+[templates.btop]
+input_path = '~/.config/matugen/templates/btop.theme'
+output_path = '~/.cache/theming/btop.theme'
+
+[templates.hypr]
+input_path = '~/.config/matugen/templates/hypr.conf'
+output_path = '~/.cache/theming/hypr.conf'
+
+[templates.waybar]
+input_path = '~/.config/matugen/templates/waybar.css'
+output_path = '~/.cache/theming/waybar.css'
+post_hook = 'pkill -SIGUSR2 waybar'
+
+[templates.swayosd]
+input_path = '~/.config/matugen/templates/swayosd.css'
+output_path = '~/.cache/theming/swayosd.css'
+
+[templates.tmux]
+input_path = '~/.config/matugen/templates/tmux.conf'
+output_path = '~/.cache/theming/tmux.conf'
+# post_hook = 'tmux source "${CONFIG_PATH}/tmux/tmux.conf"'
