@@ -1,4 +1,5 @@
-general.import = ["~/.config/theming/current/alacritty.toml"]
+[general]
+import = ["~/.config/theming/current/alacritty.toml"]
 
 [bell]
 animation = "EaseOutCirc"
@@ -29,7 +30,9 @@ multiplier = 3
 
 [window]
 decorations = "none"
+padding = { x = 5, y = 5 }
 
-[window.padding]
-x = 5
-y = 5
+[cursor]
+style = { shape = "Block", blinking = "On" }
+blink_interval = 500
+unfocused_hollow = true
