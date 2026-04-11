@@ -1,28 +1,51 @@
-@import "../theming/current/swayosd.css";
-
-window {
-  border-radius: 0;
-  opacity: 0.97;
-  border: 2px solid @border-color;
-
-  background-color: @background-color;
+* {
+    all: unset;
 }
 
-label {
-  font-family: 'JetBrainsMono Nerd Font';
-  font-size: 11pt;
+@import "../../.cache/theming/css-colors.css";
 
-  color: @label;
+window#osd {
+    padding: 0px 6px;
+    border: 2px solid @outline;
+    border-radius: 0px;
+    background: @surface;
+    box-shadow: 1px 2px 2px black;
+    opacity: 0.97;
 }
 
-image {
-  color: @image;
+image, label {
+    font-family: 'JetBrainsMono Nerd Font';
+    font-size: 16px;
+
+    color: @primary;
+}
+
+progressbar:disabled, image:disabled {
+    /* for some reason the volume bar gets this property */
+    opacity: 1;
 }
 
 progressbar {
-  border-radius: 0;
+    min-height: 6px;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+}
+
+trough {
+    min-height: inherit;
+    border-radius: inherit;
+    border: none;
+    background: @surface_variant;
 }
 
 progress {
-  background-color: @progress;
+    min-height: inherit;
+    border-radius: inherit;
+    border: none;
+    background: @primary;
+}
+
+#container {
+    margin:6px;
 }

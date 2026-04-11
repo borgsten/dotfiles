@@ -1,10 +1,5 @@
 [config]
 
-[templates.walker]
-input_path = '~/.config/matugen/templates/walker.css'
-output_path = '~/.cache/theming/walker.css'
-post_hook = 'systemctl --user restart walker'
-
 [templates.alacritty]
 input_path = '~/.config/matugen/templates/alacritty.toml'
 output_path = '~/.cache/theming/alacritty.toml'
@@ -17,14 +12,27 @@ output_path = '~/.cache/theming/btop.theme'
 input_path = '~/.config/matugen/templates/hypr.conf'
 output_path = '~/.cache/theming/hypr.conf'
 
+[templates.css-colors]
+input_path = '~/.config/matugen/templates/css-colors.css'
+output_path = '~/.cache/theming/css-colors.css'
+
+# Template dummy file to run hook as css-colors template is used
 [templates.waybar]
-input_path = '~/.config/matugen/templates/waybar.css'
-output_path = '~/.cache/theming/waybar.css'
+input_path = '~/.config/matugen/templates/dummy.txt'
+output_path = '/dev/null'
 post_hook = 'pkill -SIGUSR2 waybar'
 
+# Template dummy file to run hook as css-colors template is used
 [templates.swayosd]
-input_path = '~/.config/matugen/templates/swayosd.css'
-output_path = '~/.cache/theming/swayosd.css'
+input_path = '~/.config/matugen/templates/dummy.txt'
+output_path = '/dev/null'
+post_hook = 'systemctl --user try-restart swayosd'
+
+# Template dummy file to run hook as css-colors template is used
+[templates.walker]
+input_path = '~/.config/matugen/templates/dummy.txt'
+output_path = '/dev/null'
+post_hook = 'systemctl --user try-restart walker'
 
 [templates.tmux]
 input_path = '~/.config/matugen/templates/tmux.conf'

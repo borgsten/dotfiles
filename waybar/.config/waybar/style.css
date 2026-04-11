@@ -1,4 +1,4 @@
-@import "../../.cache/theming/waybar.css";
+@import "../../.cache/theming/css-colors.css";
 
 @define-color warning-color @tertiary;
 @define-color critical-color @error;
