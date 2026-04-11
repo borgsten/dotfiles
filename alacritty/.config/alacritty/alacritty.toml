@@ -1,9 +1,8 @@
 [general]
-import = ["~/.config/theming/current/alacritty.toml"]
+import = [ "~/.cache/theming/alacritty.toml" ]
 
 [bell]
 animation = "EaseOutCirc"
-color = "#d54e53"
 duration = 180
 
 [env]

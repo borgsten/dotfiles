@@ -45,6 +45,8 @@ magenta = '{{colors.tertiary.default.hex}}'
 cyan = '{{colors.secondary.default.hex}}'
 white = '#BAC2DE'
 
+[bell]
+color = '{{colors.error.default.hex}}'
 
 [colors.bright]
 black = '#585B70'
