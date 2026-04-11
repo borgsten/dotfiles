@@ -38,3 +38,8 @@ post_hook = 'systemctl --user try-restart walker'
 input_path = '~/.config/matugen/templates/tmux.conf'
 output_path = '~/.cache/theming/tmux.conf'
 post_hook = 'tmux source-file ~/.config/tmux/tmux.conf'
+
+[templates.gtk]
+input_path = '~/.config/matugen/templates/gtk.css'
+output_path = '~/.cache/theming/gtk.css'
+post_hook = '~/.config/matugen/trigger_gtk.sh'
