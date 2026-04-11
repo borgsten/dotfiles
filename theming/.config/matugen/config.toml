@@ -37,4 +37,4 @@ post_hook = 'systemctl --user try-restart walker'
 [templates.tmux]
 input_path = '~/.config/matugen/templates/tmux.conf'
 output_path = '~/.cache/theming/tmux.conf'
-# post_hook = 'tmux source "${CONFIG_PATH}/tmux/tmux.conf"'
+post_hook = 'tmux source-file ~/.config/tmux/tmux.conf'
