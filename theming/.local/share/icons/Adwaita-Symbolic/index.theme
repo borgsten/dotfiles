@@ -1,0 +1,12 @@
+[Icon Theme]
+Name=Adwaita-Symbolic
+Comment=Adwaita with symbolic icons
+Inherits=Adwaita
+Directories=scalable/places
+
+[scalable/places]
+Context=Places
+Size=128
+MinSize=8
+MaxSize=512
+Type=Scalable

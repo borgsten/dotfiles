@@ -20,7 +20,7 @@ output_path = '~/.cache/theming/css-colors.css'
 [templates.waybar]
 input_path = '~/.config/matugen/templates/dummy.txt'
 output_path = '/dev/null'
-post_hook = 'pkill -SIGUSR2 waybar'
+post_hook = 'pgrep waybar && pkill -SIGUSR2 waybar || true'
 
 # Template dummy file to run hook as css-colors template is used
 [templates.swayosd]
@@ -43,3 +43,8 @@ post_hook = 'tmux source-file ~/.config/tmux/tmux.conf'
 input_path = '~/.config/matugen/templates/gtk.css'
 output_path = '~/.cache/theming/gtk.css'
 post_hook = '~/.config/matugen/trigger_gtk.sh'
+
+[templates.icons]
+input_path = '~/.config/matugen/templates/icon_theme.env'
+output_path = '~/.cache/theming/icon_theme.env'
+post_hook = '~/.config/matugen/update_icons.sh'

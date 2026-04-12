@@ -19,6 +19,8 @@ configs=(
     "applications"
 )
 
+mkdir -p ~/.local/share/icons/Adwaita-Symbolic
+
 for config in "${configs[@]}"; do
 	echo "Stowing $config"
 	stow -R --target="${HOME}" "$config"
