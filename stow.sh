@@ -17,9 +17,13 @@ configs=(
     "ghostty"
     "services"
     "applications"
+    "btop"
 )
 
+# Make sure files are symlinced
 mkdir -p ~/.local/share/icons/Adwaita-Symbolic
+mkdir -p ~/.config/btop/themes
+ln -sf ../../../.cache/theming/btop.theme ~/.config/btop/themes/matugen.theme
 
 for config in "${configs[@]}"; do
 	echo "Stowing $config"
