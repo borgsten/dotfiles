@@ -77,3 +77,5 @@ alias lzg='lazygit'
 
 DOTFILES_DIR="$(dirname "$(realpath "$0")")/../../../"
 alias dot="cd "$DOTFILES_DIR" && ls"
+
+alias zshrc='source ${ZDOTDIR}/.zshrc'

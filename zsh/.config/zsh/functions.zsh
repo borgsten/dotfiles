@@ -92,3 +92,27 @@ function diffdelay() {
     second=$($command)
     diff <(echo "$first") <(echo "$second")
 }
+
+function alert() {
+    local start end elapsed formatted_time exit_code
+
+    start=$(date +%s)
+
+    # eval preserves pipes, ;, ||, &&, redirections, etc.
+    eval "$*"
+    exit_code=$?
+
+    end=$(date +%s)
+    elapsed=$((end - start))
+    formatted_time=$(printf "%02d:%02d" $((elapsed / 60)) $((elapsed % 60)))
+
+    if [ "$exit_code" -eq 0 ]; then
+        notify-send "✅ Command Completed" "$*\nCompleted in $formatted_time."
+    else
+        notify-send -u critical "❌ Command Failed" "$*\nFailed (exit $exit_code) after $formatted_time."
+    fi
+
+    # Bell alert on terminal window
+    echo -e '\a'
+    return $exit_code
+}
