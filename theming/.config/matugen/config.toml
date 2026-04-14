@@ -49,3 +49,7 @@ post_hook = '~/.config/matugen/trigger_gtk.sh'
 input_path = '~/.config/matugen/templates/icon_theme.env'
 output_path = '~/.cache/theming/icon_theme.env'
 post_hook = '~/.config/matugen/update_icons.sh'
+
+[templates.hyprpaper]
+input_path = '~/.config/matugen/templates/hyprpaper.conf'
+output_path = '~/.cache/theming/hyprpaper.conf'
