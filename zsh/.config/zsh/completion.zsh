@@ -5,9 +5,15 @@
 export ZSH_COMPLETION_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/completions"
 mkdir -p "$ZSH_COMPLETION_DIR"
 
-fpath=("$ZSH_COMPLETION_DIR" $fpath)
+fpath+=("$ZSH_COMPLETION_DIR")
 
-autoload -Uz compinit && compinit -C
+autoload -Uz compinit
+# Rebuild the dump once every 24h, otherwise load it cheaply
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # Include .* and .. in completion results unprovoked
 # _comp_options+=(globdots)

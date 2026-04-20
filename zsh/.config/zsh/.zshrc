@@ -3,6 +3,15 @@
 # Debug startup time
 # zmodload zsh/zprof
 
+# Reaffirm history to prevent truncation
+mkdir -p "$XDG_STATE_HOME/zsh"
+if [[ ! -f "$XDG_STATE_HOME/zsh/history" ]]; then
+    cp "$HOME/.zsh_history" "$XDG_STATE_HOME/zsh/history"
+fi
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export HISTSIZE=1000000
+export SAVEHIST=1000000
+
 source "$ZDOTDIR/exports.zsh"
 source "$ZDOTDIR/options.zsh"
 source "$ZDOTDIR/completion.zsh"

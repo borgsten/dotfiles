@@ -35,7 +35,7 @@ function plugin-load {
             (( $#initfiles )) || { echo >&2 "No init file found '$repo'." && continue }
             ln -sf $initfiles[1] $initfile
         fi
-        fpath+=$plugdir
+        fpath+=($plugdir)
         (( $+functions[zsh-defer] )) && zsh-defer . $initfile || . $initfile
     done
 }
