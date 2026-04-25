@@ -1,5 +1,7 @@
 -- [[ Basic Keymaps ]]
 
+local prio_diag = require('custom.prio_diag')
+
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
@@ -7,8 +9,8 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
+vim.keymap.set('n', '[d', prio_diag.jump_prev, { desc = 'Go to previous diagnostic message(prioritized)' })
+vim.keymap.set('n', ']d', prio_diag.jump_next, { desc = 'Go to next diagnostic message(prioritized)' })
 -- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
@@ -39,3 +41,7 @@ vim.keymap.set('n', '<C-A-k>', '<C-W>10+', { desc = 'Grow 10 rows' })
 -- Trim trailing whitespace
 vim.keymap.set({ 'n', 'v' }, '<leader>tw', require('custom.trailspace').remove_trailing_whitespace,
   { desc = 'Trim trailing whitespace' })
+
+-- Do not include white space characters when using $ in visual mode,
+-- see https://vi.stackexchange.com/q/12607/15292
+vim.keymap.set("x", "$", "g_")
