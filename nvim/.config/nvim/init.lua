@@ -34,7 +34,6 @@ require('lazy').setup({ import = 'plugins', },
 
 function DoFileIfExists(file_path)
   if vim.fn.filereadable(file_path) == 0 then
-    vim.notify("Could not run dofile on '" .. file_path .. "'")
     return false
   end
 
