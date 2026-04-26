@@ -28,19 +28,25 @@ return {
   },
   { "brenoprata10/nvim-highlight-colors", opts = {} },
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
-      "3rd/image.nvim",
-    },
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    dependencies = { { "nvim-mini/mini.icons", opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+    lazy = false,
     config = function()
-      require("neo-tree").setup({
-        close_if_last_window = true
-      });
-      require('which-key').add({ '<leader>e', mode = 'n', ":Neotree reveal toggle=true<CR>", desc = "Toggle neotree" })
+      local oil = require('oil')
+      oil.setup({})
+      local function toggle_oil_in_split()
+        if vim.bo.buftype == "oil" then
+          oil.close()
+        else
+          oil.open()
+        end
+      end
+      vim.keymap.set("n", "<leader>:", toggle_oil_in_split, { desc = "Toggle Oil in split" })
+      vim.keymap.set("n", "<leader>;", oil.toggle_float, { desc = "Toggle floating Oil" })
     end
   },
 }
