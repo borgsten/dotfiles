@@ -3,7 +3,10 @@ return {
   priority = 1000,
   lazy = false,
   opts = {
-    bigfile = { enabled = true },
+    bigfile = {
+      enabled = true,
+      notify = false
+    },
     dashboard = {
       enabled = true,
       preset = {
