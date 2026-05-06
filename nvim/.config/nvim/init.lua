@@ -1,6 +1,9 @@
 -- Based on kicstart.nvim
 -- https://github.com/nvim-lua/kickstart.nvim
 
+-- Enable new UI2
+require('vim._core.ui2').enable({})
+
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '

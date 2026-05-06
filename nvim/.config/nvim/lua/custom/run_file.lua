@@ -29,14 +29,18 @@ local function default_handler()
   return string.format("%s %s", shebang, vim.api.nvim_buf_get_name(0))
 end
 
---- Run the current file
---- Will save file on call
-function M.run_file()
-  vim.cmd.write({ mods = { emsg_silent = true, noautocmd = true } })
-  local ft = vim.bo.filetype
-  if ft == "lua" or ft == "vim" then
-    vim.cmd.source('%')
-    return
+local function get_run_file_command()
+  local run_file = vim.fn.getcwd() .. "/" .. "run.vim.sh"
+  if vim.fn.filereadable(run_file) == 1 then
+    return string.format("bash %s", run_file)
+  end
+  return nil
+end
+
+local function get_command(ft)
+  local run_file_command = get_run_file_command()
+  if run_file_command then
+    return run_file_command
   end
 
   local handler = ft_handler[ft]
@@ -51,6 +55,23 @@ function M.run_file()
   else
     command = handler()
   end
+end
+
+--- Run the current file
+--- Will save file on call
+function M.run_file()
+  vim.cmd.write({ mods = { emsg_silent = true, noautocmd = true } })
+  local ft = vim.bo.filetype
+  if ft == "lua" or ft == "vim" then
+    vim.cmd.source('%')
+    return
+  end
+
+  local command = get_command(ft)
+  if not command then
+    return
+  end
+
   term.open_term({ name = term_name, focus = false, cmd = command })
 end
 

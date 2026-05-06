@@ -82,4 +82,20 @@ function M.isInDirectory(directory)
   return M.isSubDirectory(cwd, directory)
 end
 
+--- Remove duplicates from a list while preserving order
+---
+---@param list string[] list to de-duplicate
+---@return string[] list with duplicates removed
+function M.deDuplicateList(list)
+  local seen = {}
+  local result = {}
+  for _, v in ipairs(list) do
+    if not seen[v] then
+      table.insert(result, v)
+      seen[v] = true
+    end
+  end
+  return result
+end
+
 return M

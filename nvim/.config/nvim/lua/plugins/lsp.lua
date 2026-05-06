@@ -106,7 +106,7 @@ return {
       })
 
       -- LSP log level
-      vim.lsp.set_log_level(vim.log.levels.WARN)
+      vim.lsp.log.set_level(vim.log.levels.WARN)
 
       vim.diagnostic.config {
         severity_sort = true,
