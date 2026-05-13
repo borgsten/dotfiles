@@ -64,6 +64,10 @@ provider = "websearch"
 prefix = ":"
 provider = "clipboard"
 
+[[providers.prefixes]]
+prefix = "|"
+provider = "menus:workspaces"
+
 [providers.clipboard]
 time_format = "%d.%m. - %H:%M" # format for the clipboard item date
 
@@ -148,4 +152,9 @@ clipboard = [
   { action = "remove_all", global = true, label = "clear", bind = "ctrl shift d", after = "ClearReload" },
   { action = "toggle_images", global = true, label = "toggle images", bind = "ctrl i", after = "ClearReload" },
   { action = "edit", bind = "ctrl o" },
+]
+
+"menus:workspaces" = [
+  { action = "edit", default = true, bind = "Return" },
+  { action = "open", bind = "shift Return" },
 ]
