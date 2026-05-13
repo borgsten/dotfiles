@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+export skip_global_compinit=1
 
 # Debug startup time
 # zmodload zsh/zprof
@@ -22,6 +23,11 @@ source "$ZDOTDIR/prompt.zsh"
 source "$ZDOTDIR/try.zsh"
 
 for file in $ZDOTDIR/local/*.sh(N); do
+    # Skip reloading local zshenv
+    if [[ "${file:t}" == "zshenv" ]]; then
+        continue
+    fi
+
     source "$file"
 done
 
