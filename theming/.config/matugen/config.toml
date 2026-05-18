@@ -53,3 +53,8 @@ post_hook = '~/.config/matugen/update_icons.sh'
 [templates.hyprpaper]
 input_path = '~/.config/matugen/templates/hyprpaper.conf'
 output_path = '~/.cache/theming/hyprpaper.conf'
+
+[templates.ghostty]
+input_path = '~/.config/matugen/templates/ghostty'
+output_path = '~/.cache/theming/ghostty'
+post_hook = 'pkill -SIGUSR2 ghostty'
