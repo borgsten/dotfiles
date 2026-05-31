@@ -13,6 +13,10 @@ post_hook = 'pgrep btop && pkill -SIGUSR2 btop || true'
 input_path = '~/.config/matugen/templates/hypr.conf'
 output_path = '~/.cache/theming/hypr.conf'
 
+[templates.hyprland]
+input_path = '~/.config/matugen/templates/hyprland_theme.lua'
+output_path = '~/.cache/theming/hyprland_theme.lua'
+
 [templates.css-colors]
 input_path = '~/.config/matugen/templates/css-colors.css'
 output_path = '~/.cache/theming/css-colors.css'

@@ -1,0 +1,19 @@
+--------------------------------------------------------------------------------
+---                                  TILING                                  ---
+--------------------------------------------------------------------------------
+
+-- See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
+hl.config({
+  dwindle = {
+    preserve_split = true, -- You probably want this
+  },
+
+  -- See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
+  master = {
+    new_status = "master",
+  },
+
+  binds = {
+    workspace_back_and_forth = true,
+  },
+})
