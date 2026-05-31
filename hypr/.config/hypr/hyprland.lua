@@ -1,6 +1,9 @@
 -- https://wiki.hyprland.org/Configuring/
 
--- debug:disable_logs = false
+-- Read logs from "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/hyprland.log"
+-- hl.config({
+--   debug = { disable_logs = false }
+-- })
 
 require("hyprland.env")
 require("hyprland.startup")

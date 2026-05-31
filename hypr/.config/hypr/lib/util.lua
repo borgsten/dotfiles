@@ -10,4 +10,25 @@ function M.cmd_exists(cmd)
   return false
 end
 
+--- Resize floating window to percent of active monitor
+---@param width number between 0.0 - 1.0
+---@param height number between 0.0 - 1.0
+---@param center boolean? center window as well
+---@return function
+function M.ResizePercent(width, height, center)
+  return function()
+    if center then
+      hl.dispatch(hl.dsp.window.center())
+    end
+
+    local mon = hl.get_active_monitor()
+    if mon == nil then return end
+
+    local w = math.floor(mon.width * width)
+    local h = math.floor(mon.height * height)
+
+    hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
+  end
+end
+
 return M

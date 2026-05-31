@@ -3,123 +3,105 @@
 --------------------------------------------------------------------------------
 
 -- See https://wiki.hyprland.org/Configuring/Keywords/
-local mainMod      = "SUPER"
-local terminal     = "uwsm app -- xdg-terminal-exec"
-local fileManager  = "uwsm app -- xdg-open " .. os.getenv("HOME")
-local configHome   = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
+local terminal    = "uwsm app -- xdg-terminal-exec"
+local fileManager = "uwsm app -- xdg-open " .. os.getenv("HOME")
+local configHome  = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
 
+local util        = require("lib.util")
+local b           = require("lib.bind")
 --------------------------------------------------------------------------------
 ---                                  SHELL                                   ---
 --------------------------------------------------------------------------------
 
 ---@type Actions
-local shell_action = require("lib.shell")
+local shell       = require("lib.shell")
 
-hl.bind(mainMod .. " + N", shell_action.open_notification, { desc = "Show notification history" })
-hl.bind(mainMod .. " + comma", shell_action.open_settings, { desc = "Show Settings" })
+b.bind({ b.SPR }, "N", shell.open_notification, "Show notification history")
+b.bind({ b.SPR }, "comma", shell.open_settings, "Show Settings")
 
-hl.bind("XF86AudioRaiseVolume", shell_action.volume_raise,
-  { desc = "Increase volume", repeating = true, locked = true })
-hl.bind("XF86AudioLowerVolume", shell_action.volume_lower,
-  { desc = "Decrease volume", repeating = true, locked = true })
-hl.bind("XF86AudioMute", shell_action.volume_mute, { desc = "Mute volume", locked = true })
-hl.bind("XF86AudioMicMute", shell_action.mic_mute, { desc = "Mute microphone", locked = true })
-hl.bind("XF86MonBrightnessUp", shell_action.brightness_inc,
-  { desc = "Increase brightness", repeating = true, locked = true })
-hl.bind("XF86MonBrightnessDown", shell_action.brightness_dec,
-  { desc = "Decrease brightness", repeating = true, locked = true })
+b.bind({}, "XF86AudioRaiseVolume", shell.volume_raise, "Increase volume", { repeating = true, locked = true })
+b.bind({}, "XF86AudioLowerVolume", shell.volume_lower, "Decrease volume", { repeating = true, locked = true })
+b.bind({}, "XF86AudioMute", shell.volume_mute, "Mute volume", { locked = true })
+b.bind({}, "XF86AudioMicMute", shell.mic_mute, "Mute microphone", { locked = true })
+b.bind({}, "XF86MonBrightnessUp", shell.brightness_inc, "Increase brightness", { repeating = true, locked = true })
+b.bind({}, "XF86MonBrightnessDown", shell.brightness_dec, "Decrease brightness", { repeating = true, locked = true })
 
 -- Playerctl media keys
-hl.bind("XF86AudioNext", shell_action.next, { desc = "Skip next", locked = true })
-hl.bind("XF86AudioPrev", shell_action.prev, { desc = "Skip prev", locked = true })
-hl.bind("XF86AudioPause", shell_action.play_pause, { desc = "Toggle play/pause", locked = true })
-hl.bind("XF86AudioPlay", shell_action.play_pause, { desc = "Toggle play/pause", locked = true })
+b.bind({}, "XF86AudioNext", shell.next, "Skip next", { locked = true })
+b.bind({}, "XF86AudioPrev", shell.prev, "Skip prev", { locked = true })
+b.bind({}, "XF86AudioPause", shell.play_pause, "Toggle play/pause", { locked = true })
+b.bind({}, "XF86AudioPlay", shell.play_pause, "Toggle play/pause", { locked = true })
 
-hl.bind("CONTROL + ALT + right", shell_action.next, { desc = "Skip next", locked = true })
-hl.bind("CONTROL + ALT + left", shell_action.prev, { desc = "Skip prev", locked = true })
-hl.bind("CONTROL + ALT + Space", shell_action.play_pause, { desc = "Toggle play/pause", locked = true })
+b.bind({ b.CTRL, b.ALT }, "right", shell.next, "Skip next", { locked = true })
+b.bind({ b.CTRL, b.ALT }, "left", shell.prev, "Skip prev", { locked = true })
+b.bind({ b.CTRL, b.ALT }, "Space", shell.play_pause, "Toggle play/pause", { locked = true })
 
 -- Session management
-hl.bind(mainMod .. " + escape", shell_action.lock, { desc = "Lock screen" })
-hl.bind(mainMod .. " + Delete", shell_action.powermenu, { desc = "Power Menu" })
+b.bind({ b.SPR }, "escape", shell.lock, "Lock screen")
+b.bind({ b.SPR }, "Delete", shell.powermenu, "Power Menu")
 
 --------------------------------------------------------------------------------
 ---                               COMMON BINDS                               ---
 --------------------------------------------------------------------------------
 
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.window.kill(), { desc = "Kill active window" })
-hl.bind(mainMod .. " + return", hl.dsp.exec_cmd(terminal), { desc = "Launch terminal" })
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { desc = "Launch FileManager" })
-hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("walker"), { desc = "Open Launcher" })
-hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("walker -m bookmarks"), { desc = "Open Launcher" })
-hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("walker -m bluetooth"), { desc = "Manage Bluetooth" })
+b.bind({ b.SPR, b.SHFT }, "Q", hl.dsp.window.kill(), "Kill active window")
+b.bind({ b.SPR }, "return", hl.dsp.exec_cmd(terminal), "Launch terminal")
+b.bind({ b.SPR }, "E", hl.dsp.exec_cmd(fileManager), "Launch FileManager")
+b.bind({ b.SPR }, "D", hl.dsp.exec_cmd("walker"), "Open Launcher")
+b.bind({ b.SPR }, "B", hl.dsp.exec_cmd("walker -m bookmarks"), "Open Launcher")
+b.bind({ b.SPR, b.SHFT }, "B", hl.dsp.exec_cmd("walker -m bluetooth"), "Manage Bluetooth")
 
-hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.float(), { desc = "Toggle floating" })
-hl.bind(mainMod .. " + P", hl.dsp.window.pseudo(), { desc = "Toggle Pseudo tiling" })
-hl.bind(mainMod .. " + O", hl.dsp.layout("togglesplit"), { desc = "Toggle split direction" })
+b.bind({ b.SPR, b.SHFT }, "F", hl.dsp.window.float(), "Toggle floating")
+b.bind({ b.SPR }, "P", hl.dsp.window.pseudo(), "Toggle Pseudo tiling")
+b.bind({ b.SPR }, "O", hl.dsp.layout("togglesplit"), "Toggle split direction")
 
-hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen(0), { desc = "Toggle fullscreen" })
-hl.bind(mainMod .. " + CTRL + F", hl.dsp.window.fullscreen_state({ internal = 2, client = 0, action = "toggle" }),
-  { desc = "Tiled full screen" })
+b.bind({ b.SPR }, "F", hl.dsp.window.fullscreen(0), "Toggle fullscreen")
+b.bind({ b.SPR, b.CTRL }, "F", hl.dsp.window.fullscreen_state({ internal = 2, client = 0, action = "toggle" }),
+  "Tiled full screen")
 -- TODO: Fix maximise
-hl.bind(mainMod .. " + M", hl.dsp.window.fullscreen(1), { desc = "Toggle maximation" })
+b.bind({ b.SPR }, "M", hl.dsp.window.fullscreen(1), "Toggle maximation")
 
-hl.bind(mainMod .. " + G", hl.dsp.group.toggle(), { desc = "Toggle group mode" })
-hl.bind(mainMod .. " + SHIFT + G", hl.dsp.group.next(), { desc = "Change active window in group" })
+b.bind({ b.SPR }, "G", hl.dsp.group.toggle(), "Toggle group mode")
+b.bind({ b.SPR, b.SHFT }, "G", hl.dsp.group.next(), "Change active window in group")
 
--- Move focus with mainMod + arrow keys
+-- Move focus with SUPER + arrow keys
 for i, dir in ipairs({ "left", "right", "up", "down" }) do
-  hl.bind(mainMod .. " + " .. dir, hl.dsp.focus({ direction = dir }), { desc = "Move focus " .. dir })
-  hl.bind(mainMod .. " + SHIFT + " .. dir, hl.dsp.window.move({ direction = dir }), { desc = "Move window " .. dir })
-
   local vim_key = ({ "h", "l", "k", "j" })[i]
-  hl.bind(mainMod .. " + " .. vim_key, hl.dsp.focus({ direction = dir }), { desc = "Move focus " .. dir })
-  hl.bind(mainMod .. " + SHIFT + " .. vim_key, hl.dsp.window.move({ direction = dir }), { desc = "Move window " .. dir })
+
+  b.bind({ b.SPR }, { dir, vim_key }, hl.dsp.focus({ direction = dir }), "Move focus " .. dir)
+  b.bind({ b.SPR, b.SHFT }, { dir, vim_key }, hl.dsp.window.move({ direction = dir }), "Move window " .. dir)
 
   local resize_dir = ({ { -30, 0 }, { 30, 0 }, { 0, -30 }, { 0, 30 } })[i]
   local arg = { x = resize_dir[1], y = resize_dir[2], relative = true }
-  hl.bind(mainMod .. " + CONTROL + " .. dir, hl.dsp.window.resize(arg), { desc = "Resize " .. dir, repeating = true })
-  hl.bind(mainMod .. " + CONTROL + " .. vim_key, hl.dsp.window.resize(arg), { desc = "Resize " .. dir, repeating = true })
+  b.bind({ b.SPR, b.CTRL }, { dir, vim_key }, hl.dsp.window.resize(arg), "Resize " .. dir, { repeating = true })
 end
 
 -- Switch / move to workspaces
 for i = 1, 10 do
   local key = i % 10
-  hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }), { desc = "Switch to workspace " .. i })
-  hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }), { desc = "Move to workspace " .. i })
+  b.bind({ b.SPR }, tostring(key), hl.dsp.focus({ workspace = i }), "Switch to workspace " .. i)
+  b.bind({ b.SPR, b.SHFT }, tostring(key), hl.dsp.window.move({ workspace = i }), "Move to workspace " .. i)
 end
 
 -- Toggle scratchpad
-hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("scratch"), { desc = "Toggle scratchpad shown" })
-hl.bind(mainMod .. " + Q", hl.dsp.workspace.toggle_special("scratch"), { desc = "Toggle scratchpad shown" })
+b.bind({ b.SPR }, { "Q", "S" }, hl.dsp.workspace.toggle_special("scratch"), "Toggle scratchpad shown")
 
 -- Center and resize to 80% of current screen
-hl.bind(mainMod .. " + C", function()
-    hl.dispatch(hl.dsp.window.center())
-
-    local mon = hl.get_active_monitor()
-    if mon == nil then return end
-
-    local w = math.floor(mon.width * 0.8)
-    local h = math.floor(mon.height * 0.8)
-
-    hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
-  end,
-  { desc = "Center floating window" })
+b.bind({ b.SPR }, "C", util.ResizePercent(0.8, 0.8, true), "Center floating window")
 
 -- Scroll through existing workspaces
 -- TODO: FIX
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
+b.bind({ b.SPR }, "mouse_down", hl.dsp.focus({ workspace = "e+1" }))
+b.bind({ b.SPR }, "mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 
 -- Move/resize windows with mainMod + LMB/RMB and dragging
-hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { desc = "Move window with left mouse", mouse = true })
-hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { desc = "Resize window with right mouse", mouse = true })
+b.bind({ b.SPR }, "mouse:272", hl.dsp.window.drag(), "Move window with left mouse", { mouse = true })
+b.bind({ b.SPR }, "mouse:273", hl.dsp.window.resize(), "Resize window with right mouse", { mouse = true })
 
-hl.bind("Print", hl.dsp.exec_cmd("flameshot gui"), { desc = "Take area screenshot" })
+b.bind({}, "Print", hl.dsp.exec_cmd("flameshot gui"), "Take area screenshot")
 
 -- Theme related
-hl.bind(mainMod .. " + SHIFT + comma", hl.dsp.exec_cmd("theme_menu"), { desc = "Open theme menu" })
+b.bind({ b.SPR, b.SHFT }, "comma", hl.dsp.exec_cmd("theme_menu"), "Open theme menu")
 
-hl.bind(mainMod .. " + ALT + k", hl.dsp.exec_cmd(configHome .. "/hypr/hyprland/scripts/keymap_hint.sh"),
-  { desc = "Show all keybindings" })
+b.bind({ b.SPR, b.ALT }, "k", hl.dsp.exec_cmd(configHome .. "/hypr/hyprland/scripts/keymap_hint.sh"),
+  "Show all keybindings")
