@@ -44,7 +44,7 @@ b.bind({ b.SPR }, "Delete", shell.powermenu, "Power Menu")
 ---                               COMMON BINDS                               ---
 --------------------------------------------------------------------------------
 
-b.bind({ b.SPR, b.SHFT }, "Q", hl.dsp.window.kill(), "Kill active window")
+b.bind({ b.SPR, b.SHFT }, "Q", hl.dsp.window.close(), "Close active window")
 b.bind({ b.SPR }, "return", hl.dsp.exec_cmd(terminal), "Launch terminal")
 b.bind({ b.SPR }, "E", hl.dsp.exec_cmd(fileManager), "Launch FileManager")
 b.bind({ b.SPR }, "D", hl.dsp.exec_cmd("walker"), "Open Launcher")
