@@ -127,7 +127,7 @@
 }
 
 #workspaces button.urgent label {
-    color: @warning-color;
+    color: @critical-color;
 }
 
 tooltip {

@@ -83,6 +83,9 @@ for i = 1, 10 do
   b.bind({ b.SPR, b.SHFT }, tostring(key), hl.dsp.window.move({ workspace = i }), "Move to workspace " .. i)
 end
 
+b.bind({ b.SPR }, "grave", hl.dsp.focus({ workspace = "name:B" }), "Switch to browser workspace ")
+b.bind({ b.SPR, b.SHFT }, "grave", hl.dsp.window.move({ workspace = "name:B" }), "Move to browser workspace ")
+
 -- Toggle scratchpad
 b.bind({ b.SPR }, { "Q", "S" }, hl.dsp.workspace.toggle_special("scratch"), "Toggle scratchpad shown")
 
