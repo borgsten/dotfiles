@@ -6,12 +6,28 @@ function M.setup(cfg)
   assert(cfg.clamshell.enabled, "clamshell: setup called but not enabled")
   assert(cfg.clamshell.lid_switch, "clamshell: 'lid_switch' is required")
 
-  local internal_enabled = cfg.internal or {}
+  local internal_enabled = {}
+  for k, v in pairs(cfg.internal) do internal_enabled[k] = v end
   internal_enabled.disabled = false
 
   local internal_name = cfg.internal.output
 
-  local lid_closed = false
+  local function read_lid_closed()
+    for _, path in ipairs({
+      "/proc/acpi/button/lid/LID0/state",
+      "/proc/acpi/button/lid/LID/state",
+    }) do
+      local f = io.open(path, "r")
+      if f then
+        local content = f:read("*all")
+        f:close()
+        return content:match("closed") ~= nil
+      end
+    end
+    return false
+  end
+
+  local lid_closed = read_lid_closed()
 
   ---@return boolean
   local function external_connected()

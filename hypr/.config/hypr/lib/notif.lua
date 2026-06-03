@@ -24,7 +24,7 @@ function M.Send(title, body, opts)
     cmd = cmd .. " -i " .. opts.icon
   end
 
-  if opts.transient ~= nil then
+  if opts.transient == true then
     cmd = cmd .. " -h boolean:transient:true"
     -- cmd = cmd .. " -e"
   end

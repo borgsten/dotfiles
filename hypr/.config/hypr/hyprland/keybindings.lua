@@ -49,7 +49,7 @@ b.bind({ b.SPR, b.SHFT }, "Q", hl.dsp.window.close(), "Close active window")
 b.bind({ b.SPR }, "return", hl.dsp.exec_cmd(terminal), "Launch terminal")
 b.bind({ b.SPR }, "E", hl.dsp.exec_cmd(fileManager), "Launch FileManager")
 b.bind({ b.SPR }, "D", hl.dsp.exec_cmd("walker"), "Open Launcher")
-b.bind({ b.SPR }, "B", hl.dsp.exec_cmd("walker -m bookmarks"), "Open Launcher")
+b.bind({ b.SPR }, "B", hl.dsp.exec_cmd("walker -m bookmarks"), "Open Bookmarks")
 b.bind({ b.SPR, b.SHFT }, "B", hl.dsp.exec_cmd("walker -m bluetooth"), "Manage Bluetooth")
 
 b.bind({ b.SPR, b.SHFT }, "F", hl.dsp.window.float(), "Toggle floating")

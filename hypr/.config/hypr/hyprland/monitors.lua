@@ -1,5 +1,4 @@
 local M = {}
-
 ---@param cfg Config
 function M.setup(cfg)
   assert(cfg.external_monitors, "monitors: 'external_monitors' list is required")

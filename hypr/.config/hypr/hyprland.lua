@@ -4,6 +4,7 @@
 -- hl.config({
 --   debug = { disable_logs = false }
 -- })
+
 local config = require("lib.config").load()
 if config then
   require("hyprland.monitors").setup(config)

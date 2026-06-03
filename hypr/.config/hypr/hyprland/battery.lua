@@ -7,18 +7,24 @@ local notified_critical = false
 local LOW_LEVEL = 20
 local CRIT_LEVEL = 10
 
+local function find_battery_path()
+  for _, name in ipairs({ "BAT0", "BAT1", "BATT", "BAT" }) do
+    local f = io.open("/sys/class/power_supply/" .. name .. "/capacity", "r")
+    if f then f:close(); return "/sys/class/power_supply/" .. name end
+  end
+  return nil
+end
+
+local BATTERY_PATH = find_battery_path()
+
 --- Get current battery status
 ---@return string? status
 local function getStatus()
-  local status_file = io.open("/sys/class/power_supply/BAT0/status", "r")
-  if status_file == nil then
-    return nil
-  end
-
-  local status = status_file and status_file:read("*all"):gsub("%s+", "") or ""
-  if status_file then
-    status_file:close()
-  end
+  if not BATTERY_PATH then return nil end
+  local f = io.open(BATTERY_PATH .. "/status", "r")
+  if not f then return nil end
+  local status = f:read("*all"):gsub("%s+", "")
+  f:close()
   return status
 end
 
@@ -30,7 +36,7 @@ local function check_battery()
     return
   end
 
-  local file = io.open("/sys/class/power_supply/BAT0/capacity", "r")
+  local file = io.open(BATTERY_PATH .. "/capacity", "r")
   if not file then
     return
   end

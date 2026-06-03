@@ -13,6 +13,9 @@ local M = {}
 -- so the entrypoint can degrade gracefully on a fresh checkout.
 ---@return Config?
 function M.load()
+  if not package.searchpath("hyprland.local.config", package.path) then
+    return nil
+  end
   local ok, cfg = pcall(require, "hyprland.local.config")
   if not ok then
     return nil

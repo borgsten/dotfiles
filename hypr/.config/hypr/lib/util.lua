@@ -5,7 +5,8 @@ local M = {}
 ---@return boolean
 function M.cmd_exists(cmd)
   for dir in (os.getenv("PATH") or ""):gmatch("[^:]+") do
-    if io.open(dir .. "/" .. cmd, "r") then return true end
+    local f = io.open(dir .. "/" .. cmd, "r")
+    if f then f:close(); return true end
   end
   return false
 end
