@@ -12,7 +12,6 @@ end
 
 require("hyprland.local")
 
-require("hyprland.env")
 require("hyprland.startup")
 require("hyprland.keybindings")
 require("hyprland.windows")

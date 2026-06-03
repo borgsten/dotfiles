@@ -1,0 +1,30 @@
+# Cursor
+export XCURSOR_SIZE=24
+export HYPRCURSOR_SIZE=24
+export HYPRCURSOR_THEME=default
+export XCURSOR_THEME=default
+
+# XDG
+export XDG_SESSION_TYPE=wayland
+export XDG_CURRENT_DESKTOP=Hyprland
+export XDG_SESSION_DESKTOP=Hyprland
+
+# Wayland backends
+export GDK_BACKEND="wayland,x11,*"
+export QT_QPA_PLATFORM="wayland;xcb"
+export QT_STYLE_OVERRIDE=kvantum
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+export SDL_VIDEODRIVER="wayland,x11"
+export MOZ_ENABLE_WAYLAND=1
+export ELECTRON_OZONE_PLATFORM_HINT=wayland
+export OZONE_PLATFORM=wayland
+
+# Java
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# NVIDIA — set if the driver is loaded
+if [ -e /dev/nvidia0 ]; then
+    export NVD_BACKEND=direct
+    export LIBVA_DRIVER_NAME=nvidia
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+fi
