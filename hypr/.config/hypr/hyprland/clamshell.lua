@@ -1,16 +1,48 @@
---------------------------------------------------------------------------------
----                                CLAMSHELL                                 ---
---------------------------------------------------------------------------------
+local M = {}
 
-local clamshell = (os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config"))
-  .. "/hypr/hyprland/scripts/clamshell.sh"
+---@param cfg Config
+function M.setup(cfg)
+  assert(cfg.internal, "clamshell: 'internal' is required")
+  assert(cfg.clamshell.enabled, "clamshell: setup called but not enabled")
+  assert(cfg.clamshell.lid_switch, "clamshell: 'lid_switch' is required")
 
-hl.bind("switch:on:Lid Switch",  hl.dsp.exec_cmd(clamshell .. " close"), { locked = true })
-hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd(clamshell .. " open"),  { locked = true })
+  local internal_enabled = cfg.internal or {}
+  internal_enabled.disabled = false
 
--- Re-evaluate lid state on Hyprland start/reload
-local function check_clamshell()
-  hl.exec_cmd(clamshell .. " check")
+  local internal_name = cfg.internal.output
+
+  local lid_closed = false
+
+  ---@return boolean
+  local function external_connected()
+    for _, m in ipairs(hl.get_monitors()) do
+      if m.name ~= internal_name then
+        return true
+      end
+    end
+    return false
+  end
+
+  local function apply()
+    if lid_closed and external_connected() then
+      hl.monitor({ output = internal_name, disabled = true })
+    else
+      hl.monitor(internal_enabled)
+    end
+  end
+
+  hl.bind("switch:off:" .. cfg.clamshell.lid_switch, function()
+    lid_closed = true
+    apply()
+  end, { locked = true })
+  hl.bind("switch:on:" .. cfg.clamshell.lid_switch, function()
+    lid_closed = false
+    apply()
+  end, { locked = true })
+
+  hl.on("monitor.added", apply)
+  hl.on("monitor.removed", apply)
+  hl.on("hyprland.start", apply)
 end
-hl.on("hyprland.start",    check_clamshell)
-hl.on("config.reloaded",   check_clamshell)
+
+return M
