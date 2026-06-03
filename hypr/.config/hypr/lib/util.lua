@@ -24,8 +24,11 @@ function M.ResizePercent(width, height, center)
     local mon = hl.get_active_monitor()
     if mon == nil then return end
 
-    local w = math.floor(mon.width * width)
-    local h = math.floor(mon.height * height)
+    local scaled_width = math.floor(mon.width / mon.scale)
+    local scaled_height = math.floor(mon.height / mon.scale)
+
+    local w = math.floor(scaled_width * width)
+    local h = math.floor(scaled_height * height)
 
     hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
   end
