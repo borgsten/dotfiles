@@ -47,11 +47,11 @@ function M.setup(cfg)
     end
   end
 
-  hl.bind("switch:off:" .. cfg.clamshell.lid_switch, function()
+  hl.bind("switch:on:" .. cfg.clamshell.lid_switch, function()
     lid_closed = true
     apply()
   end, { locked = true })
-  hl.bind("switch:on:" .. cfg.clamshell.lid_switch, function()
+  hl.bind("switch:off:" .. cfg.clamshell.lid_switch, function()
     lid_closed = false
     apply()
   end, { locked = true })
@@ -59,6 +59,10 @@ function M.setup(cfg)
   hl.on("monitor.added", apply)
   hl.on("monitor.removed", apply)
   hl.on("hyprland.start", apply)
+  hl.on("config.reloaded", function()
+    lid_closed = read_lid_closed()
+    apply()
+  end)
 end
 
 return M

@@ -9,7 +9,7 @@ function M.setup(cfg)
 
   if cfg.internal then
     if cfg.clamshell and cfg.clamshell.enabled == true then
-      require("clamshell").setup(cfg)
+      require("hyprland.clamshell").setup(cfg)
     else
       hl.monitor(cfg.internal)
     end
