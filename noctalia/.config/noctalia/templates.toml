@@ -1,0 +1,52 @@
+[theme.templates.user.alacritty]
+input_path = '~/.config/matugen/templates/alacritty.toml'
+output_path = '~/.cache/theming/alacritty.toml'
+
+[theme.templates.user.btop]
+input_path = '~/.config/matugen/templates/btop.theme'
+output_path = '~/.cache/theming/btop.theme'
+post_hook = 'pgrep btop && pkill -SIGUSR2 btop || true'
+
+[theme.templates.user.hypr]
+input_path = '~/.config/matugen/templates/hypr.conf'
+output_path = '~/.cache/theming/hypr.conf'
+
+[theme.templates.user.hyprland]
+input_path = '~/.config/matugen/templates/hyprland_theme.lua'
+output_path = '~/.cache/theming/hyprland_theme.lua'
+
+[theme.templates.user.css-colors]
+input_path = '~/.config/matugen/templates/css-colors.css'
+output_path = '~/.cache/theming/css-colors.css'
+
+# Template dummy file to run hook as css-colors template is used
+[theme.templates.user.waybar]
+input_path = '~/.config/matugen/templates/dummy.txt'
+output_path = '/dev/null'
+post_hook = 'pgrep waybar && pkill -SIGUSR2 waybar || true'
+
+# Template dummy file to run hook as css-colors template is used
+[theme.templates.user.walker]
+input_path = '~/.config/matugen/templates/dummy.txt'
+output_path = '/dev/null'
+post_hook = 'systemctl --user try-restart walker'
+
+[theme.templates.user.tmux]
+input_path = '~/.config/matugen/templates/tmux.conf'
+output_path = '~/.cache/theming/tmux.conf'
+post_hook = 'tmux source-file ~/.config/tmux/tmux.conf'
+
+[theme.templates.user.gtk]
+input_path = '~/.config/matugen/templates/gtk.css'
+output_path = '~/.cache/theming/gtk.css'
+post_hook = '~/.config/matugen/trigger_gtk.sh'
+
+[theme.templates.user.icons]
+input_path = '~/.config/matugen/templates/icon_theme.env'
+output_path = '~/.cache/theming/icon_theme.env'
+post_hook = '~/.config/matugen/update_icons.sh'
+
+[theme.templates.user.ghostty]
+input_path = '~/.config/matugen/templates/ghostty'
+output_path = '~/.cache/theming/ghostty'
+post_hook = 'pkill -SIGUSR2 ghostty'

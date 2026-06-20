@@ -25,6 +25,18 @@ local function build_dms(cmd, prefix)
   return hl.dsp.exec_cmd(cmd)
 end
 
+--- Create noctalia dispatcher
+---@param cmd string
+---@param prefix string?
+---@return HL.Dispatcher
+local function build_noctalia(cmd, prefix)
+  cmd = "noctalia msg " .. cmd
+  if prefix ~= nil then
+    cmd = prefix .. ";" .. cmd
+  end
+  return hl.dsp.exec_cmd(cmd)
+end
+
 --- Create swayosd-client command dispatcher
 ---@param cmd string
 ---@return fun()
@@ -60,6 +72,21 @@ local actions = {
     prev = build_raw("playerctl previous"),
     play_pause = build_raw("playerctl play-pause"),
   },
+  noctalia = {
+    volume_raise = build_noctalia("volume-up 3"),
+    volume_lower = build_noctalia("volume-down 3"),
+    volume_mute = build_noctalia("volume-mute"),
+    mic_mute = build_noctalia("mic-mute"),
+    brightness_inc = build_noctalia("brightness-up 5"),
+    brightness_dec = build_noctalia("brightness-down 5"),
+    lock = build_noctalia("session lock"),
+    powermenu = build_noctalia("panel-toggle session"),
+    open_notification = build_noctalia("panel-toggle control-center notifications"),
+    open_settings = build_noctalia("settings-toggle"),
+    next = build_noctalia("media next"),
+    prev = build_noctalia("media previous"),
+    play_pause = build_noctalia("media toggle"),
+  },
   external = {
     volume_raise = build_swayosd("--output-volume raise"),
     volume_lower = build_swayosd("--output-volume lower"),
@@ -81,9 +108,11 @@ local actions = {
 ---@return Actions
 local function get_shell_actions()
   local util = require("lib.util")
-  local is_dms = util.cmd_exists("dms")
-  if is_dms then
+
+  if util.service_active("dms", true) then
     return actions.dms
+  elseif util.service_active("noctalia", true) then
+    return actions.noctalia
   end
   return actions.external
 end

@@ -1,0 +1,25 @@
+[bar.default]
+end = [ "notifications", "network", "bluetooth", "volume", "brightness", "battery", "session", "tray" ]
+margin_edge = 0
+margin_ends = 0
+radius = 0
+start = [ "wallpaper", "workspaces" ]
+
+[osd]
+offset_y = 80
+position = "bottom_center"
+
+[dock]
+enabled = false
+
+[shell]
+font_family = "JetBrainsMono Nerd Font"
+settings_show_advanced = true
+telemetry_enabled = false
+
+[widget.network]
+show_label = false
+
+[widget.clock]
+format = "{:%a %e %b %H:%M}"
+tooltip_format = "{:%a W%V %d/%m/%y %R}"

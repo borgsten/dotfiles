@@ -6,9 +6,28 @@ local M = {}
 function M.cmd_exists(cmd)
   for dir in (os.getenv("PATH") or ""):gmatch("[^:]+") do
     local f = io.open(dir .. "/" .. cmd, "r")
-    if f then f:close(); return true end
+    if f then
+      f:close(); return true
+    end
   end
   return false
+end
+
+--- Check if a systemd service is active
+---@param service string
+---@param user boolean user or system service
+---@return boolean
+function M.service_active(service, user)
+  local scope = user and "--user " or ""
+  local cmd = ("systemctl %sis-active %s 2>/dev/null"):format(scope, service)
+  local h = io.popen(cmd)
+  if h == nil then
+    print("Could not run systemctl commnad")
+    return false
+  end
+  local out = h:read("*a")
+  h:close()
+  return out:match("^active")
 end
 
 --- Resize floating window to percent of active monitor

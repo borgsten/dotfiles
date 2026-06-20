@@ -18,6 +18,7 @@ configs=(
     "services"
     "applications"
     "btop"
+    "noctalia"
 )
 
 # Make sure files are symlinced
