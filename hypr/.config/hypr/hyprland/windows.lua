@@ -5,15 +5,6 @@
 -- See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
 -- See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
 
--- Scratch
-hl.window_rule({
-  name      = "scratchpad",
-  match     = { class = "com.scratch" },
-  float     = true,
-  workspace = "special:scratch",
-  size      = "80% 80%",
-})
-
 hl.window_rule({
   name  = "suppress-maximize-events",
   match = { class = ".*" },

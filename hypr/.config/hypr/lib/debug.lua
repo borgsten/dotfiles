@@ -85,7 +85,7 @@ M.to_print = true -- also emit via print()
 M.use_timestamp = true
 
 local LEVELS = { trace = 1, debug = 2, info = 3, warn = 4, error = 5 }
-M.level = "trace" -- minimum level to emit
+M.level = "warn" -- minimum level to emit
 
 local function stringify(v)
   local t = type(v)
@@ -104,7 +104,7 @@ local function emit(level, ...)
   end
   local body = table.concat(pieces, " ")
 
-  local prefix = "[" .. level:upper() .. "]"
+  local prefix = string.format("[%-5s]", level:upper())
   if M.use_timestamp then
     prefix = os.date("%Y-%m-%d %H:%M:%S ") .. prefix
   end

@@ -59,8 +59,7 @@ b.bind({ b.SPR }, "O", hl.dsp.layout("togglesplit"), "Toggle split direction")
 b.bind({ b.SPR }, "F", hl.dsp.window.fullscreen(0), "Toggle fullscreen")
 b.bind({ b.SPR, b.CTRL }, "F", hl.dsp.window.fullscreen_state({ internal = 2, client = 0, action = "toggle" }),
   "Tiled full screen")
--- TODO: Fix maximise
-b.bind({ b.SPR }, "M", hl.dsp.window.fullscreen(1), "Toggle maximation")
+b.bind({ b.SPR }, "M", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }), "Toggle maximize")
 
 b.bind({ b.SPR }, "G", hl.dsp.group.toggle(), "Toggle group mode")
 b.bind({ b.SPR, b.SHFT }, "G", hl.dsp.group.next(), "Change active window in group")
@@ -87,8 +86,11 @@ end
 b.bind({ b.SPR }, "grave", hl.dsp.focus({ workspace = "name:B" }), "Switch to browser workspace ")
 b.bind({ b.SPR, b.SHFT }, "grave", hl.dsp.window.move({ workspace = "name:B" }), "Move to browser workspace ")
 
--- Toggle scratchpad
-b.bind({ b.SPR }, { "Q", "S" }, hl.dsp.workspace.toggle_special("scratch"), "Toggle scratchpad shown")
+-- Scratchpad
+local scratch = require("hyprland.scratch")
+scratch.setup()
+b.bind({ b.SPR }, { "Q", "S" }, scratch.toggleScratchpad, "Toggle scratchpad")
+b.bind({ b.SPR, b.SHFT }, "S", scratch.emptyScratchpad, "Empty all non scratchpad windows from workspace")
 
 -- Center and resize to 80% of current screen
 b.bind({ b.SPR }, "C", util.ResizePercent(0.8, 0.8, true), "Center floating window")
