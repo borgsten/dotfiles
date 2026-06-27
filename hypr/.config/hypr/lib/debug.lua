@@ -1,6 +1,3 @@
--- dbg.lua — self-contained debug/inspect/logging helper for Hyprland 0.55+
--- No third-party deps; pure Lua stdlib.
-
 local M = {}
 
 -- ---------------------------------------------------------------------------
@@ -127,20 +124,20 @@ local function emit(level, ...)
   end
 end
 
-M.trace = function(...) emit("trace", ...) end
-M.debug = function(...) emit("debug", ...) end
-M.info  = function(...) emit("info", ...) end
-M.warn  = function(...) emit("warn", ...) end
-M.error = function(...) emit("error", ...) end
+M.trace       = function(...) emit("trace", ...) end
+M.debug       = function(...) emit("debug", ...) end
+M.info        = function(...) emit("info", ...) end
+M.warn        = function(...) emit("warn", ...) end
+M.error       = function(...) emit("error", ...) end
 
 -- quick dump: print inspect() of anything and return it (chainable)
-M.dump  = function(v)
+M.dump        = function(v)
   emit("debug", inspect(v))
   return v
 end
 
 -- raw print of arbitrary types, no level/prefix
-M.p     = function(...)
+M.p           = function(...)
   local n = select("#", ...)
   local pieces = {}
   for i = 1, n do pieces[i] = stringify((select(i, ...))) end
@@ -152,6 +149,15 @@ M.p     = function(...)
       fh:write(line, "\n"); fh:close()
     end
   end
+end
+
+M.enableDebug = function()
+  -- Read logs from "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/hyprland.log"
+  M.level = "trace"
+  M.outfile = "/tmp/hyprland.txt"
+  hl.config({
+    debug = { disable_logs = false }
+  })
 end
 
 return M

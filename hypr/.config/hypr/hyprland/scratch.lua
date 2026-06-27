@@ -35,6 +35,16 @@ local function isWindowStashed(window)
   return false
 end
 
+--- Check if window is on active workspace
+---@param window HL.Window
+---@return boolean
+local function isWindowOnActiveWorkspace(window)
+  local active_workspace = hl.get_active_workspace()
+  local in_active = window.workspace == active_workspace
+  dbg.debug(string.format("Is %son the active workspace", in_active and "" or "not "))
+  return in_active
+end
+
 --- Move window to scratchpad stash
 ---@param window HL.Window
 local function stashWindow(window)
@@ -63,7 +73,7 @@ function M.toggleScratchpad()
     return
   end
 
-  if isWindowStashed(scratch) then
+  if isWindowStashed(scratch) or not isWindowOnActiveWorkspace(scratch) then
     dbg.debug("scratchpad is stashed, unstashing")
     unstashWindow(scratch)
   else
