@@ -1,5 +1,7 @@
 local M = {}
 
+local dbg = require("lib.debug")
+
 --- Check if a command exists in path
 ---@param cmd string
 ---@return boolean
@@ -28,6 +30,43 @@ function M.service_active(service, user)
   local out = h:read("*a")
   h:close()
   return out:match("^active")
+end
+
+---Deeply compares two Lua values (tables, primitives, userdata).
+---@param a any
+---@param b any
+---@return boolean
+function M.deepEqual(a, b)
+  if a == b then return true end
+  if type(a) ~= type(b) then return false end
+  if type(a) == "table" then
+    for k, v in pairs(a) do
+      if not M.deepEqual(v, b[k]) then return false end
+    end
+    for k, v in pairs(b) do
+      if not M.deepEqual(v, a[k]) then return false end
+    end
+    return true
+  end
+  return false
+end
+
+---Compares two objects by a list of keys, using deep_equal for each field.
+---@param keys string[]
+---@param a any
+---@param b any
+---@return boolean
+function M.userdataEqual(keys, a, b)
+  if a == b then
+    return true
+  end
+  if type(a) ~= "table" or type(b) ~= "table" then
+    return false
+  end
+  for _, k in ipairs(keys) do
+    if not M.deepEqual(a[k], b[k]) then return false end
+  end
+  return true
 end
 
 --- Resize floating window to percent of active monitor
