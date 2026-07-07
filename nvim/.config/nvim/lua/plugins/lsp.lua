@@ -106,7 +106,7 @@ return {
       })
 
       -- LSP log level
-      vim.lsp.log.set_level(vim.log.levels.WARN)
+      vim.lsp.set_log_level(vim.log.levels.WARN)
 
       vim.diagnostic.config {
         severity_sort = true,
@@ -184,7 +184,42 @@ return {
       vim.lsp.config("*", {
         capabilities = require('blink.cmp').get_lsp_capabilities(),
       })
-    end
 
+      vim.api.nvim_create_user_command("LspInfo", function()
+        vim.cmd("checkhealth vim.lsp")
+      end, {
+        nargs = 0,
+        desc = "Show LSP info",
+      })
+
+      vim.api.nvim_create_user_command(
+        'LspRestart',
+        function(opts)
+          local client_name = opts.args
+          for _, client in pairs(vim.lsp.get_clients()) do
+            if client.name == client_name then
+              client:stop(false)
+              vim.defer_fn(function()
+                vim.cmd('edit') -- triggers re-attach for most setups
+              end, 100)
+              print('Restarted LSP server: ' .. client_name)
+              return
+            end
+          end
+          print('No active LSP server named: ' .. client_name)
+        end,
+        {
+          nargs = 1,
+          complete = function(_, _, _)
+            local names = {}
+            for _, client in pairs(vim.lsp.get_clients()) do
+              names[client.name] = true
+            end
+            return vim.tbl_keys(names)
+          end,
+          desc = 'Restart a running LSP server by name',
+        }
+      )
+    end
   },
 }
