@@ -27,7 +27,11 @@ less_opts=(
 )
 export LESS="${less_opts[*]}"
 
-(( $+commands[dircolors] )) && source <(dircolors -b)
+if (( $+commands[vivid] )); then
+  export LS_COLORS="$(vivid generate ansi)"
+elif (( $+commands[dircolors] )); then
+  source <(dircolors -b)
+fi
 
 # Ctrl+w deletes whole words
 WORDCHARS='-_'

@@ -64,6 +64,8 @@ plugins=(
     # VI mode
     jeffreytse/zsh-vi-mode@80f78d9a3cc06843c776f60e4535b20bb857b1d4
 
+    romkatv/powerlevel10k@9253fb1c5034410c43a0c681ff8294181c54016c
+
     # Should be last
     zsh-users/zsh-syntax-highlighting@5eb677bb0fa9a3e60f0eff031dc13926e093df92
 )

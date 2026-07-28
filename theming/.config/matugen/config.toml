@@ -62,3 +62,8 @@ output_path = '~/.cache/theming/hyprpaper.conf'
 input_path = '~/.config/matugen/templates/ghostty'
 output_path = '~/.cache/theming/ghostty'
 post_hook = 'pkill -SIGUSR2 ghostty'
+
+[templates.p10k]
+input_path = '~/.config/matugen/templates/p10k.tpl'
+output_path = '~/.cache/theming/p10k.zsh'
+post_hook = "python3 ~/.config/matugen/clamp_patch.py --bg {{colors.background.default.hex}} ~/.cache/theming/p10k.zsh"

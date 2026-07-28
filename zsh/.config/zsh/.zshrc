@@ -1,8 +1,19 @@
 #!/usr/bin/env zsh
-export skip_global_compinit=1
 
-# Debug startup time
-# zmodload zsh/zprof
+PROFILE=0
+
+if [[ $PROFILE == 1 ]]; then
+    zmodload zsh/zprof
+fi
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+export skip_global_compinit=1
 
 # Reaffirm history to prevent truncation
 mkdir -p "$XDG_STATE_HOME/zsh"
@@ -19,7 +30,7 @@ source "$ZDOTDIR/completion.zsh"
 source "$ZDOTDIR/functions.zsh"
 source "$ZDOTDIR/alias.zsh"
 source "$ZDOTDIR/keybindings.zsh"
-source "$ZDOTDIR/prompt.zsh"
+source "$ZDOTDIR/p10k.zsh"
 source "$ZDOTDIR/try.zsh"
 
 for file in $ZDOTDIR/local/*.sh(N); do
@@ -41,4 +52,6 @@ done
 # Snytax highlighting needs to be loaded last
 source "$ZDOTDIR/plugins.zsh"
 
-# zprof
+if [[ $PROFILE == 1 ]]; then
+    zprof
+fi
