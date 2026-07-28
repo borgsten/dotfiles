@@ -1,5 +1,5 @@
 [bar.default]
-end = [ "notifications", "network", "bluetooth", "volume", "brightness", "battery", "session", "tray" ]
+end = [ "cpu", "ram", "notifications", "network", "bluetooth", "volume", "brightness", "battery", "session", "tray" ]
 margin_edge = 0
 margin_ends = 0
 radius = 0
@@ -23,3 +23,10 @@ show_label = false
 [widget.clock]
 format = "{:%a %e %b %H:%M}"
 tooltip_format = "{:%a W%V %d/%m/%y %R}"
+
+[control_center.calendar]
+show_week_numbers = true
+
+[widget.workspaces]
+active_pill_size = 2.0
+display = "name"
