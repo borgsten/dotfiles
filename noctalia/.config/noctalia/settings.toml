@@ -30,3 +30,7 @@ show_week_numbers = true
 [widget.workspaces]
 active_pill_size = 2.0
 label_source = "name"
+
+[hooks]
+session_locked = "playerctl pause"
+theme_mode_changed = "gsettings set org.gnome.desktop.interface color-scheme prefer-$NOCTALIA_THEME_MODE"
