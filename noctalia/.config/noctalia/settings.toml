@@ -29,4 +29,4 @@ show_week_numbers = true
 
 [widget.workspaces]
 active_pill_size = 2.0
-display = "name"
+label_source = "name"
