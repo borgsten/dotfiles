@@ -102,7 +102,7 @@ function M.setup()
     match     = { class = "com.scratch" },
     float     = true,
     workspace = "special:scratch silent",
-    size      = "80% 80%",
+    size      = { "monitor_w * 0.8", "monitor_h * 0.8" },
   })
 
   hl.on("hyprland.start", function()
