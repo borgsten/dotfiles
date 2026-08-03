@@ -107,11 +107,14 @@ local actions = {
 --- Get shell actions for current session
 ---@return Actions
 local function get_shell_actions()
-  local util = require("lib.util")
-
-  if util.service_active("dms", true) then
+  local config = require("lib.config").load()
+  if config == nil or config.shell == nil then
+    return actions.external
+  end
+  local shelltype = config.shell
+  if shelltype == "DMS" then
     return actions.dms
-  elseif util.service_active("noctalia", true) then
+  elseif shelltype == "noctalia" then
     return actions.noctalia
   end
   return actions.external

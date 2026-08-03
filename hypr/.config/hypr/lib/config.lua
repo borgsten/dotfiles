@@ -2,7 +2,13 @@
 ---@field enabled boolean
 ---@field lid_switch string      switch name (`hyprctl devices`)
 
+---@alias ShellType
+---| `DMS`
+---| `noctalia`
+---| `bespoke`
+
 ---@class Config
+---@field shell? ShellType
 ---@field external_monitors HL.MonitorSpec[]
 ---@field internal? HL.MonitorSpec
 ---@field clamshell? ClamshellConfig
