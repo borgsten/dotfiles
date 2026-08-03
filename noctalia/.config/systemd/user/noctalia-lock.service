@@ -1,0 +1,10 @@
+[Unit]
+Description=Lock Noctalia before sleep
+Before=sleep.target
+
+[Service]
+Type=forking
+ExecStart=noctalia msg session lock
+
+[Install]
+WantedBy=sleep.target

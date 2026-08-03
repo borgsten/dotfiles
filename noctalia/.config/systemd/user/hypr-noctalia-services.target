@@ -6,3 +6,4 @@ Wants=elephant.service walker.service noctalia.service
 
 [Install]
 WantedBy=wayland-session@hyprland.desktop.target
+Also=noctalia-lock.service
