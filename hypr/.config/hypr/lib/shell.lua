@@ -109,6 +109,7 @@ local actions = {
 local function get_shell_actions()
   local config = require("lib.config").load()
   if config == nil or config.shell == nil then
+    hl.notification.create({ text = "Shell not configured, falling back to bespoke", timeout = 10000, icon = 0, font_size = 17 })
     return actions.external
   end
   local shelltype = config.shell
@@ -117,6 +118,8 @@ local function get_shell_actions()
   elseif shelltype == "noctalia" then
     return actions.noctalia
   end
+  local warn = string.format("Shell actions not found for shell: '%s', falling back to bespoke", config.shell)
+  hl.notification.create({ text = warn, timeout = 10000, icon = 0, font_size = 17 })
   return actions.external
 end
 
