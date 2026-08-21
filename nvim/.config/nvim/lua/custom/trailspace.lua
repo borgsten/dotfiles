@@ -76,6 +76,9 @@ function M.setup()
   -- Reload color from colorscheme
   vim.api.nvim_create_autocmd("ColorScheme",
     { group = autogroup, callback = create_highlight, desc = "Recreate hihglight group" })
+
+  vim.api.nvim_buf_create_user_command(0, "Trailspace", M.remove_trailing_whitespace,
+    { desc = "Remove trailing whitespace" })
 end
 
 return M
