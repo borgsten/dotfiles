@@ -5,6 +5,10 @@
 -- See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
 -- See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
 
+local theme_path = os.getenv("HOME") .. "/.cache/theming"
+package.path = theme_path .. "/?.lua;" .. package.path
+local theme = require("hyprland_theme")
+
 hl.window_rule({
   name           = "suppress-maximize-events",
   match          = { class = ".*" },
@@ -37,6 +41,18 @@ hl.window_rule({
   match       = { float = false, workspace = "f[1]" },
   border_size = 0,
   rounding    = 0,
+})
+
+-- Indicate that window is maximized and hides other windows with tertiary border
+hl.window_rule({
+  name         = "maximized-hiding-others",
+  match        = {
+    float                     = false,
+    fullscreen_state_internal = 1,
+    workspace                 = "w[t2-99]",
+  },
+  border_size  = 1,
+  border_color = theme.tertiary,
 })
 
 -- Tag games

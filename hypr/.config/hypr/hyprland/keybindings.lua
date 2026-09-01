@@ -56,10 +56,10 @@ b.bind({ b.SPR, b.SHFT }, "F", hl.dsp.window.float(), "Toggle floating")
 b.bind({ b.SPR }, "P", hl.dsp.window.pseudo(), "Toggle Pseudo tiling")
 b.bind({ b.SPR }, "O", hl.dsp.layout("togglesplit"), "Toggle split direction")
 
-b.bind({ b.SPR }, "F", hl.dsp.window.fullscreen(0), "Toggle fullscreen")
+b.bind({ b.SPR }, "M", hl.dsp.window.fullscreen(0), "Toggle Maximized")
 b.bind({ b.SPR, b.CTRL }, "F", hl.dsp.window.fullscreen_state({ internal = 2, client = 0, action = "toggle" }),
   "Tiled full screen")
-b.bind({ b.SPR }, "M", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }), "Toggle maximize")
+b.bind({ b.SPR }, "F", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }), "Toggle Fullscreen")
 
 b.bind({ b.SPR }, "G", hl.dsp.group.toggle(), "Toggle group mode")
 b.bind({ b.SPR, b.SHFT }, "G", hl.dsp.group.next(), "Change active window in group")
