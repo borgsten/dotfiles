@@ -9,6 +9,7 @@ local configHome  = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.con
 
 local util        = require("lib.util")
 local b           = require("lib.bind")
+local groups      = require("hyprland.groups")
 --------------------------------------------------------------------------------
 ---                                  SHELL                                   ---
 --------------------------------------------------------------------------------
@@ -48,7 +49,8 @@ b.bind({ b.SPR, b.SHFT }, "R", hl.dsp.exec_cmd("hyprctl reload"), "Reload config
 b.bind({ b.SPR, b.SHFT }, "Q", hl.dsp.window.close(), "Close active window")
 b.bind({ b.SPR }, "return", hl.dsp.exec_cmd(terminal), "Launch terminal")
 b.bind({ b.SPR }, "E", hl.dsp.exec_cmd(fileManager), "Launch FileManager")
-b.bind({ b.SPR }, "D", hl.dsp.exec_cmd("walker"), "Open Launcher")
+-- b.bind({ b.SPR }, "D", hl.dsp.exec_cmd("walker"), "Open Launcher")
+b.bind({ b.SPR }, "D", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"), "Open Launcher")
 b.bind({ b.SPR }, "B", hl.dsp.exec_cmd("walker -m bookmarks"), "Open Bookmarks")
 b.bind({ b.SPR, b.SHFT }, "B", hl.dsp.exec_cmd("walker -m bluetooth"), "Manage Bluetooth")
 
@@ -61,20 +63,44 @@ b.bind({ b.SPR, b.CTRL }, "F", hl.dsp.window.fullscreen_state({ internal = 2, cl
   "Tiled full screen")
 b.bind({ b.SPR }, "F", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }), "Toggle Fullscreen")
 
-b.bind({ b.SPR }, "G", hl.dsp.group.toggle(), "Toggle group mode")
-b.bind({ b.SPR, b.SHFT }, "G", hl.dsp.group.next(), "Change active window in group")
-
 -- Move focus with SUPER + arrow keys
 for i, dir in ipairs({ "left", "right", "up", "down" }) do
   local vim_key = ({ "h", "l", "k", "j" })[i]
 
   b.bind({ b.SPR }, { dir, vim_key }, hl.dsp.focus({ direction = dir }), "Move focus " .. dir)
-  b.bind({ b.SPR, b.SHFT }, { dir, vim_key }, hl.dsp.window.move({ direction = dir }), "Move window " .. dir)
+  b.bind({ b.SPR, b.SHFT }, { dir, vim_key }, groups.MoveOrGroup(dir), "Move window " .. dir)
 
   local resize_dir = ({ { -30, 0 }, { 30, 0 }, { 0, -30 }, { 0, 30 } })[i]
   local arg = { x = resize_dir[1], y = resize_dir[2], relative = true }
   b.bind({ b.SPR, b.CTRL }, { dir, vim_key }, hl.dsp.window.resize(arg), "Resize " .. dir, { repeating = true })
 end
+
+--------------------------------------------------------------------------------
+---                          GROUPS (i3-STYLE TABS)                          ---
+--------------------------------------------------------------------------------
+
+-- A group is i3's tabbed container: SUPER + T wraps the focused window in one
+-- and dissolves it again. (i3: `layout toggle tabbed split`)
+b.bind({ b.SPR }, "T", hl.dsp.group.toggle(), "Toggle tabbed group")
+
+-- Cycle tabs explicitly. SUPER + h/l does this too while inside a group,
+-- courtesy of binds.movefocus_cycles_groupfirst.
+b.bind({ b.SPR }, "Tab", hl.dsp.group.next(), "Next tab in group")
+b.bind({ b.SPR, b.SHFT }, "Tab", hl.dsp.group.prev(), "Previous tab in group")
+
+-- Reorder the active tab within its group.
+b.bind({ b.SPR, b.ALT }, { "h", "left" }, hl.dsp.group.move_window({ forward = false }), "Move tab left")
+b.bind({ b.SPR, b.ALT }, { "l", "right" }, hl.dsp.group.move_window({ forward = true }), "Move tab right")
+
+-- Pop the active window back out into the tiling tree.
+b.bind({ b.SPR, b.SHFT }, "G", hl.dsp.window.move({ out_of_group = true }), "Pop window out of group")
+
+-- Seal a group so directional moves stop pushing windows into it.
+b.bind({ b.SPR, b.CTRL }, "G", hl.dsp.group.lock_active(), "Lock/unlock group")
+
+--------------------------------------------------------------------------------
+---                                WORKSPACES                                ---
+--------------------------------------------------------------------------------
 
 -- Switch / move to workspaces
 for i = 1, 10 do
