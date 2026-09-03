@@ -12,6 +12,9 @@
 ---@field next function
 ---@field prev function
 ---@field play_pause function
+---@field launcher function
+---@field bookmarks function
+---@field bluetooth function
 
 --- Create dms dispatcher
 ---@param cmd string
@@ -71,6 +74,9 @@ local actions = {
     next = build_raw("playerctl next"),
     prev = build_raw("playerctl previous"),
     play_pause = build_raw("playerctl play-pause"),
+    launcher = build_raw("walker"),
+    bookmarks = build_raw("walker -m bookmarks"),
+    bluetooth = build_raw("walker -m bluetooth"),
   },
   noctalia = {
     volume_raise = build_noctalia("volume-up 3"),
@@ -86,6 +92,9 @@ local actions = {
     next = build_noctalia("media next"),
     prev = build_noctalia("media previous"),
     play_pause = build_noctalia("media toggle"),
+    launcher = build_noctalia("panel-toggle launcher"),
+    bookmarks = build_noctalia("panel-toggle launcher /bk"),
+    bluetooth = build_noctalia("panel-toggle control-center bluetooth"),
   },
   external = {
     volume_raise = build_swayosd("--output-volume raise"),
@@ -101,6 +110,9 @@ local actions = {
     next = build_swayosd("--playerctl next"),
     prev = build_swayosd("--playerctl previous"),
     play_pause = build_swayosd("--playerctl play-pause"),
+    launcher = build_raw("walker"),
+    bookmarks = build_raw("walker -m bookmarks"),
+    bluetooth = build_raw("walker -m bluetooth"),
   },
 }
 

@@ -17,6 +17,10 @@ local groups      = require("hyprland.groups")
 ---@type Actions
 local shell       = require("lib.shell")
 
+b.bind({ b.SPR }, "D", shell.launcher, "Open Launcher")
+b.bind({ b.SPR }, "B", shell.bookmarks, "Open Bookmarks")
+b.bind({ b.SPR, b.SHFT }, "B", shell.bluetooth, "Manage Bluetooth")
+
 b.bind({ b.SPR }, "N", shell.open_notification, "Show notification history")
 b.bind({ b.SPR }, "comma", shell.open_settings, "Show Settings")
 
@@ -49,10 +53,6 @@ b.bind({ b.SPR, b.SHFT }, "R", hl.dsp.exec_cmd("hyprctl reload"), "Reload config
 b.bind({ b.SPR, b.SHFT }, "Q", hl.dsp.window.close(), "Close active window")
 b.bind({ b.SPR }, "return", hl.dsp.exec_cmd(terminal), "Launch terminal")
 b.bind({ b.SPR }, "E", hl.dsp.exec_cmd(fileManager), "Launch FileManager")
--- b.bind({ b.SPR }, "D", hl.dsp.exec_cmd("walker"), "Open Launcher")
-b.bind({ b.SPR }, "D", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"), "Open Launcher")
-b.bind({ b.SPR }, "B", hl.dsp.exec_cmd("walker -m bookmarks"), "Open Bookmarks")
-b.bind({ b.SPR, b.SHFT }, "B", hl.dsp.exec_cmd("walker -m bluetooth"), "Manage Bluetooth")
 
 b.bind({ b.SPR, b.SHFT }, "F", hl.dsp.window.float(), "Toggle floating")
 b.bind({ b.SPR }, "P", hl.dsp.window.pseudo(), "Toggle Pseudo tiling")
