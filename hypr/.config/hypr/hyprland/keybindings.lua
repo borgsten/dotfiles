@@ -63,6 +63,10 @@ b.bind({ b.SPR, b.CTRL }, "F", hl.dsp.window.fullscreen_state({ internal = 2, cl
   "Tiled full screen")
 b.bind({ b.SPR }, "F", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }), "Toggle Fullscreen")
 
+b.bind({ b.SPR }, "U", function()
+  hl.dispatch(hl.dsp.focus({ window = hl.get_urgent_window() }))
+end, "Focus urgent window")
+
 -- Move focus with SUPER + arrow keys
 for i, dir in ipairs({ "left", "right", "up", "down" }) do
   local vim_key = ({ "h", "l", "k", "j" })[i]
