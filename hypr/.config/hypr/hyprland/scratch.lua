@@ -76,6 +76,10 @@ function M.toggleScratchpad()
   if isWindowStashed(scratch) or not isWindowOnActiveWorkspace(scratch) then
     dbg.debug("scratchpad is stashed, unstashing")
     unstashWindow(scratch)
+
+    -- focus scratch window
+    hl.dispatch(hl.dsp.window.bring_to_top({ window = scratch }))
+    hl.dispatch(hl.dsp.focus({ window = scratch }))
   else
     stashWindow(scratch)
     dbg.debug("scratchpad is not stashed, stashing")
