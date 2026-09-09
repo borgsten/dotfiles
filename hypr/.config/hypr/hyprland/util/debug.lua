@@ -1,9 +1,7 @@
 ---@class Util.Debug
 local M = {}
 
--- ---------------------------------------------------------------------------
--- inspect: vim.inspect-style pretty printer for arbitrary values
--- ---------------------------------------------------------------------------
+-- inspect: vim.inspect-style pretty printer
 local function is_identifier(k)
   return type(k) == "string" and k:match("^[%a_][%w_]*$") ~= nil
 end
@@ -75,9 +73,7 @@ end
 
 M.inspect = inspect
 
--- ---------------------------------------------------------------------------
 -- log: arbitrary args, auto-formatted, to print and/or a file
--- ---------------------------------------------------------------------------
 M.outfile = nil   -- set M.outfile = "/tmp/hypr-debug.log" to log to file
 M.to_print = true -- also emit via print()
 M.use_timestamp = true

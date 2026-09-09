@@ -64,11 +64,9 @@ b.bind({ b.SPR, b.CTRL }, "F", hl.dsp.window.fullscreen_state({ internal = 2, cl
   "Tiled full screen")
 b.bind({ b.SPR }, "F", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }), "Toggle Fullscreen")
 
-b.bind({ b.SPR }, "U", function()
-  hl.dispatch(hl.dsp.focus({ window = hl.get_urgent_window() }))
-end, "Focus urgent window")
+b.bind({ b.SPR }, "U", helpers.focusUrgentWindow, "Focus urgent window")
 
--- Move focus with SUPER + arrow keys
+-- Directional focus, move and resize on both arrows and hjkl
 for i, dir in ipairs({ "left", "right", "up", "down" }) do
   local vim_key = ({ "h", "l", "k", "j" })[i]
 
@@ -84,24 +82,21 @@ end
 ---                          GROUPS (i3-STYLE TABS)                          ---
 --------------------------------------------------------------------------------
 
--- A group is i3's tabbed container: SUPER + T wraps the focused window in one
--- and dissolves it again. (i3: `layout toggle tabbed split`)
+-- i3's `layout toggle tabbed split`: wrap the focused window in a group,
+-- or dissolve it again.
 b.bind({ b.SPR }, "T", hl.dsp.group.toggle(), "Toggle tabbed group")
-b.bind({ b.SPR, b.SHFT }, "T", hl.dsp.group.toggle(), "Swallow all windows to group")
+b.bind({ b.SPR, b.SHFT }, "T", groups.SwallowWorkspace, "Swallow all windows to group")
 
--- Cycle tabs explicitly. SUPER + h/l does this too while inside a group,
--- courtesy of binds.movefocus_cycles_groupfirst.
+-- SUPER + h/l does this too inside a group, via binds.movefocus_cycles_groupfirst.
 b.bind({ b.SPR }, "Tab", hl.dsp.group.next(), "Next tab in group")
 b.bind({ b.SPR, b.SHFT }, "Tab", hl.dsp.group.prev(), "Previous tab in group")
 
--- Reorder the active tab within its group.
 b.bind({ b.SPR, b.ALT }, { "h", "left" }, hl.dsp.group.move_window({ forward = false }), "Move tab left")
 b.bind({ b.SPR, b.ALT }, { "l", "right" }, hl.dsp.group.move_window({ forward = true }), "Move tab right")
 
--- Pop the active window back out into the tiling tree.
 b.bind({ b.SPR, b.SHFT }, "G", hl.dsp.window.move({ out_of_group = true }), "Pop window out of group")
 
--- Seal a group so directional moves stop pushing windows into it.
+-- Sealed: directional moves stop pushing windows in.
 b.bind({ b.SPR, b.CTRL }, "G", hl.dsp.group.lock_active(), "Lock/unlock group")
 
 --------------------------------------------------------------------------------
@@ -118,27 +113,22 @@ end
 b.bind({ b.SPR }, "grave", hl.dsp.focus({ workspace = "name:B" }), "Switch to browser workspace ")
 b.bind({ b.SPR, b.SHFT }, "grave", hl.dsp.window.move({ workspace = "name:B" }), "Move to browser workspace ")
 
--- Scratchpad
+-- Scratchpad (setup runs from the entrypoint)
 local scratch = require("hyprland.scratch")
-scratch.setup()
-b.bind({ b.SPR }, { "Q", "S" }, scratch.toggleScratchpad, "Toggle scratchpad")
-b.bind({ b.SPR, b.SHFT }, "S", scratch.emptyScratchpad, "Empty all non scratchpad windows from workspace")
+b.bind({ b.SPR }, { "Q", "S" }, scratch.toggle("scratch"), "Toggle scratchpad")
+b.bind({ b.SPR, b.SHFT }, "S", scratch.empty("scratch"), "Empty all non scratchpad windows from workspace")
 
--- Center and resize to 80% of current screen
 b.bind({ b.SPR }, "C", helpers.resizePercent(0.8, 0.8, true), "Center floating window")
 
 -- Scroll through existing workspaces
--- TODO: FIX
 b.bind({ b.SPR }, "mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 b.bind({ b.SPR }, "mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 
--- Move/resize windows with mainMod + LMB/RMB and dragging
 b.bind({ b.SPR }, "mouse:272", hl.dsp.window.drag(), "Move window with left mouse", { mouse = true })
 b.bind({ b.SPR }, "mouse:273", hl.dsp.window.resize(), "Resize window with right mouse", { mouse = true })
 
 b.bind({}, "Print", hl.dsp.exec_cmd("flameshot gui"), "Take area screenshot")
 
--- Theme related
 b.bind({ b.SPR, b.SHFT }, "comma", hl.dsp.exec_cmd("theme_menu"), "Open theme menu")
 
 b.bind({ b.SPR, b.ALT }, "k", hl.dsp.exec_cmd(configHome .. "/hypr/hyprland/scripts/keymap_hint.sh"),

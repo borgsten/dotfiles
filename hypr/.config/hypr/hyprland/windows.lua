@@ -49,7 +49,7 @@ hl.window_rule({
   rounding    = 0,
 })
 
--- Indicate that window is maximized and hides other windows with tertiary border
+-- Tertiary border marks a maximized window that is hiding others
 hl.window_rule({
   name         = "maximized-hiding-others",
   match        = {

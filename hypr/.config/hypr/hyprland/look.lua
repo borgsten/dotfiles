@@ -4,23 +4,12 @@
 
 -- https://wiki.hyprland.org/Configuring/Variables/
 
--- local theme = {}
--- local f = io.open(os.getenv("HOME") .. "/.cache/theming/hypr.conf", "r")
--- if f then
---   for line in f:lines() do
---     local key, val = line:match("^%$(%w+)%s*=%s*(.+)")
---     if key then theme[key] = val:gsub("%s+$", "") end
---   end
---   f:close()
--- end
-
 local theme_path = os.getenv("HOME") .. "/.cache/theming"
 package.path = theme_path .. "/?.lua;" .. package.path
 local theme = require("hyprland_theme")
 
---- Re-emit a theme color at reduced opacity. The theme exports decimal
---- "rgb(r,g,b)" triplets, while Hyprland only takes an alpha channel in the
---- hex "rgba(rrggbbaa)" form, so this converts between the two.
+--- The theme exports decimal `rgb(r,g,b)`; Hyprland only takes alpha in the
+--- hex `rgba(rrggbbaa)` form.
 ---@param color string an `rgb(r,g,b)` value from the theme
 ---@param alpha number 0.0 - 1.0
 ---@return string
@@ -33,16 +22,9 @@ local function fade(color, alpha)
     tonumber(r), tonumber(g), tonumber(b), math.floor(alpha * 255 + 0.5))
 end
 
--- Opacity of the groupbar tabs. The fully opaque Material You surfaces read
--- as a harsh slab of color against the rest of the desktop; letting a little
--- of the backdrop through settles them down. Titles stay fully opaque, so
--- this softens the block without giving back the legibility it buys.
---
--- The active tabs are the loud ones -- they are light surfaces carrying dark
--- text, so fading them moves the tab toward the text and costs contrast.
--- 0.75 is the floor before the title drops under WCAG AA (4.6:1). The
--- inactive tabs are dark surfaces carrying light text, so fading them moves
--- *away* from the text and reads fine wherever it lands.
+-- Active tabs are light surfaces under dark text, so fading moves them toward
+-- the text: 0.75 is the floor before the title drops under WCAG AA (4.6:1).
+-- Inactive tabs fade away from their text, so they have more room.
 local TAB_ALPHA_ACTIVE   = 0.75
 local TAB_ALPHA_INACTIVE = 0.85
 
@@ -95,19 +77,16 @@ hl.config({
       border_locked_inactive = theme.outline,
     },
     groupbar = {
-      -- The groupbar is the tab bar of an i3 tabbed container, so make the
-      -- titles actually readable (defaults are height 14 / font_size 8).
+      -- Defaults (height 14 / font_size 8) are too small to read.
       height            = 20,
       font_size         = 11,
       text_padding      = 6,
       render_titles     = true,
-      -- Keep the bar on single-tab groups: it is the only cue that a window
-      -- is a group, which matters now that groups are explicit.
+      -- Kept on single-tab groups: the only cue that a window is grouped.
       disable_when_only = false,
 
-      -- Without gradients Hyprland paints only the thin indicator line and
-      -- leaves the tab itself transparent, so the title had nothing to sit
-      -- on. Filling the tab is what makes the text legible.
+      -- Without gradients Hyprland paints only the indicator line and leaves
+      -- the tab transparent, so titles have nothing to sit on.
       gradients         = true,
       indicator_height  = 0,
 
@@ -115,9 +94,8 @@ hl.config({
       rounding          = 0,
       gradient_rounding = 0,
 
-      -- Each tab pairs a Material You surface with its matching `on*`
-      -- foreground, so contrast holds for any generated palette rather than
-      -- just this one.
+      -- Each surface paired with its matching `on*` foreground, so contrast
+      -- holds for any generated palette.
       text_color                 = theme.onPrimary,        -- on primary
       text_color_inactive        = theme.onSurfaceVariant, -- on surfaceContainerHigh
       text_color_locked_active   = theme.onError,          -- on error

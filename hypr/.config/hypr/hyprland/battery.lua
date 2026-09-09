@@ -1,69 +1,61 @@
 --------------------------------------------------------------------------------
----                               KEYBINDINGS                                ---
+---                                 BATTERY                                  ---
 --------------------------------------------------------------------------------
+--- Latching lives in `util/watch.lua`; this is where to read and what to say.
 
-local notified_low = false
-local notified_critical = false
-local LOW_LEVEL = 20
-local CRIT_LEVEL = 10
+---@class Config.Battery
+---@field low integer      warn at or below this percentage
+---@field critical integer warn more loudly at or below this percentage
+---@field poll_ms integer
 
+local M = {}
+
+---@type Config.Battery
+local DEFAULTS = { low = 20, critical = 10, poll_ms = 30000 }
+
+---@return string?
 local function findBatteryPath()
-  for _, name in ipairs({ "BAT0", "BAT1", "BATT", "BAT" }) do
-    local f = io.open("/sys/class/power_supply/" .. name .. "/capacity", "r")
-    if f then
-      f:close()
-      return "/sys/class/power_supply/" .. name
-    end
+  local candidates = {}
+  for i, n in ipairs({ "BAT0", "BAT1", "BATT", "BAT" }) do
+    candidates[i] = "/sys/class/power_supply/" .. n .. "/capacity"
   end
-  return nil
+  local found = UTIL.sys.firstExisting(candidates)
+  if found == nil then return nil end
+  return (found:gsub("/capacity$", ""))
 end
 
-local BATTERY_PATH = findBatteryPath()
+local TITLES = { critical = "Critical battery", low = "Low battery" }
 
---- Get current battery status
----@return string? status
-local function getStatus()
-  if not BATTERY_PATH then return nil end
-  local f = io.open(BATTERY_PATH .. "/status", "r")
-  if not f then return nil end
-  local status = f:read("*all"):gsub("%s+", "")
-  f:close()
-  return status
+function M.setup()
+  local path = findBatteryPath()
+  if path == nil then return end -- no battery
+
+  local cfg = UTIL.config.section("battery", DEFAULTS)
+
+  UTIL.watch.thresholds({
+    poll_ms = cfg.poll_ms,
+    levels = {
+      { at = cfg.critical, tag = "critical" },
+      { at = cfg.low,      tag = "low" },
+    },
+
+    read = function()
+      return UTIL.sys.readNumber(path .. "/capacity"), UTIL.sys.readFile(path .. "/status")
+    end,
+
+    clear_when = function(_, status)
+      return status == "Charging"
+    end,
+
+    on_enter = function(tag, level)
+      UTIL.notif.send(TITLES[tag], ("Battery level %d%%"):format(math.floor(level)), {
+        icon        = "dialog-warning",
+        transient   = true,
+        timeout     = 15 * 60 * 1000,
+        criticality = "critical",
+      })
+    end,
+  })
 end
 
-local function checkBattery()
-  local status = getStatus()
-  if status == "Charging" then
-    notified_low = false
-    notified_critical = false
-    return
-  end
-
-  local file = io.open(BATTERY_PATH .. "/capacity", "r")
-  if not file then
-    return
-  end
-
-  local level = tonumber(file:read("*all"))
-  file:close()
-
-  local function notify(title, message)
-    UTIL.notif.Send(title, message,
-      { icon = "dialog-warning", transient = true, timeout = 15 * 60 * 1000, criticality = "critical" })
-  end
-
-  if level <= CRIT_LEVEL and not notified_critical then
-    notify("Critical battery", "Battery level " .. level .. "%")
-
-    notified_critical = true
-    notified_low = true
-  elseif level <= LOW_LEVEL and not notified_low and level > CRIT_LEVEL then
-    notify("Low battery", "Battery level " .. level .. "%")
-
-    notified_low = true
-  end
-end
-
-if getStatus() ~= nil then
-  hl.timer(checkBattery, { timeout = 30000, type = "repeat" })
-end
+return M

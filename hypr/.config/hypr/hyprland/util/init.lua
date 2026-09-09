@@ -1,31 +1,36 @@
--- Lazily loads hyprland.util.<key> submodules on first access and exposes
--- the result as the global UTIL table.
+-- Lazily loads hyprland.util.<key> on first access, as the global UTIL.
 --
--- _G.UTIL is assigned *before* any submodule is required, so submodules
--- inside this directory (and everything else) can safely reference
--- UTIL.xxx for their own cross-deps, regardless of load order.
+-- _G.UTIL is assigned *before* any submodule is required, so submodules can
+-- reference UTIL.xxx for their own cross-deps regardless of load order.
 
 local ALIASES = {
-  dbg     = "debug",
-  notif   = "notif",
-  helpers = "helpers",
-  bind    = "bind",
-  config  = "config",
-  monitor = "monitor",
+  dbg        = "debug",
+  notif      = "notif",
+  helpers    = "helpers",
+  bind       = "bind",
+  config     = "config",
+  output     = "output",
+  sys        = "sys",
+  cmd        = "cmd",
+  tbl        = "tbl",
+  scratchpad = "scratchpad",
+  watch      = "watch",
 }
 
----Static type hints only -- these `@field` annotations let lua_ls resolve
----`UTIL.dbg` etc. to the real submodule's named class (declared via
----`---@class Util.X` above each module's `local M = {}`), enabling
----go-to-definition/autocomplete into the actual functions, without
----eagerly `require`-ing anything at runtime. Keep in sync with ALIASES.
+---Type hints only: these resolve UTIL.dbg etc. to the real submodule class
+---without require-ing anything at runtime. Keep in sync with ALIASES.
 ---@class Util
 ---@field dbg Util.Debug
 ---@field notif Util.Notif
 ---@field helpers Util.Helpers
 ---@field bind Util.Bind
 ---@field config Util.Config
----@field monitor Util.Monitor
+---@field output Util.Output
+---@field sys Util.Sys
+---@field cmd Util.Cmd
+---@field tbl Util.Tbl
+---@field scratchpad Util.Scratchpad
+---@field watch Util.Watch
 local M = setmetatable({}, {
   __index = function(t, key)
     local modname = ALIASES[key]

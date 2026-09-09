@@ -1,138 +1,123 @@
+--------------------------------------------------------------------------------
+---                                  SHELL                                   ---
+--------------------------------------------------------------------------------
+--- Actions that a desktop shell owns: volume, brightness, launcher, lock etc.
+--- Expressed once as an interface and implemented per shell.
+
+---@alias ShellType
+---| "DMS"
+---| "noctalia"
+---| "bespoke"
+
+---@class Config.Shell
+---@field type? ShellType
+
+---@alias ShellAction HL.Dispatcher|fun()
+
 ---@class Actions
----@field volume_raise function
----@field volume_lower function
----@field volume_mute function
----@field mic_mute function
----@field brightness_inc function
----@field brightness_dec function
----@field lock function
----@field powermenu function
----@field open_notification function
----@field open_settings function
----@field next function
----@field prev function
----@field play_pause function
----@field launcher function
----@field bookmarks function
----@field bluetooth function
+---@field volume_raise      ShellAction
+---@field volume_lower      ShellAction
+---@field volume_mute       ShellAction
+---@field mic_mute          ShellAction
+---@field brightness_inc    ShellAction
+---@field brightness_dec    ShellAction
+---@field lock              ShellAction
+---@field powermenu         ShellAction
+---@field open_notification ShellAction
+---@field open_settings     ShellAction
+---@field next              ShellAction
+---@field prev              ShellAction
+---@field play_pause        ShellAction
+---@field launcher          ShellAction
+---@field bookmarks         ShellAction
+---@field bluetooth         ShellAction
 
---- Create dms dispatcher
----@param cmd string
----@param prefix string?
----@return HL.Dispatcher
-local function build_dms(cmd, prefix)
-  cmd = "dms ipc call " .. cmd
-  if prefix ~= nil then
-    cmd = prefix .. ";" .. cmd
-  end
-  return hl.dsp.exec_cmd(cmd)
-end
+local dms         = UTIL.cmd.prefixed("dms ipc call")
+local noctalia    = UTIL.cmd.prefixed("noctalia msg")
+local swayosd     = UTIL.cmd.perMonitor("swayosd-client --monitor")
+local raw         = hl.dsp.exec_cmd
 
---- Create noctalia dispatcher
----@param cmd string
----@param prefix string?
----@return HL.Dispatcher
-local function build_noctalia(cmd, prefix)
-  cmd = "noctalia msg " .. cmd
-  if prefix ~= nil then
-    cmd = prefix .. ";" .. cmd
-  end
-  return hl.dsp.exec_cmd(cmd)
-end
-
---- Create swayosd-client command dispatcher
----@param cmd string
----@return fun()
-local function build_swayosd(cmd)
-  return function()
-    local swayosd = "swayosd-client --monitor"
-    local monitor = hl.get_active_monitor().name
-    local cmd_ = table.concat({ swayosd, monitor, cmd }, " ")
-    hl.dispatch(hl.dsp.exec_cmd(cmd_))
-  end
-end
-
---- Create "raw" command dispatcher
----@param cmd string
----@return HL.Dispatcher
-local function build_raw(cmd)
-  return hl.dsp.exec_cmd(cmd)
-end
-
-local actions = {
-  dms = {
-    volume_raise = build_dms("audio increment 3"),
-    volume_lower = build_dms("audio decrement 3"),
-    volume_mute = build_dms("audio mute"),
-    mic_mute = build_dms("audio micmute"),
-    brightness_inc = build_dms("brightness increment 5 ''"),
-    brightness_dec = build_dms("brightness decrement 5 ''"),
-    lock = build_dms("lock lock;playerctl pause"),
-    powermenu = build_dms("powermenu toggle"),
-    open_notification = build_dms("notifications toggle"),
-    open_settings = build_dms("settings focusOrToggle"),
-    next = build_raw("playerctl next"),
-    prev = build_raw("playerctl previous"),
-    play_pause = build_raw("playerctl play-pause"),
-    launcher = build_raw("walker"),
-    bookmarks = build_raw("walker -m bookmarks"),
-    bluetooth = build_raw("walker -m bluetooth"),
-  },
-  noctalia = {
-    volume_raise = build_noctalia("volume-up 3"),
-    volume_lower = build_noctalia("volume-down 3"),
-    volume_mute = build_noctalia("volume-mute"),
-    mic_mute = build_noctalia("mic-mute"),
-    brightness_inc = build_noctalia("brightness-up 5"),
-    brightness_dec = build_noctalia("brightness-down 5"),
-    lock = build_noctalia("session lock"),
-    powermenu = build_noctalia("panel-toggle session"),
-    open_notification = build_noctalia("panel-toggle control-center notifications"),
-    open_settings = build_noctalia("settings-toggle"),
-    next = build_noctalia("media next"),
-    prev = build_noctalia("media previous"),
-    play_pause = build_noctalia("media toggle"),
-    launcher = build_noctalia("panel-toggle launcher"),
-    bookmarks = build_noctalia("panel-toggle launcher /bk"),
-    bluetooth = build_noctalia("panel-toggle control-center bluetooth"),
-  },
-  external = {
-    volume_raise = build_swayosd("--output-volume raise"),
-    volume_lower = build_swayosd("--output-volume lower"),
-    volume_mute = build_swayosd("--output-volume mute-toggle"),
-    mic_mute = build_swayosd("--input-volume mute-toggle"),
-    brightness_inc = build_swayosd("--brightness raise"),
-    brightness_dec = build_swayosd("--brightness lower"),
-    lock = build_raw("playerctl pause; hyprlock"),
-    powermenu = build_raw("walker -m menus:system"),
-    open_notification = build_raw("swaync-client -t"),
-    open_settings = build_raw("gtk-launch nwg-displays"),
-    next = build_swayosd("--playerctl next"),
-    prev = build_swayosd("--playerctl previous"),
-    play_pause = build_swayosd("--playerctl play-pause"),
-    launcher = build_raw("walker"),
-    bookmarks = build_raw("walker -m bookmarks"),
-    bluetooth = build_raw("walker -m bluetooth"),
-  },
+---@type Actions
+local bespoke     = {
+  volume_raise      = swayosd("--output-volume raise"),
+  volume_lower      = swayosd("--output-volume lower"),
+  volume_mute       = swayosd("--output-volume mute-toggle"),
+  mic_mute          = swayosd("--input-volume mute-toggle"),
+  brightness_inc    = swayosd("--brightness raise"),
+  brightness_dec    = swayosd("--brightness lower"),
+  lock              = raw("playerctl pause; hyprlock"),
+  powermenu         = raw("walker -m menus:system"),
+  open_notification = raw("swaync-client -t"),
+  open_settings     = raw("gtk-launch nwg-displays"),
+  next              = swayosd("--playerctl next"),
+  prev              = swayosd("--playerctl previous"),
+  play_pause        = swayosd("--playerctl play-pause"),
+  launcher          = raw("walker"),
+  bookmarks         = raw("walker -m bookmarks"),
+  bluetooth         = raw("walker -m bluetooth"),
 }
 
---- Get shell actions for current session
+---@type table<string, Actions>
+local backends    = { bespoke = bespoke }
+
+backends.DMS      = {
+  volume_raise      = dms("audio increment 3"),
+  volume_lower      = dms("audio decrement 3"),
+  volume_mute       = dms("audio mute"),
+  mic_mute          = dms("audio micmute"),
+  brightness_inc    = dms("brightness increment 5 ''"),
+  brightness_dec    = dms("brightness decrement 5 ''"),
+  lock              = dms("lock lock;playerctl pause"),
+  powermenu         = dms("powermenu toggle"),
+  open_notification = dms("notifications toggle"),
+  open_settings     = dms("settings focusOrToggle"),
+  next              = raw("playerctl next"),
+  prev              = raw("playerctl previous"),
+  play_pause        = raw("playerctl play-pause"),
+  launcher          = raw("walker"),
+  bookmarks         = raw("walker -m bookmarks"),
+  bluetooth         = raw("walker -m bluetooth"),
+}
+
+backends.noctalia = {
+  volume_raise      = noctalia("volume-up 3"),
+  volume_lower      = noctalia("volume-down 3"),
+  volume_mute       = noctalia("volume-mute"),
+  mic_mute          = noctalia("mic-mute"),
+  brightness_inc    = noctalia("brightness-up 5"),
+  brightness_dec    = noctalia("brightness-down 5"),
+  lock              = noctalia("session lock"),
+  powermenu         = noctalia("panel-toggle session"),
+  open_notification = noctalia("panel-toggle control-center notifications"),
+  open_settings     = noctalia("settings-toggle"),
+  next              = noctalia("media next"),
+  prev              = noctalia("media previous"),
+  play_pause        = noctalia("media toggle"),
+  launcher          = noctalia("panel-toggle launcher"),
+  bookmarks         = noctalia("panel-toggle launcher /bk"),
+  bluetooth         = noctalia("panel-toggle control-center bluetooth"),
+}
+
+local BINARY      = { DMS = "dms", noctalia = "noctalia" }
+
 ---@return Actions
-local function GetShellActions()
-  local config = UTIL.config.load()
-  if config == nil or config.shell == nil then
-    hl.notification.create({ text = "Shell not configured, falling back to bespoke", timeout = 10000, icon = 0, font_size = 17 })
-    return actions.external
+local function resolve()
+  local cfg = UTIL.config.section("shell", { type = "bespoke" })
+  local chosen = cfg.type
+
+  local picked = backends[chosen]
+  if picked == nil then
+    UTIL.notif.osd(("Unknown shell %q, using bespoke"):format(tostring(chosen)))
+    return bespoke
   end
-  local shelltype = config.shell
-  if shelltype == "DMS" then
-    return actions.dms
-  elseif shelltype == "noctalia" then
-    return actions.noctalia
+
+  local binary = BINARY[chosen]
+  if binary and not UTIL.helpers.cmd_exists(binary) then
+    UTIL.notif.osd(("Shell %q is configured but %q is not on PATH")
+      :format(chosen, binary))
   end
-  local warn = string.format("Shell actions not found for shell: '%s', falling back to bespoke", config.shell)
-  hl.notification.create({ text = warn, timeout = 10000, icon = 0, font_size = 17 })
-  return actions.external
+
+  return picked
 end
 
-return GetShellActions()
+return resolve()

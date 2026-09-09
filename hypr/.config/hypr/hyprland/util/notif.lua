@@ -1,19 +1,19 @@
 ---@class Util.Notif
 local M = {}
 
----@alias M.Crit "low" | "normal" | "critical"
+---@alias Util.Notif.Crit "low" | "normal" | "critical"
 
----@class M.Opts
+---@class Util.Notif.Opts
 ---@field timeout? integer
 ---@field icon? string
 ---@field transient? boolean
----@field criticality? M.Crit
+---@field criticality? Util.Notif.Crit
 
---- Send notification
+--- Desktop notification, for anything seen during a normal session.
 ---@param title string
 ---@param body string
----@param opts M.Opts?
-function M.Send(title, body, opts)
+---@param opts Util.Notif.Opts?
+function M.send(title, body, opts)
   opts = opts or {}
   local cmd = "notify-send"
 
@@ -27,19 +27,26 @@ function M.Send(title, body, opts)
 
   if opts.transient == true then
     cmd = cmd .. " -h boolean:transient:true"
-    -- cmd = cmd .. " -e"
   end
 
-  if opts.criticality ~= nil then
-    cmd = cmd .. " -u " .. opts.criticality
-  else
-    cmd = cmd .. " -u normal"
-  end
-
+  cmd = cmd .. " -u " .. (opts.criticality or "normal")
   cmd = table.concat({ cmd, string.format("%q", title), string.format("%q", body) }, " ")
-  -- hl.notification.create({ text = cmd, timeout = opts.timeout or 1000, icon = 0, font_size = 17 })
 
   hl.exec_cmd(cmd)
+end
+
+--- Hyprland's own overlay. For problems raised while the config is being
+--- evaluated, when a notify-send would go nowhere.
+---@param text string
+---@param opts {timeout?: integer, icon?: integer, font_size?: number}?
+function M.osd(text, opts)
+  opts = opts or {}
+  hl.notification.create({
+    text = text,
+    timeout = opts.timeout or 10000,
+    icon = opts.icon or 0,
+    font_size = opts.font_size or 17,
+  })
 end
 
 return M

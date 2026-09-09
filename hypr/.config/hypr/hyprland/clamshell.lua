@@ -1,88 +1,83 @@
-local dbg = UTIL.dbg
-local mon = UTIL.monitor
+--------------------------------------------------------------------------------
+---                                CLAMSHELL                                 ---
+--------------------------------------------------------------------------------
+--- Internal display off when the lid is shut *and* an external is attached,
+--- so closing the lid on a bare laptop never blanks the session.
+
+---@class Config.Clamshell
+---@field enabled boolean
+---@field lid_switch string  switch name, from `hyprctl devices`
 
 local M = {}
 
----@param cfg Config
-function M.setup(cfg)
-  assert(cfg.internal, "clamshell: 'internal' is required")
-  assert(cfg.clamshell and cfg.clamshell.enabled, "clamshell: setup called but not enabled")
-  assert(cfg.clamshell.lid_switch, "clamshell: 'lid_switch' is required")
+local dbg = UTIL.dbg
 
-  local internal_name = cfg.internal.output
+--- From /proc rather than remembered: the Lua state is rebuilt each reload.
+---@return boolean
+local function readLidClosed()
+  for _, path in ipairs(UTIL.sys.glob("/proc/acpi/button/lid/*/state")) do
+    local content = UTIL.sys.readFile(path)
+    if content then return content:match("closed") ~= nil end
+  end
+  return false
+end
 
-  -- Spec for the internal being ON: the user's spec with disabled cleared.
-  local internal_on = {}
-  for k, v in pairs(cfg.internal) do internal_on[k] = v end
-  internal_on.disabled = false
+function M.setup()
+  local cfg = UTIL.config.section("clamshell", { enabled = false })
+  if not cfg.enabled then return end
 
-  -- Spec for the internal being OFF.
-  local internal_off = {}
-  for k, v in pairs(cfg.internal) do internal_off[k] = v end
-  internal_off.disabled = true
-
-  local function readLidClosed()
-    for _, path in ipairs({
-      "/proc/acpi/button/lid/LID0/state",
-      "/proc/acpi/button/lid/LID/state",
-    }) do
-      local f = io.open(path, "r")
-      if f then
-        local content = f:read("*all")
-        f:close()
-        return content:match("closed") ~= nil
-      end
-    end
-    return false
+  -- Misconfiguration disables the feature rather than asserting, which would
+  -- abort the whole evaluation and take the session's keybinds with it.
+  local monitors = UTIL.config.section("monitors", { external = {} })
+  if monitors.internal == nil then
+    UTIL.notif.osd("clamshell: enabled, but monitors.internal is not set")
+    return
+  end
+  if cfg.lid_switch == nil then
+    UTIL.notif.osd("clamshell: enabled, but clamshell.lid_switch is not set")
+    return
   end
 
-  ---@return boolean
-  local function externalConnected()
-    for _, m in ipairs(hl.get_monitors()) do
-      if m.name ~= internal_name then
-        return true
-      end
-    end
-    return false
-  end
+  local internal = monitors.internal
+  local internal_on = UTIL.output.override(internal, { disabled = false })
+  local internal_off = UTIL.output.override(internal, { disabled = true })
 
-  -- Fresh closure each reload (Lua state is rebuilt), re-seeded from /proc.
-  -- Nothing here needs to persist across reloads.
   local lid_closed = readLidClosed()
 
   local function apply()
-    local want_off = lid_closed and externalConnected()
-    mon.apply(want_off and internal_off or internal_on)
+    local external_connected = #UTIL.output.othersThan(internal.output) > 0
+    local want_off = lid_closed and external_connected
+    UTIL.output.apply(want_off and internal_off or internal_on)
   end
 
-  hl.bind("switch:on:" .. cfg.clamshell.lid_switch, function()
+  hl.bind("switch:on:" .. cfg.lid_switch, function()
     lid_closed = true
     dbg.trace("clamshell: lid closed, internal OFF if external connected")
     apply()
   end, { locked = true })
 
-  hl.bind("switch:off:" .. cfg.clamshell.lid_switch, function()
+  hl.bind("switch:off:" .. cfg.lid_switch, function()
     lid_closed = false
     dbg.trace("clamshell: lid opened, internal ON")
     apply()
   end, { locked = true })
 
-  hl.on("monitor.added", function(test)
-    dbg.trace("clamshell: monitor added, re-evaluating internal state", test)
+  hl.on("monitor.added", function()
+    dbg.trace("clamshell: monitor added, re-evaluating")
     apply()
   end)
-  --- This event fires when internal is disabled but will not be applied again
-  hl.on("monitor.removed", function(test)
-    dbg.trace("clamshell: monitor removed, re-evaluating internal state", test)
+
+  hl.on("monitor.removed", function()
+    dbg.trace("clamshell: monitor removed, re-evaluating")
     apply()
   end)
 
   hl.on("hyprland.start", function()
-    dbg.trace("clamshell: hyprland.start, re-evaluating internal state")
+    dbg.trace("clamshell: hyprland.start, re-evaluating")
     apply()
   end)
 
-  dbg.trace("clamshell: setup() called, re-evaluating internal state")
+  dbg.trace("clamshell: setup, evaluating internal state")
   apply()
 end
 
