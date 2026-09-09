@@ -112,7 +112,7 @@ local function resolve()
   end
 
   local binary = BINARY[chosen]
-  if binary and not UTIL.helpers.cmd_exists(binary) then
+  if binary and not UTIL.helpers.cmdExists(binary) then
     UTIL.notif.osd(("Shell %q is configured but %q is not on PATH")
       :format(chosen, binary))
   end

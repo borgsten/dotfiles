@@ -4,7 +4,7 @@ local M = {}
 --- Check if a command exists in path
 ---@param cmd string
 ---@return boolean
-function M.cmd_exists(cmd)
+function M.cmdExists(cmd)
   for dir in (os.getenv("PATH") or ""):gmatch("[^:]+") do
     local f = io.open(dir .. "/" .. cmd, "r")
     if f then
@@ -18,7 +18,7 @@ end
 ---@param service string
 ---@param user boolean user or system service
 ---@return boolean
-function M.service_active(service, user)
+function M.serviceActive(service, user)
   local scope = user and "--user " or ""
   local cmd = ("systemctl %sis-active %s 2>/dev/null"):format(scope, service)
   local h = io.popen(cmd)

@@ -2,7 +2,7 @@
 local M = {}
 
 -- inspect: vim.inspect-style pretty printer
-local function is_identifier(k)
+local function isIdentifier(k)
   return type(k) == "string" and k:match("^[%a_][%w_]*$") ~= nil
 end
 
@@ -40,12 +40,12 @@ local function inspect(value, opts)
     end
     seen[v]      = true
 
-    local pad    = indent:rep(depth + 1)
-    local padEnd = indent:rep(depth)
-    local parts  = {}
+    local pad     = indent:rep(depth + 1)
+    local pad_end = indent:rep(depth)
+    local parts   = {}
 
     -- array part first
-    local n      = 0
+    local n       = 0
     for i, item in ipairs(v) do
       parts[#parts + 1] = pad .. fmt(item, depth + 1)
       n = i
@@ -59,13 +59,13 @@ local function inspect(value, opts)
     end
     table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
     for _, k in ipairs(keys) do
-      local key = is_identifier(k) and k or ("[" .. fmt(k, depth + 1) .. "]")
+      local key = isIdentifier(k) and k or ("[" .. fmt(k, depth + 1) .. "]")
       parts[#parts + 1] = pad .. key .. " = " .. fmt(v[k], depth + 1)
     end
 
     seen[v] = nil
     if #parts == 0 then return "{}" end
-    return "{\n" .. table.concat(parts, ",\n") .. "\n" .. padEnd .. "}"
+    return "{\n" .. table.concat(parts, ",\n") .. "\n" .. pad_end .. "}"
   end
 
   return fmt(value, 0)
