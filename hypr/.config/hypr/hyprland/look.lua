@@ -4,9 +4,7 @@
 
 -- https://wiki.hyprland.org/Configuring/Variables/
 
-local theme_path = os.getenv("HOME") .. "/.cache/theming"
-package.path = theme_path .. "/?.lua;" .. package.path
-local theme = require("hyprland_theme")
+local theme = UTIL.theme.get()
 
 --- The theme exports decimal `rgb(r,g,b)`; Hyprland only takes alpha in the
 --- hex `rgba(rrggbbaa)` form.

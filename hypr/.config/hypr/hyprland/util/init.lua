@@ -15,6 +15,7 @@ local ALIASES = {
   tbl        = "tbl",
   scratchpad = "scratchpad",
   watch      = "watch",
+  theme      = "theme",
 }
 
 ---Type hints only: these resolve UTIL.dbg etc. to the real submodule class
@@ -31,6 +32,7 @@ local ALIASES = {
 ---@field tbl Util.Tbl
 ---@field scratchpad Util.Scratchpad
 ---@field watch Util.Watch
+---@field theme Util.Theme
 local M = setmetatable({}, {
   __index = function(t, key)
     local modname = ALIASES[key]
