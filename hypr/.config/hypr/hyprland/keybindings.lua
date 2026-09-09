@@ -7,15 +7,16 @@ local terminal    = "uwsm app -- xdg-terminal-exec"
 local fileManager = "uwsm app -- xdg-open " .. os.getenv("HOME")
 local configHome  = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
 
-local util        = require("lib.util")
-local b           = require("lib.bind")
+local helpers     = UTIL.helpers
+local b           = UTIL.bind
 local groups      = require("hyprland.groups")
+
 --------------------------------------------------------------------------------
 ---                                  SHELL                                   ---
 --------------------------------------------------------------------------------
 
 ---@type Actions
-local shell       = require("lib.shell")
+local shell       = require("hyprland.shell")
 
 b.bind({ b.SPR }, "D", shell.launcher, "Open Launcher")
 b.bind({ b.SPR }, "B", shell.bookmarks, "Open Bookmarks")
@@ -86,6 +87,7 @@ end
 -- A group is i3's tabbed container: SUPER + T wraps the focused window in one
 -- and dissolves it again. (i3: `layout toggle tabbed split`)
 b.bind({ b.SPR }, "T", hl.dsp.group.toggle(), "Toggle tabbed group")
+b.bind({ b.SPR, b.SHFT }, "T", hl.dsp.group.toggle(), "Swallow all windows to group")
 
 -- Cycle tabs explicitly. SUPER + h/l does this too while inside a group,
 -- courtesy of binds.movefocus_cycles_groupfirst.
@@ -123,7 +125,7 @@ b.bind({ b.SPR }, { "Q", "S" }, scratch.toggleScratchpad, "Toggle scratchpad")
 b.bind({ b.SPR, b.SHFT }, "S", scratch.emptyScratchpad, "Empty all non scratchpad windows from workspace")
 
 -- Center and resize to 80% of current screen
-b.bind({ b.SPR }, "C", util.ResizePercent(0.8, 0.8, true), "Center floating window")
+b.bind({ b.SPR }, "C", helpers.resizePercent(0.8, 0.8, true), "Center floating window")
 
 -- Scroll through existing workspaces
 -- TODO: FIX

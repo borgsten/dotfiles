@@ -25,6 +25,6 @@ hl.config({
     -- Groups are explicit containers, like i3. A window opened while a group
     -- is focused tiles beside it instead of silently becoming another tab;
     -- windows join a group only via SUPER + SHIFT + <dir>.
-    auto_group = false,
+    auto_group = true,
   },
 })

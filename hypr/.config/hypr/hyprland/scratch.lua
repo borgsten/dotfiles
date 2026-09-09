@@ -2,12 +2,12 @@
 ---                               SCRATCHPAD                                 ---
 --------------------------------------------------------------------------------
 
-M = {}
+local M = {}
 
-SCRATCHPAD_WORKSPACE_NAME = "special:scratch"
-SCRATCHPAD_CLASS_NAME = "com.scratch"
+local SCRATCHPAD_WORKSPACE_NAME = "special:scratch"
+local SCRATCHPAD_CLASS_NAME = "com.scratch"
 
-local dbg = require("lib.debug")
+local dbg = UTIL.dbg
 
 --- Get scratchpad window if it exists
 ---@return HL.Window | nil

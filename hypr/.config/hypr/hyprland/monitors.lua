@@ -5,7 +5,7 @@
 -- the actual apply to lib.monitor so reloads don't re-modeset monitors that
 -- are already in the right state.
 
-local mon = require("lib.monitor")
+local mon = UTIL.monitor
 
 local M = {}
 

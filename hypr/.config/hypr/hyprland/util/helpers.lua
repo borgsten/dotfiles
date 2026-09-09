@@ -1,6 +1,5 @@
+---@class Util.Helpers
 local M = {}
-
-local dbg = require("lib.debug")
 
 --- Check if a command exists in path
 ---@param cmd string
@@ -74,7 +73,7 @@ end
 ---@param height number between 0.0 - 1.0
 ---@param center boolean? center window as well
 ---@return function
-function M.ResizePercent(width, height, center)
+function M.resizePercent(width, height, center)
   return function()
     if center then
       hl.dispatch(hl.dsp.window.center())
@@ -90,6 +89,14 @@ function M.ResizePercent(width, height, center)
     local h = math.floor(scaled_height * height)
 
     hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
+  end
+end
+
+--- Focus any urgent window that isn't already focused
+function M.focusUrgentWindow()
+  local urgent = hl.get_urgent_window()
+  if urgent and urgent ~= hl.get_active_window() then
+    hl.dispatch(hl.dsp.focus({ window = urgent }))
   end
 end
 

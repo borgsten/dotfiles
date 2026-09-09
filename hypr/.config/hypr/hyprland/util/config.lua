@@ -13,6 +13,7 @@
 ---@field internal? HL.MonitorSpec
 ---@field clamshell? ClamshellConfig
 
+---@class Util.Config
 local M = {}
 
 -- Load the per-machine (gitignored) config table. Returns nil if absent,

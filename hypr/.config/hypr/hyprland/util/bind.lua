@@ -1,3 +1,4 @@
+---@class Util.Bind
 local M = {}
 
 M.ALT = "ALT"

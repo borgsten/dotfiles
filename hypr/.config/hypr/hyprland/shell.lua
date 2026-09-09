@@ -118,8 +118,8 @@ local actions = {
 
 --- Get shell actions for current session
 ---@return Actions
-local function get_shell_actions()
-  local config = require("lib.config").load()
+local function GetShellActions()
+  local config = UTIL.config.load()
   if config == nil or config.shell == nil then
     hl.notification.create({ text = "Shell not configured, falling back to bespoke", timeout = 10000, icon = 0, font_size = 17 })
     return actions.external
@@ -135,4 +135,4 @@ local function get_shell_actions()
   return actions.external
 end
 
-return get_shell_actions()
+return GetShellActions()

@@ -14,7 +14,7 @@
 
 local M = {}
 
-local dbg = require("lib.debug")
+local dbg = UTIL.dbg
 
 --- Snapshot the parts of a window that change when it enters or leaves a
 --- group, so a no-op `into_group` can be told apart from a real move.

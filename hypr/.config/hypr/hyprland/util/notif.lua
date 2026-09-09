@@ -1,3 +1,4 @@
+---@class Util.Notif
 local M = {}
 
 ---@alias M.Crit "low" | "normal" | "critical"

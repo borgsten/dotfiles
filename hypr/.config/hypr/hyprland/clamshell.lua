@@ -1,5 +1,5 @@
-local mon = require("lib.monitor")
-local dbg = require("lib.debug")
+local dbg = UTIL.dbg
+local mon = UTIL.monitor
 
 local M = {}
 
@@ -21,7 +21,7 @@ function M.setup(cfg)
   for k, v in pairs(cfg.internal) do internal_off[k] = v end
   internal_off.disabled = true
 
-  local function read_lid_closed()
+  local function readLidClosed()
     for _, path in ipairs({
       "/proc/acpi/button/lid/LID0/state",
       "/proc/acpi/button/lid/LID/state",
@@ -37,7 +37,7 @@ function M.setup(cfg)
   end
 
   ---@return boolean
-  local function external_connected()
+  local function externalConnected()
     for _, m in ipairs(hl.get_monitors()) do
       if m.name ~= internal_name then
         return true
@@ -48,10 +48,10 @@ function M.setup(cfg)
 
   -- Fresh closure each reload (Lua state is rebuilt), re-seeded from /proc.
   -- Nothing here needs to persist across reloads.
-  local lid_closed = read_lid_closed()
+  local lid_closed = readLidClosed()
 
   local function apply()
-    local want_off = lid_closed and external_connected()
+    local want_off = lid_closed and externalConnected()
     mon.apply(want_off and internal_off or internal_on)
   end
 

@@ -1,7 +1,8 @@
+---@class Util.Monitor
 local M = {}
 
-local dbg = require("lib.debug")
-local util = require("lib.util")
+local dbg = UTIL.dbg
+local util = UTIL.helpers
 
 ---@type table<string, HL.MonitorSpec>
 local applied = {}

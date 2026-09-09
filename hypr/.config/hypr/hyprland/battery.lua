@@ -7,15 +7,18 @@ local notified_critical = false
 local LOW_LEVEL = 20
 local CRIT_LEVEL = 10
 
-local function find_battery_path()
+local function findBatteryPath()
   for _, name in ipairs({ "BAT0", "BAT1", "BATT", "BAT" }) do
     local f = io.open("/sys/class/power_supply/" .. name .. "/capacity", "r")
-    if f then f:close(); return "/sys/class/power_supply/" .. name end
+    if f then
+      f:close()
+      return "/sys/class/power_supply/" .. name
+    end
   end
   return nil
 end
 
-local BATTERY_PATH = find_battery_path()
+local BATTERY_PATH = findBatteryPath()
 
 --- Get current battery status
 ---@return string? status
@@ -28,7 +31,7 @@ local function getStatus()
   return status
 end
 
-local function check_battery()
+local function checkBattery()
   local status = getStatus()
   if status == "Charging" then
     notified_low = false
@@ -44,9 +47,8 @@ local function check_battery()
   local level = tonumber(file:read("*all"))
   file:close()
 
-  local notif = require("lib.notif")
   local function notify(title, message)
-    notif.Send(title, message,
+    UTIL.notif.Send(title, message,
       { icon = "dialog-warning", transient = true, timeout = 15 * 60 * 1000, criticality = "critical" })
   end
 
@@ -63,5 +65,5 @@ local function check_battery()
 end
 
 if getStatus() ~= nil then
-  hl.timer(check_battery, { timeout = 30000, type = "repeat" })
+  hl.timer(checkBattery, { timeout = 30000, type = "repeat" })
 end
