@@ -21,6 +21,10 @@ key[Shift-Tab]="${terminfo[kcbt]}"
 key[Ctrl-Left]="${terminfo[kLFT5]}"
 key[Ctrl-Right]="${terminfo[kRIT5]}"
 
+typeset -ga home_keys end_keys
+home_keys=("${key[Home]}" $'\e[H' $'\eOH' $'\e[1~' $'\e[7~')
+end_keys=("${key[End]}" $'\e[F' $'\eOF' $'\e[4~' $'\e[8~')
+
 # load widgets
 autoload -U up-line-or-beginning-search down-line-or-beginning-search reverse-menu-complete
 zle -N up-line-or-beginning-search
@@ -39,8 +43,12 @@ zle -N reverse-menu-complete
 # parsed as commands (e.g. Home/End end in "~", which is vi-swap-case - hence
 # text randomly turning uppercase after pressing Home/End).
 for km in viins vicmd; do
-    [[ -n "${key[Home]}"       ]] && bindkey -M $km -- "${key[Home]}"       beginning-of-line
-    [[ -n "${key[End]}"        ]] && bindkey -M $km -- "${key[End]}"        end-of-line
+    for seq in "${home_keys[@]}"; do
+        [[ -n "$seq" ]] && bindkey -M $km -- "$seq" beginning-of-line
+    done
+    for seq in "${end_keys[@]}"; do
+        [[ -n "$seq" ]] && bindkey -M $km -- "$seq" end-of-line
+    done
     [[ -n "${key[Up]}"         ]] && bindkey -M $km -- "${key[Up]}"         up-line-or-beginning-search
     [[ -n "${key[Down]}"       ]] && bindkey -M $km -- "${key[Down]}"       down-line-or-beginning-search
     [[ -n "${key[Left]}"       ]] && bindkey -M $km -- "${key[Left]}"       backward-char
