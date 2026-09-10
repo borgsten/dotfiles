@@ -28,20 +28,28 @@ zle -N down-line-or-beginning-search
 zle -N reverse-menu-complete
 
 # setup key accordingly
-[[ -n "${key[Home]}"       ]] && bindkey -- "${key[Home]}"       beginning-of-line
-[[ -n "${key[End]}"        ]] && bindkey -- "${key[End]}"        end-of-line
 [[ -n "${key[Insert]}"     ]] && bindkey -- "${key[Insert]}"     overwrite-mode
 [[ -n "${key[Backspace]}"  ]] && bindkey -- "${key[Backspace]}"  backward-delete-char
 [[ -n "${key[Delete]}"     ]] && bindkey -- "${key[Delete]}"     delete-char
-[[ -n "${key[Up]}"         ]] && bindkey -- "${key[Up]}"         up-line-or-beginning-search
-[[ -n "${key[Down]}"       ]] && bindkey -- "${key[Down]}"       down-line-or-beginning-search
-[[ -n "${key[Left]}"       ]] && bindkey -- "${key[Left]}"       backward-char
-[[ -n "${key[Right]}"      ]] && bindkey -- "${key[Right]}"      forward-char
-[[ -n "${key[PageUp]}"     ]] && bindkey -- "${key[PageUp]}"     beginning-of-buffer-or-history
-[[ -n "${key[PageDown]}"   ]] && bindkey -- "${key[PageDown]}"   end-of-buffer-or-history
 [[ -n "${key[Shift-Tab]}"  ]] && bindkey -- "${key[Shift-Tab]}"  reverse-menu-complete
-[[ -n "${key[Ctrl-Left]}"  ]] && bindkey -- "${key[Ctrl-Left]}"  backward-word
-[[ -n "${key[Ctrl-Right]}" ]] && bindkey -- "${key[Ctrl-Right]}" forward-word
+
+# Navigation keys need binding in both viins and vicmd: bindkey without -M only
+# hits viins (bindkey -v already made that the "main" keymap above), so in vi
+# command mode their raw escape sequences fell through to the vi keymap and got
+# parsed as commands (e.g. Home/End end in "~", which is vi-swap-case - hence
+# text randomly turning uppercase after pressing Home/End).
+for km in viins vicmd; do
+    [[ -n "${key[Home]}"       ]] && bindkey -M $km -- "${key[Home]}"       beginning-of-line
+    [[ -n "${key[End]}"        ]] && bindkey -M $km -- "${key[End]}"        end-of-line
+    [[ -n "${key[Up]}"         ]] && bindkey -M $km -- "${key[Up]}"         up-line-or-beginning-search
+    [[ -n "${key[Down]}"       ]] && bindkey -M $km -- "${key[Down]}"       down-line-or-beginning-search
+    [[ -n "${key[Left]}"       ]] && bindkey -M $km -- "${key[Left]}"       backward-char
+    [[ -n "${key[Right]}"      ]] && bindkey -M $km -- "${key[Right]}"      forward-char
+    [[ -n "${key[PageUp]}"     ]] && bindkey -M $km -- "${key[PageUp]}"     beginning-of-buffer-or-history
+    [[ -n "${key[PageDown]}"   ]] && bindkey -M $km -- "${key[PageDown]}"   end-of-buffer-or-history
+    [[ -n "${key[Ctrl-Left]}"  ]] && bindkey -M $km -- "${key[Ctrl-Left]}"  backward-word
+    [[ -n "${key[Ctrl-Right]}" ]] && bindkey -M $km -- "${key[Ctrl-Right]}" forward-word
+done
 
 # Finally, make sure the terminal is in application mode, when zle is
 # active. Only then are the values from $terminfo valid.
