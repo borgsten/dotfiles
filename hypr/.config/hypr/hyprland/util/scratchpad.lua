@@ -6,8 +6,9 @@ local M = {}
 
 ---@class Util.Scratchpad.Spec
 ---@field name string        identifier, and the special workspace's suffix
----@field class string       the window's `initial_class`
----@field cmd string         command that spawns it
+---@field class string       regex matched against the window's class
+---@field cmd? string        command that spawns it; omit to never auto-launch,
+---                          only adopt a window you started yourself
 ---@field size? number       fraction of the monitor, 0.0-1.0 (default 0.8)
 ---@field workspace? string  defaults to `"special:" .. name`
 
@@ -23,17 +24,30 @@ function M.new(spec)
   local dbg = UTIL.dbg
   local name = assert(spec.name, "scratchpad: 'name' is required")
   local class = assert(spec.class, "scratchpad: 'class' is required")
-  local cmd = assert(spec.cmd, "scratchpad: 'cmd' is required")
+  local cmd = spec.cmd
   local workspace = spec.workspace or ("special:" .. name)
   local size = spec.size or 0.8
+  local tag = "scratch-" .. name
 
   local S = {}
 
+  ---@param w HL.Window
+  ---@return boolean
+  local function hasTag(w)
+    local tags = w.tags
+    if type(tags) == "table" then
+      for _, t in ipairs(tags) do
+        if t == tag or t == tag .. "*" then return true end
+      end
+      return false
+    end
+    return tags == tag or tags == tag .. "*"
+  end
+
   ---@return HL.Window|nil
   local function findWindow()
-    for _, w in ipairs(hl.get_windows({ class = class })) do
-      -- The query is a loose match; initial_class is the real test.
-      if w.initial_class == class then return w end
+    for _, w in ipairs(hl.get_windows({})) do
+      if hasTag(w) then return w end
     end
     return nil
   end
@@ -72,6 +86,10 @@ function M.new(spec)
   function S.toggle()
     local w = findWindow()
     if w == nil then
+      if cmd == nil then
+        dbg.info(("scratchpad %s: no window and no cmd configured, nothing to do"):format(name))
+        return
+      end
       dbg.warn(("scratchpad %s: no window, launching %q"):format(name, cmd))
       hl.exec_cmd(cmd)
       return
@@ -89,7 +107,7 @@ function M.new(spec)
   --- Rescue any non-scratchpad window from the stash workspace.
   function S.empty()
     for _, w in ipairs(hl.get_workspace_windows(workspace)) do
-      if w.initial_class ~= class then
+      if not hasTag(w) then
         dbg.warn(("scratchpad %s: evicting stray window %s(%d)")
           :format(name, w.title, w.stable_id))
         unstash(w)
@@ -99,16 +117,24 @@ function M.new(spec)
 
   function S.setup()
     hl.window_rule({
+      name  = "scratchpad-tag-" .. name,
+      match = { class = class },
+      tag   = "+" .. tag,
+    })
+
+    hl.window_rule({
       name      = "scratchpad-" .. name,
-      match     = { class = class },
+      match     = { tag = tag },
       float     = true,
       workspace = workspace .. " silent",
       size      = { ("monitor_w * %s"):format(size), ("monitor_h * %s"):format(size) },
     })
 
-    hl.on("hyprland.start", function()
-      hl.exec_cmd(cmd)
-    end)
+    if cmd ~= nil then
+      hl.on("hyprland.start", function()
+        hl.exec_cmd(cmd)
+      end)
+    end
   end
 
   return S

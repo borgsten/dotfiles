@@ -3,8 +3,9 @@
 --------------------------------------------------------------------------------
 
 ---@class Config.Scratchpad
----@field class string   the window's `initial_class`
----@field cmd string     command that spawns it
+---@field class string   regex matched against the window's class
+---@field cmd? string    command that spawns it; omit to only adopt a window
+---                       you start yourself, never auto-launch it
 ---@field size? number   fraction of the monitor, 0.0-1.0
 
 local M = {}
