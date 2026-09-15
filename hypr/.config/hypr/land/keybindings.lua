@@ -116,6 +116,7 @@ b.bind({ b.SPR, b.SHFT }, "grave", hl.dsp.window.move({ workspace = "name:B" }),
 -- Scratchpad (setup runs from the entrypoint)
 local scratch = require("land.scratch")
 b.bind({ b.SPR }, { "Q", "S" }, scratch.toggle("scratch"), "Toggle scratchpad")
+b.bind({ b.SPR }, { "X" }, scratch.toggle("spotify"), "Toggle scratchpad")
 b.bind({ b.SPR, b.SHFT }, "S", scratch.empty("scratch"), "Empty all non scratchpad windows from workspace")
 
 b.bind({ b.SPR }, "C", helpers.resizePercent(0.8, 0.8, true), "Center floating window")

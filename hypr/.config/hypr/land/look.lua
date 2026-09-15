@@ -23,8 +23,8 @@ end
 -- Active tabs are light surfaces under dark text, so fading moves them toward
 -- the text: 0.75 is the floor before the title drops under WCAG AA (4.6:1).
 -- Inactive tabs fade away from their text, so they have more room.
-local TAB_ALPHA_ACTIVE   = 0.75
-local TAB_ALPHA_INACTIVE = 0.85
+local TAB_ALPHA_ACTIVE   = 0.5
+local TAB_ALPHA_INACTIVE = 0.5
 
 -- https://wiki.hyprland.org/Configuring/Variables/#general
 hl.config({
@@ -76,31 +76,31 @@ hl.config({
     },
     groupbar = {
       -- Defaults (height 14 / font_size 8) are too small to read.
-      height            = 20,
-      font_size         = 11,
-      text_padding      = 6,
-      render_titles     = true,
+      height                     = 20,
+      font_size                  = 14,
+      text_padding               = 6,
+      render_titles              = true,
       -- Kept on single-tab groups: the only cue that a window is grouped.
-      disable_when_only = false,
+      disable_when_only          = false,
 
       -- Without gradients Hyprland paints only the indicator line and leaves
       -- the tab transparent, so titles have nothing to sit on.
-      gradients         = true,
-      indicator_height  = 0,
+      gradients                  = true,
+      indicator_height           = 0,
 
       -- Square, to match decoration.rounding = 0.
-      rounding          = 0,
-      gradient_rounding = 0,
+      rounding                   = 0,
+      gradient_rounding          = 0,
 
       -- Each surface paired with its matching `on*` foreground, so contrast
       -- holds for any generated palette.
-      text_color                 = theme.onPrimary,        -- on primary
-      text_color_inactive        = theme.onSurfaceVariant, -- on surfaceContainerHigh
-      text_color_locked_active   = theme.onError,          -- on error
-      text_color_locked_inactive = theme.onErrorContainer, -- on errorContainer
+      text_color                 = theme.onPrimaryContainer, -- on primary
+      text_color_inactive        = theme.onSurface,          -- on surfaceContainerHigh
+      text_color_locked_active   = theme.onError,            -- on error
+      text_color_locked_inactive = theme.onErrorContainer,   -- on errorContainer
       col                        = {
-        active          = fade(theme.primary, TAB_ALPHA_ACTIVE),
-        inactive        = fade(theme.surfaceContainerHigh, TAB_ALPHA_INACTIVE),
+        active          = fade(theme.primaryContainer, TAB_ALPHA_ACTIVE),
+        inactive        = fade(theme.surface, TAB_ALPHA_INACTIVE),
         locked_active   = fade(theme.error, TAB_ALPHA_ACTIVE),
         locked_inactive = fade(theme.errorContainer, TAB_ALPHA_INACTIVE),
       },
