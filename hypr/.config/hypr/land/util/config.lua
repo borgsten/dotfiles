@@ -1,5 +1,5 @@
 --- Resolving configuration sections. Generic: the schema lives in
---- `hyprland/config.lua`, this knows only how to merge a section over defaults.
+--- `land/config.lua`, this knows only how to merge a section over defaults.
 ---@class Util.Config
 local M = {}
 
@@ -14,14 +14,14 @@ local function readLocal()
 
   -- searchpath first: an absent local config is normal and stays quiet, a
   -- present but broken one must be loud.
-  if not package.searchpath("hyprland.local.config", package.path) then
+  if not package.searchpath("land.local.config", package.path) then
     raw = {}
     return raw
   end
 
   -- osd rather than notify-send: config evaluation can run before any
   -- notification daemon is up.
-  local ok, cfg = pcall(require, "hyprland.local.config")
+  local ok, cfg = pcall(require, "land.local.config")
   if not ok then
     UTIL.notif.osd("Broken local config: " .. tostring(cfg), { timeout = 15000 })
     cfg = {}

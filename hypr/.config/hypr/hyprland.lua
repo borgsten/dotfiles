@@ -3,23 +3,23 @@
 -- Declarative modules take effect as they load. Those owning state, timers or
 -- subscriptions expose setup(), so requiring them alone does nothing.
 
-UTIL = require("hyprland.util")
+UTIL = require("land.util")
 
 -- Monitors before clamshell: the externals must exist before clamshell first
 -- asks whether any are connected.
-require("hyprland.monitors").setup()
-require("hyprland.clamshell").setup()
+require("land.monitors").setup()
+require("land.clamshell").setup()
 
 -- Per-machine additions outside the config schema.
-require("hyprland.local")
+require("land.local")
 
-require("hyprland.scratch").setup()
+require("land.scratch").setup()
 
-require("hyprland.keybindings")
-require("hyprland.windows")
-require("hyprland.input")
-require("hyprland.misc")
-require("hyprland.tiling")
-require("hyprland.look")
+require("land.keybindings")
+require("land.windows")
+require("land.input")
+require("land.misc")
+require("land.tiling")
+require("land.look")
 
-require("hyprland.battery").setup()
+require("land.battery").setup()

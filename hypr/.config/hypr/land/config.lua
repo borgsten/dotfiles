@@ -1,4 +1,4 @@
---- The shape of `hyprland/local/config.lua` (per-machine, gitignored).
+--- The shape of `land/local/config.lua` (per-machine, gitignored).
 ---
 --- Nothing requires this at runtime: it exists so lua_ls can resolve
 --- `---@type Config` there. Each feature module declares its own

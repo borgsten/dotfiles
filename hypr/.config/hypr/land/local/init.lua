@@ -5,7 +5,7 @@ if f then
   for path in f:lines() do
     if not path:match("init%.lua$") and not path:match("config%.lua$") then
       local mod = path:match(".+/(.+)%.lua$")
-      require("hyprland.local." .. mod)
+      require("land.local." .. mod)
     end
   end
   f:close()

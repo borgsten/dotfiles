@@ -1,4 +1,4 @@
--- Lazily loads hyprland.util.<key> on first access, as the global UTIL.
+-- Lazily loads land.util.<key> on first access, as the global UTIL.
 --
 -- _G.UTIL is assigned *before* any submodule is required, so submodules can
 -- reference UTIL.xxx for their own cross-deps regardless of load order.
@@ -39,7 +39,7 @@ local M = setmetatable({}, {
     if not modname then
       error(("UTIL.%s: no such util module"):format(tostring(key)), 2)
     end
-    local mod = require("hyprland.util." .. modname)
+    local mod = require("land.util." .. modname)
     rawset(t, key, mod) -- cache so subsequent lookups skip require()
     return mod
   end,

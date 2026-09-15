@@ -9,14 +9,14 @@ local configHome  = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.con
 
 local helpers     = UTIL.helpers
 local b           = UTIL.bind
-local groups      = require("hyprland.groups")
+local groups      = require("land.groups")
 
 --------------------------------------------------------------------------------
 ---                                  SHELL                                   ---
 --------------------------------------------------------------------------------
 
 ---@type Actions
-local shell       = require("hyprland.shell")
+local shell       = require("land.shell")
 
 b.bind({ b.SPR }, "D", shell.launcher, "Open Launcher")
 b.bind({ b.SPR }, "B", shell.bookmarks, "Open Bookmarks")
@@ -114,7 +114,7 @@ b.bind({ b.SPR }, "grave", hl.dsp.focus({ workspace = "name:B" }), "Switch to br
 b.bind({ b.SPR, b.SHFT }, "grave", hl.dsp.window.move({ workspace = "name:B" }), "Move to browser workspace ")
 
 -- Scratchpad (setup runs from the entrypoint)
-local scratch = require("hyprland.scratch")
+local scratch = require("land.scratch")
 b.bind({ b.SPR }, { "Q", "S" }, scratch.toggle("scratch"), "Toggle scratchpad")
 b.bind({ b.SPR, b.SHFT }, "S", scratch.empty("scratch"), "Empty all non scratchpad windows from workspace")
 
@@ -131,5 +131,5 @@ b.bind({}, "Print", hl.dsp.exec_cmd("flameshot gui"), "Take area screenshot")
 
 b.bind({ b.SPR, b.SHFT }, "comma", hl.dsp.exec_cmd("theme_menu"), "Open theme menu")
 
-b.bind({ b.SPR, b.ALT }, "k", hl.dsp.exec_cmd(configHome .. "/hypr/hyprland/scripts/keymap_hint.sh"),
+b.bind({ b.SPR, b.ALT }, "k", hl.dsp.exec_cmd(configHome .. "/hypr/land/scripts/keymap_hint.sh"),
   "Show all keybindings")

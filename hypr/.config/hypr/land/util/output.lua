@@ -1,5 +1,5 @@
 --- Applying monitor specs. Named `output` to stay distinct from the
---- `hyprland/monitors.lua` policy module.
+--- `land/monitors.lua` policy module.
 ---@class Util.Output
 local M = {}
 
