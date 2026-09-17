@@ -24,7 +24,7 @@ export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export HISTSIZE=1000000
 export SAVEHIST=1000000
 
-if (( ! $+commands[mise] )); then
+if (( $+commands[mise] )); then
     eval "$(mise activate zsh)"
 fi
 
