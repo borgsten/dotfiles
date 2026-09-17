@@ -8,11 +8,13 @@ fpath+=("$ZSH_COMPLETION_DIR")
 
 autoload -Uz compinit
 # Rebuild the dump once every 24h, otherwise load it cheaply
-if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+compdump=${ZDOTDIR:-$HOME}/.zcompdump
+if [[ ! -e $compdump || -n $(print -r -- $compdump(N.mh+24)) ]]; then
     compinit
 else
     compinit -C
 fi
+unset compdump
 
 # Include .* and .. in completion results unprovoked
 # _comp_options+=(globdots)
