@@ -24,6 +24,10 @@ export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export HISTSIZE=1000000
 export SAVEHIST=1000000
 
+if (( ! $+commands[mise] )); then
+    eval "$(mise activate zsh)"
+fi
+
 source "$ZDOTDIR/exports.zsh"
 source "$ZDOTDIR/options.zsh"
 source "$ZDOTDIR/completion.zsh"
