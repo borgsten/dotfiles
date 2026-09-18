@@ -125,9 +125,10 @@ function M.new(spec)
     hl.window_rule({
       name      = "scratchpad-" .. name,
       match     = { tag = tag },
+      center    = true,
       float     = true,
-      workspace = workspace .. " silent",
       size      = { ("monitor_w * %s"):format(size), ("monitor_h * %s"):format(size) },
+      workspace = workspace .. " silent",
     })
 
     if cmd ~= nil then
