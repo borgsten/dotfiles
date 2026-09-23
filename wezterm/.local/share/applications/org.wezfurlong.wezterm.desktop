@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Name=WezTerm
+Comment=Wez's Terminal Emulator
+Icon=org.wezfurlong.wezterm
+TryExec=wezterm
+Exec=wezterm start
+Terminal=false
+StartupWMClass=org.wezfurlong.wezterm
+Categories=System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;cmd;
+
+X-TerminalArgExec=--
+X-TerminalArgAppId=--class
+X-TerminalArgDir=--cwd

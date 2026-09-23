@@ -19,6 +19,7 @@ configs=(
     "applications"
     "btop"
     "noctalia"
+    "wezterm"
 )
 
 # Make sure files are symlinced

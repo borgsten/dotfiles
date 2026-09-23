@@ -63,6 +63,11 @@ input_path = '~/.config/matugen/templates/ghostty'
 output_path = '~/.cache/theming/ghostty'
 post_hook = 'pkill -SIGUSR2 ghostty'
 
+[templates.wezterm]
+input_path = '~/.config/matugen/templates/wezterm.toml'
+output_path = '~/.cache/theming/wezterm/Noctalia.toml'
+post_hook = '~/.config/matugen/reload_wezterm.sh'
+
 [templates.p10k]
 input_path = '~/.config/matugen/templates/p10k.tpl'
 output_path = '~/.cache/theming/p10k.zsh'
