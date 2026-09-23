@@ -1,4 +1,4 @@
-local wezterm = require 'wezterm'
+local wezterm = require('wezterm')
 
 local M = {}
 
@@ -28,7 +28,8 @@ function M.apply_to_config(config)
     local title = tab.tab_title ~= '' and tab.tab_title
         or basename(pane.foreground_process_name ~= '' and pane.foreground_process_name or pane.title)
     local marker = tab.is_active and '*' or ' '
-    return string.format(' %d:%s%s ', tab.tab_index, title, marker)
+    local index = (tab.tab_index + 1) % 10
+    return string.format(' %d:%s%s ', index, title, marker)
   end)
 
   -- tmux-like right side (domain/host + time)
