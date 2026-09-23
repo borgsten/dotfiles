@@ -37,7 +37,11 @@ return {
     lazy = false,
     config = function()
       local oil = require('oil')
-      oil.setup({})
+      oil.setup({
+        keymaps = {
+          ["H"] = { "actions.toggle_hidden", mode = "n" },
+        },
+      })
       local function toggle_oil_in_split()
         if vim.bo.buftype == "oil" then
           oil.close()
