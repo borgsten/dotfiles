@@ -1,5 +1,7 @@
 local wezterm = require('wezterm')
-local config = wezterm.config_builder()
+-- Plain table instead of wezterm.config_builder() because it causes very
+-- slow config reloads. What it doesn't do is validate config.
+local config = {}
 
 config.font = wezterm.font('JetBrains Mono')
 
