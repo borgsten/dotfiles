@@ -33,24 +33,10 @@ require('lazy').setup({ import = 'plugins', },
     change_detection = {
       notify = false
     },
+    -- Fallback to habamax on first install
+    install = {
+      colorscheme = { 'kanagawa', 'habamax' },
+    },
   })
-
-function DoFileIfExists(file_path)
-  if vim.fn.filereadable(file_path) == 0 then
-    return false
-  end
-
-  local ok, res = pcall(dofile, file_path)
-  if not ok then
-    vim.notify("Could not run file:\n" .. res)
-  end
-  return ok
-end
-
--- Load current theme, if it doesn't exist load default
-local current_theme = vim.env.XDG_CONFIG_HOME .. '/theming/current/neovim.lua'
-if not DoFileIfExists(current_theme) then
-  vim.cmd.colorscheme('kanagawa')
-end
 
 -- vim: ts=2 sts=2 sw=2 et

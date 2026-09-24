@@ -9,7 +9,7 @@ config.font = wezterm.font('JetBrains Mono')
 config.color_scheme_dirs = { wezterm.home_dir .. '/.cache/theming/wezterm' }
 config.color_scheme = 'Noctalia'
 config.window_background_opacity = 0.8
-config.text_background_opacity = 0.8
+config.text_background_opacity = 0.9
 
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 
