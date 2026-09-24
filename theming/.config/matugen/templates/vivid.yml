@@ -1,0 +1,145 @@
+# vivid theme for LS_COLORS (eza, ls, fd, ...), loaded by zsh/exports.zsh.
+#
+# The palette roles are too close in hue for file types (wallpaper themes are
+# all tints of one colour), so each category gets an artificial role instead:
+# primary's hue rotated by a fixed step, at a fixed saturation.
+# Categories stay 45 degrees apart whatever the theme, while directories keep
+# the theme's own accent hue. Lightness is left as primary's, which already
+# suits the mode (light on dark themes, dark on light ones); template
+# conditionals can't branch on the mode.
+colors:
+  directory:  '{{ colors.primary.default.hex_stripped | set_saturation 60 }}'
+  config:     '{{ colors.primary.default.hex_stripped | rotate_hue 45 | set_saturation 60 }}'
+  source:     '{{ colors.primary.default.hex_stripped | rotate_hue 90 | set_saturation 60 }}'
+  executable: '{{ colors.primary.default.hex_stripped | rotate_hue 135 | set_saturation 60 }}'
+  symlink:    '{{ colors.primary.default.hex_stripped | rotate_hue 180 | set_saturation 60 }}'
+  document:   '{{ colors.primary.default.hex_stripped | rotate_hue 225 | set_saturation 60 }}'
+  media:      '{{ colors.primary.default.hex_stripped | rotate_hue 270 | set_saturation 60 }}'
+  archive:    '{{ colors.primary.default.hex_stripped | rotate_hue 315 | set_saturation 60 }}'
+  text:        '{{ colors.on_surface.default.hex_stripped }}'
+  dim:         '{{ colors.outline.default.hex_stripped }}'
+  background:  '{{ colors.background.default.hex_stripped }}'
+  highlight:   '{{ colors.surface_container_highest.default.hex_stripped }}'
+  error:       '{{ colors.error.default.hex_stripped }}'
+  on_error:    '{{ colors.on_error.default.hex_stripped }}'
+  warning:     '{{ colors.error_container.default.hex_stripped }}'
+  on_warning:  '{{ colors.on_error_container.default.hex_stripped }}'
+
+core:
+  normal_text: {}
+  regular_file: {}
+  reset_to_normal: {}
+
+  directory:
+    foreground: directory
+    font-style: bold
+
+  symlink:
+    foreground: symlink
+    font-style: italic
+
+  multi_hard_link: {}
+
+  # pipes, sockets and devices stand out as blocks
+  fifo:
+    foreground: background
+    background: symlink
+
+  socket:
+    foreground: background
+    background: media
+
+  door:
+    foreground: background
+    background: media
+
+  block_device:
+    foreground: archive
+    background: highlight
+
+  character_device:
+    foreground: media
+    background: highlight
+
+  broken_symlink:
+    foreground: on_error
+    background: error
+
+  missing_symlink_target:
+    foreground: on_error
+    background: error
+
+  # permissions worth noticing
+  setuid:
+    foreground: on_warning
+    background: warning
+
+  setgid:
+    foreground: on_warning
+    background: warning
+
+  file_with_capability:
+    foreground: on_warning
+    background: warning
+
+  sticky_other_writable:
+    foreground: directory
+    background: highlight
+    font-style: underline
+
+  other_writable:
+    foreground: directory
+    background: highlight
+
+  sticky:
+    foreground: directory
+    font-style: underline
+
+  executable_file:
+    foreground: executable
+    font-style: bold
+
+text:
+  special:
+    foreground: text
+    font-style: [bold, underline]
+
+  todo:
+    foreground: text
+    font-style: bold
+
+  licenses:
+    foreground: dim
+
+  configuration:
+    foreground: config
+
+  other:
+    foreground: document
+
+markup:
+  foreground: document
+
+programming:
+  source:
+    foreground: source
+
+  tooling:
+    foreground: config
+
+office:
+  foreground: document
+
+media:
+  foreground: media
+
+archives:
+  foreground: archive
+  font-style: underline
+
+executable:
+  foreground: executable
+  font-style: bold
+
+unimportant:
+  foreground: dim
