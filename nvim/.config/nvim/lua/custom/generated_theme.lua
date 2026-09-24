@@ -1,27 +1,39 @@
--- Kanagawa, recoloured from the noctalia/matugen palette, available as the
--- `kanagawa-generated` colorscheme (colors/kanagawa-generated.lua). Plain
--- `:colorscheme kanagawa` stays stock.
+-- Kanagawa, recoloured from the noctalia/matugen palette. Three variants, each
+-- its own colorscheme (colors/kanagawa-*.lua), differing only in how syntax
+-- colours are derived; plain `:colorscheme kanagawa` stays stock:
+--   kanagawa-generated   functions/keywords/parameters/punctuation take the hue
+--                        of primary/tertiary/secondary (weighted by how
+--                        saturated they are, and not where that lands next to
+--                        strings); everything else as in harmonized
+--   kanagawa-harmonized  every syntax colour is kanagawa's, with its hue pulled
+--                        at most MAX_HUE_SHIFT toward primary. Stays close to
+--                        stock kanagawa's spacing between colours on any palette
+--   kanagawa-rotated     all syntax hues are rotated together so functions land
+--                        on primary's hue (weighted by its saturation). Keeps
+--                        stock spacing exactly, but strings etc. change colour
 --
 -- The palette is rendered by theming/.config/matugen/templates/neovim.lua into
 -- ~/.cache/theming/neovim.lua. When that file doesn't exist (a server, first
--- launch before noctalia has run) kanagawa-generated is just stock kanagawa.
+-- launch before noctalia has run) every variant is just stock kanagawa.
 --
 -- Kanagawa splits colours into a palette (sumiInk3, springGreen, ...) and a
--- theme mapping those onto roles (bg, string, keyword, ...). Only the palette
--- is replaced, so kanagawa's role mapping and highlight groups stay intact:
---   * neutrals (backgrounds, text, comments, borders) come straight from the
+-- theme mapping those onto roles (bg, string, keyword, ...). All variants share:
+--   * neutrals (backgrounds, text, comments, borders) straight from the
 --     generated surface roles, so nvim matches the terminal background
---   * functions/keywords take the hue of primary/tertiary, keeping
---     kanagawa's lightness and chroma -- only partly for greyish accents, and
---     not at all where that would land them next to strings (or each other)
---   * everything else (strings green, errors red, ...) keeps its kanagawa
---     colour with the hue nudged toward primary, like Material's custom colour
---     harmonization. Generated palettes don't have enough distinct hues to
---     drive syntax on their own -- noctalia's ANSI colours are just
---     primary/secondary/tertiary again.
+--   * selection/search/popup backgrounds from primary
+--   * diagnostics, git and diff colours from kanagawa, harmonized toward
+--     primary, so red still means error
+-- Generated palettes don't have enough distinct hues to drive syntax on their
+-- own -- noctalia's ANSI colours are just primary/secondary/tertiary again.
 local M = {}
 
-local NAME = 'kanagawa-generated'
+-- colorscheme name -> syntax variant
+local VARIANTS = {
+  ['kanagawa-generated'] = 'accents',
+  ['kanagawa-harmonized'] = 'harmonized',
+  ['kanagawa-rotated'] = 'rotated',
+}
+local DEFAULT = 'kanagawa-harmonized'
 
 local PATH = vim.fs.joinpath(vim.env.XDG_CACHE_HOME or vim.fs.joinpath(vim.env.HOME, '.cache'), 'theming', 'neovim.lua')
 
@@ -141,6 +153,22 @@ local function accent(hex, source, primary, avoid)
   return oklch_to_hex(L, C, hue)
 end
 
+-- Hue rotation that puts from's hue onto to's, scaled by to's saturation.
+local function rotation(from, to)
+  local _, _, h = hex_to_oklch(from)
+  local _, tc, th = hex_to_oklch(to)
+  local weight = math.min(math.max((tc - MIN_CHROMA) / (FULL_CHROMA - MIN_CHROMA), 0), 1)
+  return ((th - h + math.pi) % (2 * math.pi) - math.pi) * weight
+end
+
+local function rotate(hex, angle)
+  local L, C, h = hex_to_oklch(hex)
+  if C < MIN_CHROMA then
+    return hex
+  end
+  return oklch_to_hex(L, C, h + angle)
+end
+
 local function is_light(hex)
   return (hex_to_oklch(hex)) > 0.6
 end
@@ -148,10 +176,25 @@ end
 -- Palette mapping ---------------------------------------------------------------
 
 -- c: the generated roles; k: stock kanagawa palette; p: harmonized kanagawa
--- palette, which the functions below overwrite for neutrals and accents.
+-- palette, which the functions below overwrite.
+
+-- Palette colours kanagawa's theme uses for syntax, per theme; what
+-- kanagawa-rotated rotates. `anchor` is the function colour.
+local SYNTAX = {
+  wave = {
+    anchor = 'crystalBlue',
+    'springGreen', 'sakuraPink', 'surimiOrange', 'carpYellow', 'oniViolet2', 'crystalBlue', 'oniViolet',
+    'boatYellow2', 'waveRed', 'waveAqua2', 'springViolet2', 'springBlue', 'peachRed',
+  },
+  lotus = {
+    anchor = 'lotusBlue4',
+    'lotusGreen', 'lotusPink', 'lotusOrange', 'lotusYellow', 'lotusBlue5', 'lotusBlue4', 'lotusViolet4',
+    'lotusYellow2', 'lotusRed', 'lotusAqua', 'lotusTeal1', 'lotusTeal2',
+  },
+}
 
 -- wave: kanagawa's dark theme
-local function wave(c, k, p)
+local function wave(c, p)
   local bg = c.background
 
   p.sumiInk0 = c.surface_container_lowest
@@ -176,7 +219,9 @@ local function wave(c, k, p)
   p.winterYellow = blend(p.autumnYellow, bg, 0.2)
   p.winterRed = blend(p.autumnRed, bg, 0.2)
   p.winterBlue = blend(c.primary, bg, 0.12)
+end
 
+local function wave_accents(c, k, p)
   -- p still holds the harmonized kanagawa colours here, so functions also
   -- steer clear of the keyword colour's fallback
   local str = p.springGreen
@@ -188,7 +233,7 @@ local function wave(c, k, p)
 end
 
 -- lotus: kanagawa's light theme
-local function lotus(c, k, p)
+local function lotus(c, p)
   local bg = c.background
 
   -- in light Material palettes the containers get darker, like lotusWhite0..2
@@ -215,7 +260,9 @@ local function lotus(c, k, p)
   p.lotusRed4 = blend(p.lotusRed2, bg, 0.25)
   p.lotusYellow4 = blend(p.lotusYellow3, bg, 0.3)
   p.lotusCyan = blend(c.primary, bg, 0.12)
+end
 
+local function lotus_accents(c, k, p)
   local str = p.lotusGreen
   p.lotusBlue4 = accent(k.lotusBlue4, c.primary, c.primary, { str, p.lotusViolet4 })      -- functions
   p.lotusViolet4 = accent(k.lotusViolet4, c.tertiary, c.primary, { str, p.lotusBlue4 })    -- keywords, statements
@@ -224,18 +271,41 @@ local function lotus(c, k, p)
   p.lotusTeal1 = accent(k.lotusTeal1, c.secondary, c.primary, { str })                     -- punctuation
 end
 
-function M.palette(c)
+-- kanagawa `colors` overrides ({ palette, theme }) for generated roles c.
+---@param variant 'accents'|'harmonized'|'rotated'
+function M.build(c, variant)
   local k = require('kanagawa.colors').setup({ theme = 'wave', colors = { palette = {}, theme = {} } }).palette
   local p = {}
   for name, hex in pairs(k) do
     p[name] = harmonize(hex, c.primary)
   end
-  if is_light(c.background) then
-    lotus(c, k, p)
+
+  local theme = is_light(c.background) and 'lotus' or 'wave'
+  if theme == 'lotus' then
+    lotus(c, p)
   else
-    wave(c, k, p)
+    wave(c, p)
   end
-  return p
+
+  if variant == 'accents' then
+    if theme == 'lotus' then
+      lotus_accents(c, k, p)
+    else
+      wave_accents(c, k, p)
+    end
+    return { palette = p }
+  elseif variant == 'rotated' then
+    -- rotate a copy and only use it for syntax: the palette colours are shared
+    -- with diagnostics, git and terminal colours, which should keep meaning
+    local names = SYNTAX[theme]
+    local angle = rotation(k[names.anchor], c.primary)
+    local r = vim.deepcopy(p)
+    for _, name in ipairs(names) do
+      r[name] = rotate(k[name], angle)
+    end
+    return { palette = p, theme = { all = { syn = require('kanagawa.themes')[theme](r).syn } } }
+  end
+  return { palette = p }
 end
 
 -- Loading -----------------------------------------------------------------------
@@ -252,8 +322,9 @@ local function read_colors()
   return colors
 end
 
--- Body of colors/kanagawa-generated.lua.
-function M.load()
+-- Body of colors/kanagawa-*.lua.
+---@param name string colorscheme name, a key of VARIANTS
+function M.load(name)
   local kanagawa = require('kanagawa')
   local colors = read_colors()
 
@@ -267,17 +338,19 @@ function M.load()
     end
   end
 
-  -- Only borrow the palette for this load so `:colorscheme kanagawa` stays
-  -- stock. Palette overrides from kanagawa.setup() still apply underneath.
-  local user_palette = kanagawa.config.colors.palette
-  kanagawa.config.colors.palette = vim.tbl_extend('force', user_palette, colors and M.palette(colors) or {})
+  -- Only borrow the colours for this load so `:colorscheme kanagawa` stays
+  -- stock. Colour overrides from kanagawa.setup() still apply underneath.
+  local user_colors = kanagawa.config.colors
+  if colors then
+    kanagawa.config.colors = vim.tbl_deep_extend('force', user_colors, M.build(colors, VARIANTS[name]))
+  end
   local ok, err = pcall(kanagawa.load)
-  kanagawa.config.colors.palette = user_palette
+  kanagawa.config.colors = user_colors
   if not ok then
     error(err, 0)
   end
 
-  vim.g.colors_name = NAME
+  vim.g.colors_name = name
 end
 
 -- noctalia rewrites the file on every theme change; watch the directory since
@@ -298,20 +371,20 @@ local function watch()
     end
     timer:stop()
     timer:start(100, 0, vim.schedule_wrap(function()
-      if vim.g.colors_name == NAME then
-        vim.cmd.colorscheme(NAME)
+      if VARIANTS[vim.g.colors_name] then
+        vim.cmd.colorscheme(vim.g.colors_name)
       end
     end))
   end)
 end
 
 -- Configures kanagawa, starts watching the palette and switches to
--- kanagawa-generated.
+-- kanagawa-harmonized.
 ---@param opts? table kanagawa.setup() options
 function M.setup(opts)
   require('kanagawa').setup(opts)
   watch()
-  vim.cmd.colorscheme(NAME)
+  vim.cmd.colorscheme(DEFAULT)
 end
 
 return M
