@@ -7,7 +7,7 @@ return {
     'rebelot/kanagawa.nvim',
     priority = 1000,
     config = function()
-      require('custom.generated_theme').setup({ transparent = false })
+      require('custom.generated_theme').setup({ transparent = true })
     end,
   },
 }
