@@ -34,37 +34,27 @@ background = '{{colors.secondary.default.hex}}'
 text = '{{colors.background.default.hex}}'
 background = '{{colors.primary.default.hex}}'
 
-
+# ANSI colours from noctalia's terminal roles: curated palettes pass their
+# real terminal colours through, and brights stay readable on dark themes
 [colors.normal]
-black = '#181818'
-red = '{{colors.error.default.hex}}'
-green = '{{colors.primary.default.hex}}'
-yellow = '{{colors.inverse_primary.default.hex}}'
-blue = '{{colors.primary.default.hex}}'
-magenta = '{{colors.tertiary.default.hex}}'
-cyan = '{{colors.secondary.default.hex}}'
-white = '#BAC2DE'
+black = '{{colors.terminal_normal_black.default.hex}}'
+red = '{{colors.terminal_normal_red.default.hex}}'
+green = '{{colors.terminal_normal_green.default.hex}}'
+yellow = '{{colors.terminal_normal_yellow.default.hex}}'
+blue = '{{colors.terminal_normal_blue.default.hex}}'
+magenta = '{{colors.terminal_normal_magenta.default.hex}}'
+cyan = '{{colors.terminal_normal_cyan.default.hex}}'
+white = '{{colors.terminal_normal_white.default.hex}}'
 
 [bell]
 color = '{{colors.error.default.hex}}'
 
 [colors.bright]
-black = '#585B70'
-red = '#F38BA8'
-green = '#A6E3A1'
-yellow = '#F9E2AF'
-blue = '#89B4FA'
-magenta = '#F5C2E7'
-cyan = '#94E2D5'
-white = '#A6ADC8'
-
-
-[colors.dim]
-black = '#45475A'
-red = '#F38BA8'
-green = '#A6E3A1'
-yellow = '#F9E2AF'
-blue = '#89B4FA'
-magenta = '#F5C2E7'
-cyan = '#94E2D5'
-white = '#BAC2DE'
+black = '{{colors.terminal_bright_black.default.hex}}'
+red = '{{colors.terminal_bright_red.default.hex}}'
+green = '{{colors.terminal_bright_green.default.hex}}'
+yellow = '{{colors.terminal_bright_yellow.default.hex}}'
+blue = '{{colors.terminal_bright_blue.default.hex}}'
+magenta = '{{colors.terminal_bright_magenta.default.hex}}'
+cyan = '{{colors.terminal_bright_cyan.default.hex}}'
+white = '{{colors.terminal_bright_white.default.hex}}'
