@@ -18,6 +18,9 @@ require('tabbar').apply_to_config(config)
 
 require('keys').apply_to_config(config)
 
+-- tmux-style C-b prefix bindings, passed through when tmux is running
+require('tmux').apply_to_config(config)
+
 -- Needs to be after other key bindings
 require('smart-splits').apply_to_config(config)
 
