@@ -5,4 +5,4 @@ if [[ -n "$UWSM_FINALIZE_VARNAMES" ]]; then
     prefix="uwsm app --"
 fi
 
-$prefix xdg-terminal-exec --app-id=com.scratch --title=Scratchpad tmux &
+$prefix xdg-terminal-exec --app-id=com.scratch --title=Scratchpad &
