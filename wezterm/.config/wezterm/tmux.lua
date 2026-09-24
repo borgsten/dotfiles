@@ -18,14 +18,14 @@ local function pass_through(pane)
   return PASSTHROUGH[name] == true
 end
 
-local rename_tab = act.PromptInputLine {
+local rename_tab = act.PromptInputLine({
   description = 'Rename tab',
   action = wezterm.action_callback(function(window, _, line)
     if line then
       window:active_tab():set_title(line)
     end
   end),
-}
+})
 
 local break_pane = wezterm.action_callback(function(_, pane)
   pane:move_to_new_tab()
@@ -45,44 +45,44 @@ function M.apply_to_config(config)
         -- no until_unknown: it pops on *any* unmatched key-down, including a
         -- bare Shift/AltGr press, so shifted keys like '"' and '%' never land.
         -- one_shot alone ignores modifier presses.
-        window:perform_action(act.ActivateKeyTable { name = TABLE, one_shot = true }, pane)
+        window:perform_action(act.ActivateKeyTable({ name = TABLE, one_shot = true }), pane)
       end
     end),
   })
 
   local bindings = {
-    { key = 'c',          action = act.SpawnTab 'CurrentPaneDomain' },
-    { key = 'n',          action = act.ActivateTabRelative(1) },
-    { key = 'p',          action = act.ActivateTabRelative(-1) },
-    { key = 'l',          action = act.ActivateLastTab },
-    { key = 'w',          action = act.ShowTabNavigator },
-    { key = ',',          action = rename_tab },
-    { key = '&',          action = act.CloseCurrentTab { confirm = true } },
+    { key = 'c', action = act.SpawnTab('CurrentPaneDomain') },
+    { key = 'n', action = act.ActivateTabRelative(1) },
+    { key = 'p', action = act.ActivateTabRelative(-1) },
+    { key = 'l', action = act.ActivateLastTab },
+    { key = 'w', action = act.ShowTabNavigator },
+    { key = ',', action = rename_tab },
+    { key = '&', action = act.CloseCurrentTab({ confirm = true }) },
 
-    { key = '%',          action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
-    { key = '"',          action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
-    { key = 'x',          action = act.CloseCurrentPane { confirm = true } },
-    { key = 'z',          action = require('tabbar').toggle_zoom },
-    { key = 'o',          action = act.ActivatePaneDirection 'Next' },
-    { key = 'q',          action = act.PaneSelect },
-    { key = '!',          action = break_pane },
-    { key = 'LeftArrow',  action = act.ActivatePaneDirection 'Left' },
-    { key = 'RightArrow', action = act.ActivatePaneDirection 'Right' },
-    { key = 'UpArrow',    action = act.ActivatePaneDirection 'Up' },
-    { key = 'DownArrow',  action = act.ActivatePaneDirection 'Down' },
+    { key = '%', action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
+    { key = '"', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
+    { key = 'x', action = act.CloseCurrentPane({ confirm = true }) },
+    { key = 'z', action = require('tabbar').toggle_zoom },
+    { key = 'o', action = act.ActivatePaneDirection('Next') },
+    { key = 'q', action = act.PaneSelect },
+    { key = '!', action = break_pane },
+    { key = 'LeftArrow', action = act.ActivatePaneDirection('Left') },
+    { key = 'RightArrow', action = act.ActivatePaneDirection('Right') },
+    { key = 'UpArrow', action = act.ActivatePaneDirection('Up') },
+    { key = 'DownArrow', action = act.ActivatePaneDirection('Down') },
 
-    { key = '[',          action = act.ActivateCopyMode },
-    { key = ']',          action = act.PasteFrom 'Clipboard' },
-    { key = ':',          action = act.ActivateCommandPalette },
-    { key = 'r',          action = act.ReloadConfiguration },
+    { key = '[', action = act.ActivateCopyMode },
+    { key = ']', action = act.PasteFrom('Clipboard') },
+    { key = ':', action = act.ActivateCommandPalette },
+    { key = 'r', action = act.ReloadConfiguration },
 
-    { key = 'Escape',     action = act.PopKeyTable },
+    { key = 'Escape', action = act.PopKeyTable },
 
     -- prefix twice sends a literal C-b
     {
       key = PREFIX.key,
       mods = PREFIX.mods,
-      action = act.SendKey(PREFIX)
+      action = act.SendKey(PREFIX),
     },
   }
 

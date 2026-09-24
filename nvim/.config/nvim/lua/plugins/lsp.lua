@@ -18,7 +18,7 @@ local function switch_source_header_splitcmd(bufnr, splitcmd)
       vim.notify('corresponding file cannot be determined')
       return
     end
-    vim.api.nvim_command(splitcmd .. " " .. vim.uri_to_fname(result))
+    vim.api.nvim_command(splitcmd .. ' ' .. vim.uri_to_fname(result))
   end, bufnr)
 end
 
@@ -30,7 +30,7 @@ return {
       'saghen/blink.cmp',
       'neovim/nvim-lspconfig',
       'mason-org/mason-lspconfig.nvim',
-      "nvim-tree/nvim-web-devicons",
+      'nvim-tree/nvim-web-devicons',
       { 'j-hui/fidget.nvim', opts = {} },
     },
     lazy = false,
@@ -60,12 +60,15 @@ return {
           nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
           nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-          nmap("<leader>]e", function() switch_source_header_splitcmd(0, 'edit') end,
-            "Edit source/header in new tab")
-          nmap("<leader>]h", function() switch_source_header_splitcmd(0, 'split') end,
-            "Edit source/header in hsplit")
-          nmap("<leader>]v", function() switch_source_header_splitcmd(0, 'vsplit') end,
-            "Edit source/header in vsplit")
+          nmap('<leader>]e', function()
+            switch_source_header_splitcmd(0, 'edit')
+          end, 'Edit source/header in new tab')
+          nmap('<leader>]h', function()
+            switch_source_header_splitcmd(0, 'split')
+          end, 'Edit source/header in hsplit')
+          nmap('<leader>]v', function()
+            switch_source_header_splitcmd(0, 'vsplit')
+          end, 'Edit source/header in vsplit')
 
           -- See `:help K` for why this keymap
           nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -112,15 +115,15 @@ return {
       -- LSP log level
       vim.lsp.log.set_level(vim.log.levels.WARN)
 
-      vim.diagnostic.config {
+      vim.diagnostic.config({
         severity_sort = true,
         float = { border = 'single', source = 'if_many' },
         virtual_text = true,
-      }
+      })
 
       local servers = {
         clangd = {
-          filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
           capabilities = {
             offsetEncoding = { 'utf-16' },
           },
@@ -133,8 +136,8 @@ return {
             basedpyright = {
               analysis = {
                 diagnosticSeverityOverrides = {
-                  reportUnusedCallResult = "none",
-                  reportImplicitOverride = "none",
+                  reportUnusedCallResult = 'none',
+                  reportImplicitOverride = 'none',
                 },
               },
             },
@@ -161,7 +164,7 @@ return {
               diagnostics = {
                 gloabls = { 'vim' },
                 -- diagnostics = { disable = { 'missing-fields' } },
-              }
+              },
             },
           },
         },
@@ -185,45 +188,41 @@ return {
       end
 
       -- Add blink capabilities to all LSPs not explicitly configured
-      vim.lsp.config("*", {
+      vim.lsp.config('*', {
         capabilities = require('blink.cmp').get_lsp_capabilities(),
       })
 
-      vim.api.nvim_create_user_command("LspInfo", function()
-        vim.cmd("checkhealth vim.lsp")
+      vim.api.nvim_create_user_command('LspInfo', function()
+        vim.cmd('checkhealth vim.lsp')
       end, {
         nargs = 0,
-        desc = "Show LSP info",
+        desc = 'Show LSP info',
       })
 
-      vim.api.nvim_create_user_command(
-        'LspRestart',
-        function(opts)
-          local client_name = opts.args
-          for _, client in pairs(vim.lsp.get_clients()) do
-            if client.name == client_name then
-              client:stop(false)
-              vim.defer_fn(function()
-                vim.cmd('edit') -- triggers re-attach for most setups
-              end, 100)
-              print('Restarted LSP server: ' .. client_name)
-              return
-            end
+      vim.api.nvim_create_user_command('LspRestart', function(opts)
+        local client_name = opts.args
+        for _, client in pairs(vim.lsp.get_clients()) do
+          if client.name == client_name then
+            client:stop(false)
+            vim.defer_fn(function()
+              vim.cmd('edit') -- triggers re-attach for most setups
+            end, 100)
+            print('Restarted LSP server: ' .. client_name)
+            return
           end
-          print('No active LSP server named: ' .. client_name)
+        end
+        print('No active LSP server named: ' .. client_name)
+      end, {
+        nargs = 1,
+        complete = function(_, _, _)
+          local names = {}
+          for _, client in pairs(vim.lsp.get_clients()) do
+            names[client.name] = true
+          end
+          return vim.tbl_keys(names)
         end,
-        {
-          nargs = 1,
-          complete = function(_, _, _)
-            local names = {}
-            for _, client in pairs(vim.lsp.get_clients()) do
-              names[client.name] = true
-            end
-            return vim.tbl_keys(names)
-          end,
-          desc = 'Restart a running LSP server by name',
-        }
-      )
-    end
+        desc = 'Restart a running LSP server by name',
+      })
+    end,
   },
 }

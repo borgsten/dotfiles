@@ -39,9 +39,8 @@ vim.keymap.set('n', '<C-A-j>', '<C-W>10-', { desc = 'Shrink 10 rows' })
 vim.keymap.set('n', '<C-A-k>', '<C-W>10+', { desc = 'Grow 10 rows' })
 
 -- Trim trailing whitespace
-vim.keymap.set({ 'n', 'v' }, '<leader>tw', require('custom.trailspace').remove_trailing_whitespace,
-  { desc = 'Trim trailing whitespace' })
+vim.keymap.set({ 'n', 'v' }, '<leader>tw', require('custom.trailspace').remove_trailing_whitespace, { desc = 'Trim trailing whitespace' })
 
 -- Do not include white space characters when using $ in visual mode,
 -- see https://vi.stackexchange.com/q/12607/15292
-vim.keymap.set("x", "$", "g_")
+vim.keymap.set('x', '$', 'g_')

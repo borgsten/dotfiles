@@ -1,10 +1,10 @@
 local M = {}
 
-HIGHLIGHT_NAME = "Trailspace"
+HIGHLIGHT_NAME = 'Trailspace'
 FIND_PATTERN = [[\s\+$]]
 
 local function get_hl_color_from_colorscheme()
-  local hl = vim.api.nvim_get_hl(0, { name = "Error" })
+  local hl = vim.api.nvim_get_hl(0, { name = 'Error' })
   return { bg = hl.fg }
 end
 
@@ -52,11 +52,11 @@ function M.remove_trailing_whitespace()
   if vim.fn.mode() == 'V' then
     start_line, end_line = vim.fn.line("'<"), vim.fn.line("'>")
   else
-    start_line, end_line = 1, vim.fn.line("$")
+    start_line, end_line = 1, vim.fn.line('$')
   end
   local pattern = [[s/\s\+$//e]]
   print(start_line, end_line)
-  vim.cmd(string.format(":%d,%d%s", start_line, end_line, pattern))
+  vim.cmd(string.format(':%d,%d%s', start_line, end_line, pattern))
 end
 
 function M.setup()
@@ -65,20 +65,15 @@ function M.setup()
 
   create_highlight()
 
-  vim.api.nvim_create_autocmd({ "InsertLeave", "BufEnter", "WinEnter" },
-    { group = autogroup, callback = M.enableHL, desc = "(Re)Enable highlight" })
-  vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave', 'InsertEnter' },
-    { group = autogroup, callback = M.disableHL, desc = "Disable highlight" })
+  vim.api.nvim_create_autocmd({ 'InsertLeave', 'BufEnter', 'WinEnter' }, { group = autogroup, callback = M.enableHL, desc = '(Re)Enable highlight' })
+  vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave', 'InsertEnter' }, { group = autogroup, callback = M.disableHL, desc = 'Disable highlight' })
 
-  vim.api.nvim_create_autocmd('OptionSet',
-    { group = autogroup, pattern = { 'modifiable', 'buftype' }, callback = recheck_allowed, desc = "Check buftype" })
+  vim.api.nvim_create_autocmd('OptionSet', { group = autogroup, pattern = { 'modifiable', 'buftype' }, callback = recheck_allowed, desc = 'Check buftype' })
 
   -- Reload color from colorscheme
-  vim.api.nvim_create_autocmd("ColorScheme",
-    { group = autogroup, callback = create_highlight, desc = "Recreate hihglight group" })
+  vim.api.nvim_create_autocmd('ColorScheme', { group = autogroup, callback = create_highlight, desc = 'Recreate hihglight group' })
 
-  vim.api.nvim_buf_create_user_command(0, "Trailspace", M.remove_trailing_whitespace,
-    { desc = "Remove trailing whitespace" })
+  vim.api.nvim_buf_create_user_command(0, 'Trailspace', M.remove_trailing_whitespace, { desc = 'Remove trailing whitespace' })
 end
 
 return M

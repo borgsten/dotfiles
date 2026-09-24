@@ -36,11 +36,11 @@ end
 -- either side of them are evened out separately.
 local function targets(n, total, fixed)
   local t = {}
-  local start, start_pos = 0, -1             -- a virtual divider just left of the tab
+  local start, start_pos = 0, -1 -- a virtual divider just left of the tab
   for i = 1, n do
     local pos = i == n and total or fixed[i] -- i == n: the tab's right edge
     if pos then
-      local k = i - start                    -- columns between the two fixed dividers
+      local k = i - start -- columns between the two fixed dividers
       local avail = pos - start_pos - 1 - (k - 1)
       local base, extra = math.floor(avail / k), avail % k
       local p = start_pos

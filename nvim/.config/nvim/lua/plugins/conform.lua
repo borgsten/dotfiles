@@ -18,23 +18,23 @@ return {
           if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
             return
           end
-          return { timeout_ms = 500, lsp_fallback = true, }
+          return { timeout_ms = 500, lsp_fallback = true }
         end,
         formatters = formatters,
         formatters_by_ft = {
           lua = { 'stylua' },
-          python = { 'isort', "black" },
-          cpp = { "clang_format" },
-          golang = { "gofmt" },
-          go = { "gofmt" },
+          python = { 'isort', 'black' },
+          cpp = { 'clang_format' },
+          golang = { 'gofmt' },
+          go = { 'gofmt' },
         },
       })
 
       vim.api.nvim_create_user_command('Format', function(_)
-        require("conform").format({ async = true, lsp_fallback = true })
+        require('conform').format({ async = true, lsp_fallback = true })
       end, { desc = 'Format current buffer with LSP' })
 
-      vim.api.nvim_create_user_command("FormatDisable", function(args)
+      vim.api.nvim_create_user_command('FormatDisable', function(args)
         if args.bang then
           -- FormatDisable! will disable formatting just for this buffer
           vim.b.disable_autoformat = true
@@ -42,19 +42,19 @@ return {
           vim.g.disable_autoformat = true
         end
       end, {
-        desc = "Disable autoformat-on-save(bang for buffer)",
+        desc = 'Disable autoformat-on-save(bang for buffer)',
         bang = true,
       })
-      vim.api.nvim_create_user_command("FormatEnable", function()
+      vim.api.nvim_create_user_command('FormatEnable', function()
         vim.b.disable_autoformat = false
         vim.g.disable_autoformat = false
       end, {
-        desc = "Re-enable autoformat-on-save",
+        desc = 'Re-enable autoformat-on-save',
       })
 
-      vim.keymap.set({ 'n', 'v' }, "<leader>fm", function()
-        require("conform").format({ async = true, lsp_fallback = true })
-      end, { desc = "Format document" })
-    end
+      vim.keymap.set({ 'n', 'v' }, '<leader>fm', function()
+        require('conform').format({ async = true, lsp_fallback = true })
+      end, { desc = 'Format document' })
+    end,
   },
 }

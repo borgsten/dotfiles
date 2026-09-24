@@ -65,8 +65,7 @@ function M.apply_to_config(config)
   -- tmux-style labels: "1:nvim*", with tmux's Z flag when a pane is zoomed
   wezterm.on('format-tab-title', function(tab)
     local pane = tab.active_pane
-    local title = tab.tab_title ~= '' and tab.tab_title
-        or basename(pane.foreground_process_name ~= '' and pane.foreground_process_name or pane.title)
+    local title = tab.tab_title ~= '' and tab.tab_title or basename(pane.foreground_process_name ~= '' and pane.foreground_process_name or pane.title)
     local marker = (tab.is_active and '*' or ' ') .. (pane.is_zoomed and 'Z' or '')
     local index = (tab.tab_index + 1) % 10
     return string.format(' %d:%s%s ', index, title, marker)
@@ -79,13 +78,13 @@ function M.apply_to_config(config)
     local domain = pane:get_domain_name()
     -- like tmux's client_prefix: flag when the C-b key table is waiting
     local prefix = window:active_key_table() == 'tmux' and ' ^B ' or ''
-    window:set_right_status(wezterm.format {
+    window:set_right_status(wezterm.format({
       { Attribute = { Intensity = 'Bold' } },
       { Text = prefix },
       { Attribute = { Intensity = 'Normal' } },
       { Foreground = { Color = status_color(window) } },
-      { Text = string.format(' %s  %s ', domain, wezterm.strftime '%H:%M') },
-    })
+      { Text = string.format(' %s  %s ', domain, wezterm.strftime('%H:%M')) },
+    }))
   end)
 end
 

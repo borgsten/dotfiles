@@ -47,10 +47,10 @@ return {
         -- Actions
         -- visual mode
         map('v', '<leader>hs', function()
-          gs.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
+          gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
         end, { desc = 'stage git hunk' })
         map('v', '<leader>hr', function()
-          gs.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
+          gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
         end, { desc = 'reset git hunk' })
         -- normal mode
         map('n', '<leader>hs', gs.stage_hunk, { desc = 'git stage hunk' })
@@ -60,11 +60,11 @@ return {
         map('n', '<leader>hR', gs.reset_buffer, { desc = 'git Reset buffer' })
         map('n', '<leader>hp', gs.preview_hunk, { desc = 'preview git hunk' })
         map('n', '<leader>hb', function()
-          gs.blame_line { full = false }
+          gs.blame_line({ full = false })
         end, { desc = 'git blame line' })
         map('n', '<leader>hd', gs.diffthis, { desc = 'git diff against index' })
         map('n', '<leader>hD', function()
-          gs.diffthis '~'
+          gs.diffthis('~')
         end, { desc = 'git diff against last commit' })
 
         -- Toggles
@@ -78,23 +78,23 @@ return {
   },
   {
     {
-      "sindrets/diffview.nvim",
+      'sindrets/diffview.nvim',
       dependencies = {
-        "nvim-lua/plenary.nvim",
+        'nvim-lua/plenary.nvim',
       },
       keys = {
         {
-          "<leader>ht",
+          '<leader>ht',
           function()
-            if require("diffview.lib").get_current_view() then
-              vim.cmd("DiffviewClose")
+            if require('diffview.lib').get_current_view() then
+              vim.cmd('DiffviewClose')
             else
-              vim.cmd("DiffviewOpen HEAD^")
+              vim.cmd('DiffviewOpen HEAD^')
             end
           end,
-          desc = "[H]istory [T]oggle diffview"
+          desc = '[H]istory [T]oggle diffview',
         },
-        { "<leader>hf", "<cmd>DiffviewFileHistory<cr>", desc = "[H]istory of [F]ile" },
+        { '<leader>hf', '<cmd>DiffviewFileHistory<cr>', desc = '[H]istory of [F]ile' },
       },
 
       opts = {
@@ -103,47 +103,47 @@ return {
         watch_index = true,
         use_icons = true,
         git_cmd = {
-          "git",
+          'git',
         },
         view = {
           default = {
-            layout = "diff2_horizontal",
+            layout = 'diff2_horizontal',
           },
           merge_tool = {
-            layout = "diff3_mixed",
+            layout = 'diff3_mixed',
           },
           file_history = {
-            layout = "diff2_horizontal",
+            layout = 'diff2_horizontal',
           },
         },
         file_panel = {
-          listing_style = "tree",
-          win_config = { position = "left", width = 35 },
+          listing_style = 'tree',
+          win_config = { position = 'left', width = 35 },
         },
         file_history_panel = {
           log_options = {
             git = {
-              single_file = { diff_merges = "combined" },
-              multi_file = { diff_merges = "first-parent" },
+              single_file = { diff_merges = 'combined' },
+              multi_file = { diff_merges = 'first-parent' },
             },
           },
         },
       },
       config = function(_, opts)
-        require("diffview").setup(opts)
+        require('diffview').setup(opts)
 
         -- Diffview buffers should use the full available screen.
-        vim.api.nvim_create_autocmd("FileType", {
+        vim.api.nvim_create_autocmd('FileType', {
           pattern = {
-            "DiffviewFiles",
-            "DiffviewFileHistory",
-            "DiffviewFilePanel",
+            'DiffviewFiles',
+            'DiffviewFileHistory',
+            'DiffviewFilePanel',
           },
           callback = function()
             vim.opt_local.cursorline = true
             vim.opt_local.number = false
             vim.opt_local.relativenumber = false
-            vim.opt_local.signcolumn = "no"
+            vim.opt_local.signcolumn = 'no'
           end,
         })
       end,

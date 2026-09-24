@@ -1,6 +1,6 @@
 -- Set highlight on search
 vim.o.hlsearch = true
-vim.keymap.set({ 'n' }, '<Esc>', ":noh<CR>", { silent = true })
+vim.keymap.set({ 'n' }, '<Esc>', ':noh<CR>', { silent = true })
 
 -- Make line numbers default
 vim.wo.number = true

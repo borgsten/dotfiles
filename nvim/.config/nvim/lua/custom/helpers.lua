@@ -35,11 +35,11 @@ end
 ---@param key string XResources key
 ---@return string? string the value from the key
 function M.readFromXResources(key)
-  local result = io.popen("xrdb -query | grep " .. key .. " | cut -f 2")
+  local result = io.popen('xrdb -query | grep ' .. key .. ' | cut -f 2')
   if result == nil then
     return nil
   end
-  local value = result:read("*l")
+  local value = result:read('*l')
   if value == nil then
     return nil
   end
@@ -67,9 +67,9 @@ end
 --- @param parent string Parent path
 --- @return boolean true if child is a subpath of parent
 function M.isSubDirectory(child, parent)
-  local norm_parent = parent:gsub("[/\\]+$", "")
-  local norm_child = child:gsub("[/\\]+$", "")
-  return norm_child == norm_parent or norm_child:sub(1, #norm_parent + 1) == norm_parent .. "/"
+  local norm_parent = parent:gsub('[/\\]+$', '')
+  local norm_child = child:gsub('[/\\]+$', '')
+  return norm_child == norm_parent or norm_child:sub(1, #norm_parent + 1) == norm_parent .. '/'
 end
 
 --- Check if current working directory is in a directory

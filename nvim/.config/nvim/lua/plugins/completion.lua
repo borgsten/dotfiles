@@ -1,7 +1,7 @@
 return {
   'saghen/blink.cmp',
   dependencies = {
-    "fang2hou/blink-copilot",
+    'fang2hou/blink-copilot',
     {
       'L3MON4D3/LuaSnip',
       version = '2.*',
@@ -20,7 +20,7 @@ return {
     },
     {
       'folke/lazydev.nvim',
-      ft = "lua", -- only load on lua files
+      ft = 'lua', -- only load on lua files
       opts = {
         library = {
           -- Load luvit types when the `vim.uv` word is found
@@ -37,7 +37,7 @@ return {
     keymap = { preset = 'default' },
 
     appearance = {
-      nerd_font_variant = 'mono'
+      nerd_font_variant = 'mono',
     },
 
     -- (Default) Only show the documentation popup when manually triggered
@@ -50,18 +50,17 @@ return {
       providers = {
         lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
         copilot = {
-          name = "copilot",
-          module = "blink-copilot",
+          name = 'copilot',
+          module = 'blink-copilot',
           score_offset = 100,
           async = true,
         },
       },
-
     },
     snippets = { preset = 'luasnip' },
     signature = { enabled = true },
     -- See the fuzzy documentation for more information
-    fuzzy = { implementation = "prefer_rust_with_warning" }
+    fuzzy = { implementation = 'prefer_rust_with_warning' },
   },
-  opts_extend = { "sources.default" }
+  opts_extend = { 'sources.default' },
 }

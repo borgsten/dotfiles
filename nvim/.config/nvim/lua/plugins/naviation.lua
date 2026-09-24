@@ -20,5 +20,5 @@ return {
       vim.keymap.set('n', '<leader><leader>k', ss.swap_buf_up)
       vim.keymap.set('n', '<leader><leader>l', ss.swap_buf_right)
     end,
-  }
+  },
 }

@@ -95,8 +95,8 @@ local function oklch_to_rgb(L, C, h)
   local m = (L - 0.1055613458 * A - 0.0638541728 * B) ^ 3
   local s = (L - 0.0894841775 * A - 1.2914855480 * B) ^ 3
   return from_linear(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
-      from_linear(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
-      from_linear(-0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s)
+    from_linear(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+    from_linear(-0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s)
 end
 
 local function oklch_to_hex(L, C, h)
@@ -183,13 +183,34 @@ end
 local SYNTAX = {
   wave = {
     anchor = 'crystalBlue',
-    'springGreen', 'sakuraPink', 'surimiOrange', 'carpYellow', 'oniViolet2', 'crystalBlue', 'oniViolet',
-    'boatYellow2', 'waveRed', 'waveAqua2', 'springViolet2', 'springBlue', 'peachRed',
+    'springGreen',
+    'sakuraPink',
+    'surimiOrange',
+    'carpYellow',
+    'oniViolet2',
+    'crystalBlue',
+    'oniViolet',
+    'boatYellow2',
+    'waveRed',
+    'waveAqua2',
+    'springViolet2',
+    'springBlue',
+    'peachRed',
   },
   lotus = {
     anchor = 'lotusBlue4',
-    'lotusGreen', 'lotusPink', 'lotusOrange', 'lotusYellow', 'lotusBlue5', 'lotusBlue4', 'lotusViolet4',
-    'lotusYellow2', 'lotusRed', 'lotusAqua', 'lotusTeal1', 'lotusTeal2',
+    'lotusGreen',
+    'lotusPink',
+    'lotusOrange',
+    'lotusYellow',
+    'lotusBlue5',
+    'lotusBlue4',
+    'lotusViolet4',
+    'lotusYellow2',
+    'lotusRed',
+    'lotusAqua',
+    'lotusTeal1',
+    'lotusTeal2',
   },
 }
 
@@ -225,11 +246,11 @@ local function wave_accents(c, k, p)
   -- p still holds the harmonized kanagawa colours here, so functions also
   -- steer clear of the keyword colour's fallback
   local str = p.springGreen
-  p.crystalBlue = accent(k.crystalBlue, c.primary, c.primary, { str, p.oniViolet })        -- functions
-  p.oniViolet = accent(k.oniViolet, c.tertiary, c.primary, { str, p.crystalBlue })         -- keywords, statements
-  p.oniViolet2 = accent(k.oniViolet2, c.tertiary, c.primary, { str })                      -- parameters
-  p.springViolet1 = accent(k.springViolet1, c.tertiary, c.primary, { str })                -- special ui
-  p.springViolet2 = accent(k.springViolet2, c.secondary, c.primary, { str })               -- punctuation
+  p.crystalBlue = accent(k.crystalBlue, c.primary, c.primary, { str, p.oniViolet }) -- functions
+  p.oniViolet = accent(k.oniViolet, c.tertiary, c.primary, { str, p.crystalBlue }) -- keywords, statements
+  p.oniViolet2 = accent(k.oniViolet2, c.tertiary, c.primary, { str }) -- parameters
+  p.springViolet1 = accent(k.springViolet1, c.tertiary, c.primary, { str }) -- special ui
+  p.springViolet2 = accent(k.springViolet2, c.secondary, c.primary, { str }) -- punctuation
 end
 
 -- lotus: kanagawa's light theme
@@ -264,11 +285,11 @@ end
 
 local function lotus_accents(c, k, p)
   local str = p.lotusGreen
-  p.lotusBlue4 = accent(k.lotusBlue4, c.primary, c.primary, { str, p.lotusViolet4 })      -- functions
-  p.lotusViolet4 = accent(k.lotusViolet4, c.tertiary, c.primary, { str, p.lotusBlue4 })    -- keywords, statements
-  p.lotusBlue5 = accent(k.lotusBlue5, c.tertiary, c.primary, { str })                      -- parameters
-  p.lotusViolet2 = accent(k.lotusViolet2, c.tertiary, c.primary, { str })                  -- special ui
-  p.lotusTeal1 = accent(k.lotusTeal1, c.secondary, c.primary, { str })                     -- punctuation
+  p.lotusBlue4 = accent(k.lotusBlue4, c.primary, c.primary, { str, p.lotusViolet4 }) -- functions
+  p.lotusViolet4 = accent(k.lotusViolet4, c.tertiary, c.primary, { str, p.lotusBlue4 }) -- keywords, statements
+  p.lotusBlue5 = accent(k.lotusBlue5, c.tertiary, c.primary, { str }) -- parameters
+  p.lotusViolet2 = accent(k.lotusViolet2, c.tertiary, c.primary, { str }) -- special ui
+  p.lotusTeal1 = accent(k.lotusTeal1, c.secondary, c.primary, { str }) -- punctuation
 end
 
 -- kanagawa `colors` overrides ({ palette, theme }) for generated roles c.
@@ -370,11 +391,15 @@ local function watch()
       return
     end
     timer:stop()
-    timer:start(100, 0, vim.schedule_wrap(function()
-      if VARIANTS[vim.g.colors_name] then
-        vim.cmd.colorscheme(vim.g.colors_name)
-      end
-    end))
+    timer:start(
+      100,
+      0,
+      vim.schedule_wrap(function()
+        if VARIANTS[vim.g.colors_name] then
+          vim.cmd.colorscheme(vim.g.colors_name)
+        end
+      end)
+    )
   end)
 end
 

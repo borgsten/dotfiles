@@ -16,26 +16,26 @@ local function find_git_root()
   -- Find the Git root directory from the current file's path
   local git_root = vim.fn.systemlist('git -C ' .. vim.fn.escape(current_dir, ' ') .. ' rev-parse --show-toplevel')[1]
   if vim.v.shell_error ~= 0 then
-    print 'Not a git repository. Searching on current working directory'
+    print('Not a git repository. Searching on current working directory')
     return cwd
   end
   return git_root
 end
 
 local function telescope_live_grep_open_files()
-  require('telescope.builtin').live_grep {
+  require('telescope.builtin').live_grep({
     grep_open_files = true,
     prompt_title = 'Live Grep in Open Files',
-  }
+  })
 end
 
 -- Custom live_grep function to search in git root
 local function live_grep_git_root()
   local git_root = find_git_root()
   if git_root then
-    require('telescope.builtin').live_grep {
+    require('telescope.builtin').live_grep({
       search_dirs = { git_root },
-    }
+    })
   end
 end
 
@@ -54,17 +54,17 @@ return {
       --       refer to the README for telescope-fzf-native for more instructions.
       build = 'make',
       cond = function()
-        return vim.fn.executable 'make' == 1
+        return vim.fn.executable('make') == 1
       end,
     },
     { 'nvim-telescope/telescope-ui-select.nvim' },
-    { "debugloop/telescope-undo.nvim" },
+    { 'debugloop/telescope-undo.nvim' },
   },
   config = function()
     local telescope = require('telescope')
     telescope.setup({
       defaults = {
-        file_ignore_patterns = { "%.git/", "%.cache/", "%.o", "%.a", "%.out", "%.class", "%.pyc" },
+        file_ignore_patterns = { '%.git/', '%.cache/', '%.o', '%.a', '%.out', '%.class', '%.pyc' },
         mappings = {
           i = {
             ['<C-u>'] = false,
@@ -92,20 +92,22 @@ return {
     vim.keymap.set('n', '<leader>?', builtin.oldfiles, { desc = '[?] Find recently opened files' })
     vim.keymap.set('n', '<leader><space>', builtin.buffers, { desc = '[ ] Find existing buffers' })
     vim.keymap.set('n', '<leader>/', function()
-      builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+      builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown({
         winblend = 10,
         previewer = false,
-      })
+      }))
     end, { desc = '[/] Fuzzily search in current buffer' })
 
     vim.keymap.set('n', '<leader>f/', telescope_live_grep_open_files, { desc = '[F]ind [/] in Open Files' })
     vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, { desc = '[F]ind LSP document [S]ymbols' })
     vim.keymap.set('n', '<leader>ft', builtin.builtin, { desc = '[F]ind [T]elescope' })
     vim.keymap.set('n', '<leader>gf', builtin.git_files, { desc = 'Search [G]it [F]iles' })
-    vim.keymap.set('n', '<leader>ff', function() builtin.find_files({ follow = true }) end, { desc = '[F]ind [F]iles' })
-    vim.keymap.set('n', '<leader>fa',
-      function() builtin.find_files({ no_ignore = true, follow = true, hidden = true }) end,
-      { desc = '[F]ind [A]ll Files' })
+    vim.keymap.set('n', '<leader>ff', function()
+      builtin.find_files({ follow = true })
+    end, { desc = '[F]ind [F]iles' })
+    vim.keymap.set('n', '<leader>fa', function()
+      builtin.find_files({ no_ignore = true, follow = true, hidden = true })
+    end, { desc = '[F]ind [A]ll Files' })
     vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
     vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
     vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind current [W]ord' })
@@ -114,5 +116,5 @@ return {
     vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
     vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
     vim.keymap.set('n', '<leader>fu', telescope.extensions.undo.undo, { desc = '[F]ind [U]ndo' })
-  end
+  end,
 }

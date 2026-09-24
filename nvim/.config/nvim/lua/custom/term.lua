@@ -9,9 +9,9 @@ OpenTerms = OpenTerms or {}
 
 --- Print currently open terminals
 function M.list_terms()
-  vim.notify("Open terminals(name, bufid)")
+  vim.notify('Open terminals(name, bufid)')
   for name, terminfo in pairs(OpenTerms) do
-    vim.notify(string.format("%s: %i", name, terminfo.buf_id))
+    vim.notify(string.format('%s: %i', name, terminfo.buf_id))
   end
 end
 
@@ -34,7 +34,7 @@ end
 --- If cmd is set then it will be run otherwise the terminal will only be reaveal
 ---@param opts{name: string?, focus: boolean?, cmd: string?}?
 function M.open_term(opts)
-  local name = opts and opts.name or "default_term"
+  local name = opts and opts.name or 'default_term'
   local focus = opts and opts.focus or false
   local cmd = opts and opts.cmd or nil
 
@@ -42,7 +42,7 @@ function M.open_term(opts)
     if get_term_window(name) == -1 then
       vim.api.nvim_open_win(OpenTerms[name].buf_id, focus, {
         split = 'right',
-        win = 0
+        win = 0,
       })
     end
   else
@@ -50,7 +50,7 @@ function M.open_term(opts)
     local buf_id = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_open_win(buf_id, true, {
       split = 'right',
-      win = 0
+      win = 0,
     })
     local term_id = vim.fn.termopen(vim.env.SHELL)
     if not focus then
@@ -62,7 +62,7 @@ function M.open_term(opts)
     local buf_id = OpenTerms[name].buf_id
     local term_id = OpenTerms[name].term_id
     local win_id = get_term_window(name)
-    vim.api.nvim_chan_send(term_id, cmd .. "\n")
+    vim.api.nvim_chan_send(term_id, cmd .. '\n')
     local target_line = vim.tbl_count(vim.api.nvim_buf_get_lines(buf_id, 0, -1, true))
     vim.api.nvim_win_set_cursor(win_id, { target_line, 0 })
   end
