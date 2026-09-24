@@ -9,6 +9,7 @@ config.font = wezterm.font('JetBrains Mono')
 config.color_scheme_dirs = { wezterm.home_dir .. '/.cache/theming/wezterm' }
 config.color_scheme = 'Noctalia'
 config.window_background_opacity = 0.8
+config.text_background_opacity = 0.8
 
 -- tmux-style tab bar, coloured from config.color_scheme
 require('tabbar').apply_to_config(config)
