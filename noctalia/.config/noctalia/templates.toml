@@ -64,8 +64,3 @@ post_hook = "python3 ~/.config/matugen/clamp_patch.py ~/.cache/theming/p10k.zsh"
 [theme.templates.user.neovim]
 input_path = '~/.config/matugen/templates/neovim.lua'
 output_path = '~/.cache/theming/neovim.lua'
-
-# LS_COLORS theme; picked up by new shells (zsh/exports.zsh)
-[theme.templates.user.vivid]
-input_path = '~/.config/matugen/templates/vivid.yml'
-output_path = '~/.cache/theming/vivid.yml'

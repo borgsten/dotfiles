@@ -5,20 +5,24 @@ cursor-text = {{colors.on_primary.default.hex}}
 selection-background = {{colors.secondary_container.default.hex}}
 selection-foreground = {{colors.on_secondary_container.default.hex}}
 # ANSI colours from noctalia's terminal roles: curated palettes pass their
-# real terminal colours through, and brights stay readable on dark themes
+# real terminal colours through, and brights stay readable on dark themes.
+# Each hue is pulled halfway toward its conventional one: wallpaper themes
+# fill several slots with the same Material role (green == magenta), which
+# made ls colours (vivid ansi-plus) indistinguishable. Curated palettes
+# shift little since their hues are already close.
 palette = 0={{colors.terminal_normal_black.default.hex}}
-palette = 1={{colors.terminal_normal_red.default.hex}}
-palette = 2={{colors.terminal_normal_green.default.hex}}
-palette = 3={{colors.terminal_normal_yellow.default.hex}}
-palette = 4={{colors.terminal_normal_blue.default.hex}}
-palette = 5={{colors.terminal_normal_magenta.default.hex}}
-palette = 6={{colors.terminal_normal_cyan.default.hex}}
+palette = 1={{colors.terminal_normal_red.default.hex | blend: "#ff1500", 0.5}}
+palette = 2={{colors.terminal_normal_green.default.hex | blend: "#2bff00", 0.5}}
+palette = 3={{colors.terminal_normal_yellow.default.hex | blend: "#ffbf00", 0.5}}
+palette = 4={{colors.terminal_normal_blue.default.hex | blend: "#006aff", 0.5}}
+palette = 5={{colors.terminal_normal_magenta.default.hex | blend: "#ff00ff", 0.5}}
+palette = 6={{colors.terminal_normal_cyan.default.hex | blend: "#00ffff", 0.5}}
 palette = 7={{colors.terminal_normal_white.default.hex}}
 palette = 8={{colors.terminal_bright_black.default.hex}}
-palette = 9={{colors.terminal_bright_red.default.hex}}
-palette = 10={{colors.terminal_bright_green.default.hex}}
-palette = 11={{colors.terminal_bright_yellow.default.hex}}
-palette = 12={{colors.terminal_bright_blue.default.hex}}
-palette = 13={{colors.terminal_bright_magenta.default.hex}}
-palette = 14={{colors.terminal_bright_cyan.default.hex}}
+palette = 9={{colors.terminal_bright_red.default.hex | blend: "#ff1500", 0.5}}
+palette = 10={{colors.terminal_bright_green.default.hex | blend: "#2bff00", 0.5}}
+palette = 11={{colors.terminal_bright_yellow.default.hex | blend: "#ffbf00", 0.5}}
+palette = 12={{colors.terminal_bright_blue.default.hex | blend: "#006aff", 0.5}}
+palette = 13={{colors.terminal_bright_magenta.default.hex | blend: "#ff00ff", 0.5}}
+palette = 14={{colors.terminal_bright_cyan.default.hex | blend: "#00ffff", 0.5}}
 palette = 15={{colors.terminal_bright_white.default.hex}}

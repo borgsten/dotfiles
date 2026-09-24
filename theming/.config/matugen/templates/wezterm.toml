@@ -14,25 +14,29 @@ scrollbar_thumb = "{{colors.outline.default.hex}}"
 split = "{{colors.outline_variant.default.hex}}"
 visual_bell = "{{colors.error.default.hex}}"
 # ANSI colours from noctalia's terminal roles: curated palettes pass their
-# real terminal colours through, and brights stay readable on dark themes
+# real terminal colours through, and brights stay readable on dark themes.
+# Each hue is pulled halfway toward its conventional one: wallpaper themes
+# fill several slots with the same Material role (green == magenta), which
+# made ls colours (vivid ansi-plus) indistinguishable. Curated palettes
+# shift little since their hues are already close.
 ansi = [
     "{{colors.terminal_normal_black.default.hex}}",
-    "{{colors.terminal_normal_red.default.hex}}",
-    "{{colors.terminal_normal_green.default.hex}}",
-    "{{colors.terminal_normal_yellow.default.hex}}",
-    "{{colors.terminal_normal_blue.default.hex}}",
-    "{{colors.terminal_normal_magenta.default.hex}}",
-    "{{colors.terminal_normal_cyan.default.hex}}",
+    "{{colors.terminal_normal_red.default.hex | blend: "#ff1500", 0.5}}",
+    "{{colors.terminal_normal_green.default.hex | blend: "#2bff00", 0.5}}",
+    "{{colors.terminal_normal_yellow.default.hex | blend: "#ffbf00", 0.5}}",
+    "{{colors.terminal_normal_blue.default.hex | blend: "#006aff", 0.5}}",
+    "{{colors.terminal_normal_magenta.default.hex | blend: "#ff00ff", 0.5}}",
+    "{{colors.terminal_normal_cyan.default.hex | blend: "#00ffff", 0.5}}",
     "{{colors.terminal_normal_white.default.hex}}",
 ]
 brights = [
     "{{colors.terminal_bright_black.default.hex}}",
-    "{{colors.terminal_bright_red.default.hex}}",
-    "{{colors.terminal_bright_green.default.hex}}",
-    "{{colors.terminal_bright_yellow.default.hex}}",
-    "{{colors.terminal_bright_blue.default.hex}}",
-    "{{colors.terminal_bright_magenta.default.hex}}",
-    "{{colors.terminal_bright_cyan.default.hex}}",
+    "{{colors.terminal_bright_red.default.hex | blend: "#ff1500", 0.5}}",
+    "{{colors.terminal_bright_green.default.hex | blend: "#2bff00", 0.5}}",
+    "{{colors.terminal_bright_yellow.default.hex | blend: "#ffbf00", 0.5}}",
+    "{{colors.terminal_bright_blue.default.hex | blend: "#006aff", 0.5}}",
+    "{{colors.terminal_bright_magenta.default.hex | blend: "#ff00ff", 0.5}}",
+    "{{colors.terminal_bright_cyan.default.hex | blend: "#00ffff", 0.5}}",
     "{{colors.terminal_bright_white.default.hex}}",
 ]
 

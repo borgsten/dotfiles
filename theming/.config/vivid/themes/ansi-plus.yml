@@ -1,0 +1,136 @@
+# vivid's `ansi` theme with more file categories coloured. Uses the terminal's
+# own 16-colour palette, so colours follow theme changes live without having to
+# regenerate LS_COLORS. The terminal templates (matugen/templates) pull each
+# ANSI slot toward its conventional hue so the six colours stay apart, even
+# for wallpaper themes.
+#
+# Base colours only: bright variants equal the base ones in wallpaper themes.
+
+colors:
+  red: "ansi:red"
+  green: "ansi:green"
+  yellow: "ansi:yellow"
+  blue: "ansi:blue"
+  magenta: "ansi:magenta"
+  cyan: "ansi:cyan"
+
+core:
+  normal_text: {}
+  regular_file: {}
+  reset_to_normal: {}
+
+  # Directories
+  directory:
+    foreground: blue
+    font-style: bold
+
+  sticky:
+    foreground: blue
+    font-style: [bold, underline]
+
+  other_writable:
+    foreground: blue
+    font-style: [bold, underline]
+
+  sticky_other_writable:
+    foreground: blue
+    font-style: [bold, underline]
+
+  # Executables
+  executable_file:
+    foreground: green
+    font-style: bold
+
+  setuid:
+    foreground: red
+    font-style: [bold, underline]
+
+  setgid:
+    foreground: red
+    font-style: [bold, underline]
+
+  file_with_capability:
+    foreground: red
+    font-style: [bold, underline]
+
+  # Symlinks
+  symlink:
+    foreground: cyan
+    font-style: italic
+
+  broken_symlink:
+    foreground: red
+    font-style: [italic, underline]
+
+  missing_symlink_target:
+    foreground: red
+    font-style: bold
+
+  multi_hard_link: {}
+
+  # IPC files
+  fifo:
+    foreground: magenta
+    font-style: bold
+
+  socket:
+    foreground: magenta
+    font-style: bold
+
+  door:
+    foreground: magenta
+    font-style: bold
+
+  # Devices
+  block_device:
+    foreground: yellow
+    font-style: [bold, underline]
+
+  character_device:
+    foreground: yellow
+    font-style: bold
+
+text:
+  special:
+    font-style: bold
+
+  todo:
+    font-style: bold
+
+  licenses:
+    font-style: faint
+
+  configuration:
+    foreground: yellow
+
+  other: {}
+
+markup:
+  font-style: regular
+
+programming:
+  source:
+    font-style: regular
+
+  tooling:
+    foreground: yellow
+
+media:
+  foreground: magenta
+
+office:
+  font-style: regular
+
+archives:
+  foreground: red
+
+executable:
+  # Do not style libraries as executables
+  font-style: regular
+
+  windows:
+    foreground: green
+    font-style: bold
+
+unimportant:
+  font-style: faint

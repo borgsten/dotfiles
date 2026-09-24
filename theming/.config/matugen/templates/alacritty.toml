@@ -35,15 +35,19 @@ text = '{{colors.background.default.hex}}'
 background = '{{colors.primary.default.hex}}'
 
 # ANSI colours from noctalia's terminal roles: curated palettes pass their
-# real terminal colours through, and brights stay readable on dark themes
+# real terminal colours through, and brights stay readable on dark themes.
+# Each hue is pulled halfway toward its conventional one: wallpaper themes
+# fill several slots with the same Material role (green == magenta), which
+# made ls colours (vivid ansi-plus) indistinguishable. Curated palettes
+# shift little since their hues are already close.
 [colors.normal]
 black = '{{colors.terminal_normal_black.default.hex}}'
-red = '{{colors.terminal_normal_red.default.hex}}'
-green = '{{colors.terminal_normal_green.default.hex}}'
-yellow = '{{colors.terminal_normal_yellow.default.hex}}'
-blue = '{{colors.terminal_normal_blue.default.hex}}'
-magenta = '{{colors.terminal_normal_magenta.default.hex}}'
-cyan = '{{colors.terminal_normal_cyan.default.hex}}'
+red = '{{colors.terminal_normal_red.default.hex | blend: "#ff1500", 0.5}}'
+green = '{{colors.terminal_normal_green.default.hex | blend: "#2bff00", 0.5}}'
+yellow = '{{colors.terminal_normal_yellow.default.hex | blend: "#ffbf00", 0.5}}'
+blue = '{{colors.terminal_normal_blue.default.hex | blend: "#006aff", 0.5}}'
+magenta = '{{colors.terminal_normal_magenta.default.hex | blend: "#ff00ff", 0.5}}'
+cyan = '{{colors.terminal_normal_cyan.default.hex | blend: "#00ffff", 0.5}}'
 white = '{{colors.terminal_normal_white.default.hex}}'
 
 [bell]
@@ -51,10 +55,10 @@ color = '{{colors.error.default.hex}}'
 
 [colors.bright]
 black = '{{colors.terminal_bright_black.default.hex}}'
-red = '{{colors.terminal_bright_red.default.hex}}'
-green = '{{colors.terminal_bright_green.default.hex}}'
-yellow = '{{colors.terminal_bright_yellow.default.hex}}'
-blue = '{{colors.terminal_bright_blue.default.hex}}'
-magenta = '{{colors.terminal_bright_magenta.default.hex}}'
-cyan = '{{colors.terminal_bright_cyan.default.hex}}'
+red = '{{colors.terminal_bright_red.default.hex | blend: "#ff1500", 0.5}}'
+green = '{{colors.terminal_bright_green.default.hex | blend: "#2bff00", 0.5}}'
+yellow = '{{colors.terminal_bright_yellow.default.hex | blend: "#ffbf00", 0.5}}'
+blue = '{{colors.terminal_bright_blue.default.hex | blend: "#006aff", 0.5}}'
+magenta = '{{colors.terminal_bright_magenta.default.hex | blend: "#ff00ff", 0.5}}'
+cyan = '{{colors.terminal_bright_cyan.default.hex | blend: "#00ffff", 0.5}}'
 white = '{{colors.terminal_bright_white.default.hex}}'

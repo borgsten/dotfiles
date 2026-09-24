@@ -27,29 +27,10 @@ less_opts=(
 )
 export LESS="${less_opts[*]}"
 
-# theme rendered by noctalia from theming/.config/matugen/templates/vivid.yml
-typeset -g _vivid_theme="${XDG_CACHE_HOME:-$HOME/.cache}/theming/vivid.yml"
-typeset -g _vivid_mtime=0
-
-function _vivid_refresh() {
-  local -a mtime
-  zstat -A mtime +mtime -- "$_vivid_theme" 2>/dev/null || return
-  (( mtime[1] == _vivid_mtime )) && return
-  _vivid_mtime=$mtime[1]
-  export LS_COLORS="$(vivid generate "$_vivid_theme")"
-  zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-}
-
-if (( $+commands[vivid] )) && [[ -f $_vivid_theme ]]; then
-  zmodload -F zsh/stat b:zstat
-  _vivid_refresh
-  autoload -Uz add-zsh-hook
-  # preexec: the theme usually changes while sitting at a prompt, so check
-  # before running the command too, not only before drawing the next prompt
-  add-zsh-hook preexec _vivid_refresh
-  add-zsh-hook precmd _vivid_refresh
-elif (( $+commands[vivid] )); then
-  export LS_COLORS="$(vivid generate ansi)"
+# ansi-plus (theming/.config/vivid/themes) uses the terminal's ANSI palette, so
+# colours follow theme changes without regenerating LS_COLORS
+if (( $+commands[vivid] )); then
+  export LS_COLORS="$(vivid generate ansi-plus 2>/dev/null || vivid generate ansi)"
 elif (( $+commands[dircolors] )); then
   source <(dircolors -b)
 fi
