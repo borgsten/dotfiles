@@ -12,7 +12,8 @@
 --   * neutrals (backgrounds, text, comments, borders) come straight from the
 --     generated surface roles, so nvim matches the terminal background
 --   * functions/keywords take the hue of primary/tertiary, keeping
---     kanagawa's lightness and chroma
+--     kanagawa's lightness and chroma -- only partly for greyish accents, and
+--     not at all where that would land them next to strings (or each other)
 --   * everything else (strings green, errors red, ...) keeps its kanagawa
 --     colour with the hue nudged toward primary, like Material's custom colour
 --     harmonization. Generated palettes don't have enough distinct hues to
@@ -29,6 +30,14 @@ local MAX_HUE_SHIFT = math.rad(15)
 
 -- Below this OKLCH chroma a colour is effectively grey and its hue meaningless.
 local MIN_CHROMA = 0.02
+
+-- From this chroma on an accent's hue is taken over completely; greyer accents
+-- only pull partway, since their hue says little.
+local FULL_CHROMA = 0.08
+
+-- Accent-derived syntax colours keep at least this hue distance from strings
+-- (and functions from keywords), or they'd be hard to tell apart.
+local MIN_SEPARATION = math.rad(45)
 
 -- Colour helpers --------------------------------------------------------------
 
@@ -110,14 +119,26 @@ local function harmonize(hex, target)
   return oklch_to_hex(L, C, h + (diff < 0 and -shift or shift))
 end
 
--- hex's lightness and chroma with source's hue.
-local function rehue(hex, source)
-  local L, C = hex_to_oklch(hex)
+local function hue_distance(a, b)
+  return math.abs((a - b + math.pi) % (2 * math.pi) - math.pi)
+end
+
+-- hex's lightness and chroma with source's hue, weighted by how saturated
+-- source is. Where that lands within MIN_SEPARATION of a colour in avoid, keep
+-- kanagawa's own hue instead, only harmonized toward primary: kanagawa's hues
+-- are already far apart.
+local function accent(hex, source, primary, avoid)
+  local L, C, h = hex_to_oklch(hex)
   local _, sc, sh = hex_to_oklch(source)
-  if sc < MIN_CHROMA then
-    return harmonize(hex, source)
+  local weight = math.min(math.max((sc - MIN_CHROMA) / (FULL_CHROMA - MIN_CHROMA), 0), 1)
+  local hue = h + ((sh - h + math.pi) % (2 * math.pi) - math.pi) * weight
+  for _, other in ipairs(avoid) do
+    local _, oc, oh = hex_to_oklch(other)
+    if oc >= MIN_CHROMA and hue_distance(hue, oh) < MIN_SEPARATION then
+      return harmonize(hex, primary)
+    end
   end
-  return oklch_to_hex(L, C, sh)
+  return oklch_to_hex(L, C, hue)
 end
 
 local function is_light(hex)
@@ -156,11 +177,14 @@ local function wave(c, k, p)
   p.winterRed = blend(p.autumnRed, bg, 0.2)
   p.winterBlue = blend(c.primary, bg, 0.12)
 
-  p.crystalBlue = rehue(k.crystalBlue, c.primary)       -- functions
-  p.oniViolet = rehue(k.oniViolet, c.tertiary)          -- keywords, statements
-  p.oniViolet2 = rehue(k.oniViolet2, c.tertiary)        -- parameters
-  p.springViolet1 = rehue(k.springViolet1, c.tertiary)  -- special ui
-  p.springViolet2 = rehue(k.springViolet2, c.secondary) -- punctuation
+  -- p still holds the harmonized kanagawa colours here, so functions also
+  -- steer clear of the keyword colour's fallback
+  local str = p.springGreen
+  p.crystalBlue = accent(k.crystalBlue, c.primary, c.primary, { str, p.oniViolet })        -- functions
+  p.oniViolet = accent(k.oniViolet, c.tertiary, c.primary, { str, p.crystalBlue })         -- keywords, statements
+  p.oniViolet2 = accent(k.oniViolet2, c.tertiary, c.primary, { str })                      -- parameters
+  p.springViolet1 = accent(k.springViolet1, c.tertiary, c.primary, { str })                -- special ui
+  p.springViolet2 = accent(k.springViolet2, c.secondary, c.primary, { str })               -- punctuation
 end
 
 -- lotus: kanagawa's light theme
@@ -192,11 +216,12 @@ local function lotus(c, k, p)
   p.lotusYellow4 = blend(p.lotusYellow3, bg, 0.3)
   p.lotusCyan = blend(c.primary, bg, 0.12)
 
-  p.lotusBlue4 = rehue(k.lotusBlue4, c.primary)      -- functions
-  p.lotusViolet4 = rehue(k.lotusViolet4, c.tertiary) -- keywords, statements
-  p.lotusBlue5 = rehue(k.lotusBlue5, c.tertiary)     -- parameters
-  p.lotusViolet2 = rehue(k.lotusViolet2, c.tertiary) -- special ui
-  p.lotusTeal1 = rehue(k.lotusTeal1, c.secondary)    -- punctuation
+  local str = p.lotusGreen
+  p.lotusBlue4 = accent(k.lotusBlue4, c.primary, c.primary, { str, p.lotusViolet4 })      -- functions
+  p.lotusViolet4 = accent(k.lotusViolet4, c.tertiary, c.primary, { str, p.lotusBlue4 })    -- keywords, statements
+  p.lotusBlue5 = accent(k.lotusBlue5, c.tertiary, c.primary, { str })                      -- parameters
+  p.lotusViolet2 = accent(k.lotusViolet2, c.tertiary, c.primary, { str })                  -- special ui
+  p.lotusTeal1 = accent(k.lotusTeal1, c.secondary, c.primary, { str })                     -- punctuation
 end
 
 function M.palette(c)
