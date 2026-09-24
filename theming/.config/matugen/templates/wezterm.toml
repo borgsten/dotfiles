@@ -36,29 +36,34 @@ brights = [
 
 # tmux-style flat bar: every tab keeps the bar background and only the text
 # colour changes, so the accent goes on the active tab's foreground.
+#
+# The retro tab bar (config.use_fancy_tab_bar = false in wezterm.lua) paints
+# these backgrounds fully opaque -- window_background_opacity only blends the
+# pane grid, not the tab bar chrome. The alpha suffix below (e6 = ~0.9) makes
+# the bar match wezterm.lua's window_background_opacity; keep them in sync.
 [colors.tab_bar]
-background = "{{colors.background.default.hex}}"
+background = "{{colors.background.default.hex}}e6"
 inactive_tab_edge = "{{colors.outline.default.hex}}"
 
 [colors.tab_bar.active_tab]
-bg_color = "{{colors.background.default.hex}}"
+bg_color = "{{colors.background.default.hex}}e6"
 fg_color = "{{colors.primary.default.hex}}"
 intensity = "Bold"
 
 [colors.tab_bar.inactive_tab]
-bg_color = "{{colors.background.default.hex}}"
+bg_color = "{{colors.background.default.hex}}e6"
 fg_color = "{{colors.outline.default.hex}}"
 
 [colors.tab_bar.inactive_tab_hover]
-bg_color = "{{colors.background.default.hex}}"
+bg_color = "{{colors.background.default.hex}}e6"
 fg_color = "{{colors.on_surface.default.hex}}"
 
 [colors.tab_bar.new_tab]
-bg_color = "{{colors.background.default.hex}}"
+bg_color = "{{colors.background.default.hex}}e6"
 fg_color = "{{colors.outline.default.hex}}"
 
 [colors.tab_bar.new_tab_hover]
-bg_color = "{{colors.background.default.hex}}"
+bg_color = "{{colors.background.default.hex}}e6"
 fg_color = "{{colors.on_surface.default.hex}}"
 
 [metadata]
