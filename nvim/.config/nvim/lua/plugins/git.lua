@@ -76,4 +76,77 @@ return {
       end,
     },
   },
+  {
+    {
+      "sindrets/diffview.nvim",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+      },
+      keys = {
+        {
+          "<leader>ht",
+          function()
+            if require("diffview.lib").get_current_view() then
+              vim.cmd("DiffviewClose")
+            else
+              vim.cmd("DiffviewOpen HEAD^")
+            end
+          end,
+          desc = "[H]istory [T]oggle diffview"
+        },
+        { "<leader>hf", "<cmd>DiffviewFileHistory<cr>", desc = "[H]istory of [F]ile" },
+      },
+
+      opts = {
+        show_untracked = false,
+        enhanced_diff_hl = true,
+        watch_index = true,
+        use_icons = true,
+        git_cmd = {
+          "git",
+        },
+        view = {
+          default = {
+            layout = "diff2_horizontal",
+          },
+          merge_tool = {
+            layout = "diff3_mixed",
+          },
+          file_history = {
+            layout = "diff2_horizontal",
+          },
+        },
+        file_panel = {
+          listing_style = "tree",
+          win_config = { position = "left", width = 35 },
+        },
+        file_history_panel = {
+          log_options = {
+            git = {
+              single_file = { diff_merges = "combined" },
+              multi_file = { diff_merges = "first-parent" },
+            },
+          },
+        },
+      },
+      config = function(_, opts)
+        require("diffview").setup(opts)
+
+        -- Diffview buffers should use the full available screen.
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = {
+            "DiffviewFiles",
+            "DiffviewFileHistory",
+            "DiffviewFilePanel",
+          },
+          callback = function()
+            vim.opt_local.cursorline = true
+            vim.opt_local.number = false
+            vim.opt_local.relativenumber = false
+            vim.opt_local.signcolumn = "no"
+          end,
+        })
+      end,
+    },
+  },
 }
