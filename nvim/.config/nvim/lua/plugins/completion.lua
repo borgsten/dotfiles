@@ -3,6 +3,13 @@ return {
   dependencies = {
     'fang2hou/blink-copilot',
     {
+      "xzbdmw/colorful-menu.nvim",
+      config = function()
+        -- You don't need to set these options.
+        require("colorful-menu").setup({})
+      end,
+    },
+    {
       'L3MON4D3/LuaSnip',
       version = '2.*',
       build = (function()
@@ -41,7 +48,27 @@ return {
     },
 
     -- (Default) Only show the documentation popup when manually triggered
-    completion = { documentation = { auto_show = false } },
+    completion = {
+      documentation = { auto_show = false },
+      menu = {
+        draw = {
+          -- We don't need label_description now because label and label_description are already
+          -- combined together in label by colorful-menu.nvim.
+          columns = { { "kind_icon" }, { "label", gap = 1 } },
+          components = {
+            label = {
+              text = function(ctx)
+                return require("colorful-menu").blink_components_text(ctx)
+              end,
+              highlight = function(ctx)
+                return require("colorful-menu").blink_components_highlight(ctx)
+              end,
+            },
+          },
+        },
+      },
+
+    },
 
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
