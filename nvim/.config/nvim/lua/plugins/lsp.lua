@@ -119,6 +119,15 @@ return {
         severity_sort = true,
         float = { border = 'single', source = 'if_many' },
         virtual_text = true,
+        jump = {
+          on_jump = function(_, bufnr)
+            vim.diagnostic.open_float({
+              bufnr = bufnr,
+              scope = 'cursor',
+              focus = false,
+            })
+          end,
+        },
       })
 
       local servers = {
@@ -161,8 +170,15 @@ return {
                 -- library = { vim.env.VIMRUNTIME },
               },
               telemetry = { enable = false },
+              semantic = { -- disable the dimming of unused local functions
+                enable = false, -- disables lua_ls semantic tokens entirely
+              },
               diagnostics = {
                 gloabls = { 'vim' },
+                severity = {
+                  ['unused-local'] = 'Warning',
+                },
+                disable = {},
                 -- diagnostics = { disable = { 'missing-fields' } },
               },
             },
