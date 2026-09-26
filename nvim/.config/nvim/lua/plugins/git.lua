@@ -89,7 +89,7 @@ return {
             if require('diffview.lib').get_current_view() then
               vim.cmd('DiffviewClose')
             else
-              vim.cmd('DiffviewOpen HEAD^')
+              vim.cmd('DiffviewOpen')
             end
           end,
           desc = '[H]istory [T]oggle diffview',

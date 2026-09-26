@@ -6,6 +6,7 @@
   "catppuccin": { "branch": "main", "commit": "edefef779ab08ce1a4a404713e3012b0d202bd35" },
   "cheatsheet.nvim": { "branch": "master", "commit": "6a5c69d42013331a3eda70b340378f2f912b9a90" },
   "codecompanion.nvim": { "branch": "main", "commit": "87205702eccd8004c93f15caee7cc2b2978d1f25" },
+  "colorful-menu.nvim": { "branch": "master", "commit": "196ddf16d5f8fec09ba7f20e6b153aa5188e907b" },
   "conform.nvim": { "branch": "master", "commit": "016802de402556da54c36bd7359b441266b01cdd" },
   "copilot.lua": { "branch": "master", "commit": "f76a0a281de089e27b605ec8017093f1aab73b07" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
