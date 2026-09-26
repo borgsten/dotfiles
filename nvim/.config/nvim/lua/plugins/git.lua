@@ -149,4 +149,17 @@ return {
       end,
     },
   },
+  {
+    'NeogitOrg/neogit',
+    lazy = true,
+    dependencies = {
+      'sindrets/diffview.nvim',
+      'nvim-telescope/telescope.nvim',
+      'm00qek/baleia.nvim', -- For a custom log pager
+    },
+    cmd = 'Neogit',
+    keys = {
+      { '<leader>hg', '<cmd>Neogit<cr>', desc = 'Show Neogit UI' },
+    },
+  },
 }
