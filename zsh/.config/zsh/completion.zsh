@@ -35,7 +35,8 @@ zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 # Complete the alias when _expand_alias is used as a function
 zstyle ':completion:*' complete true
 
-zstyle ':completion:*' special-dirs true
+# offer ../ only when .. is typed; never list . and .. among hidden files
+zstyle -e ':completion:*' special-dirs '[[ $PREFIX == (*/|).. ]] && reply=(..) || reply=(false)'
 
 # squash // to /
 zstyle ':completion:*' squeeze-slashes true
