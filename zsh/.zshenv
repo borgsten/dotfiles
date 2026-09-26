@@ -12,9 +12,6 @@ export XDG_DATA_HOME="$HOME/.local/share"
 
 # zsh
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
-export HISTFILE="$HOME/.zsh_history"
-export HISTSIZE=1000000
-export SAVEHIST=1000000
 
 export GOPATH="$HOME/.local/go"
 

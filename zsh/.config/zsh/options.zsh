@@ -22,6 +22,7 @@ setopt histignoredups       # ignore command if it is previous
 setopt histignorespace      # do no record commands with leading space
 setopt histverify           # do not remove comand from history directly
 setopt sharehistory         # write history from multiple instances directly
+setopt histfcntllock        # use fcntl locking for concurrent history writes
 
 # Input/Output
 setopt noflowcontrol        # disable flow control. Why? TODO

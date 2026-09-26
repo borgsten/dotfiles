@@ -15,14 +15,27 @@ fi
 
 export skip_global_compinit=1
 
-# Reaffirm history to prevent truncation
-mkdir -p "$XDG_STATE_HOME/zsh"
-if [[ ! -f "$XDG_STATE_HOME/zsh/history" ]]; then
-    cp "$HOME/.zsh_history" "$XDG_STATE_HOME/zsh/history"
-fi
-export HISTFILE="$XDG_STATE_HOME/zsh/history"
-export HISTSIZE=1000000
-export SAVEHIST=1000000
+# History settings should not be exported to child preocesses.
+typeset +x HISTFILE HISTSIZE SAVEHIST  # drop exports inherited from a parent
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+HISTSIZE=1000000
+SAVEHIST=1000000
+
+# Daily history snapshot (newest 7 kept). Will warn if size has shrinked > 50%.
+() {
+    local dir=${HISTFILE:h}/backup day
+    print -v day -P '%D{%F}'
+    [[ -f $HISTFILE && ! -f $dir/history.$day ]] || return
+    local -a snaps=($dir/history.*(N.On))
+    zmodload -F zsh/stat b:zstat
+    if (( $#snaps )) && (( $(zstat +size $HISTFILE) < $(zstat +size $snaps[1]) / 2 )); then
+        print -P "%F{red}zsh history shrank, not backing up. Snapshots in $dir%f"
+        return
+    fi
+    mkdir -p $dir
+    cp -p $HISTFILE $dir/.tmp$$ && mv -f $dir/.tmp$$ $dir/history.$day  # atomic vs concurrent shells
+    rm -f -- $snaps[7,-1]
+}
 
 if (( $+commands[mise] )); then
     eval "$(mise activate zsh)"
