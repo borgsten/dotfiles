@@ -96,7 +96,7 @@ _p10k_apply_matugen_colors() {
 
 _p10k_colors_check() {
   local f=~/.cache/theming/p10k.zsh mtime
-  mtime=$(zstat +mtime "$f" 2>/dev/null)
+  zstat -A mtime +mtime "$f" 2>/dev/null
   if [[ "$mtime" != "$_p10k_colors_mtime" ]]; then
     _p10k_colors_mtime=$mtime
     p10k reload
@@ -109,3 +109,5 @@ add-zsh-hook precmd _p10k_colors_check
 
 source ${ZDOTDIR:-$HOME}/.p10k.zsh
 _p10k_apply_matugen_colors
+zmodload -F zsh/stat b:zstat
+zstat -A _p10k_colors_mtime +mtime ~/.cache/theming/p10k.zsh 2>/dev/null

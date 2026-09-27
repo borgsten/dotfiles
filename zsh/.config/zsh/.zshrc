@@ -1,15 +1,13 @@
 #!/usr/bin/env zsh
 
-PROFILE=0
-
-if [[ $PROFILE == 1 ]]; then
+if [[ -n $ZSH_PROFILE ]]; then
     zmodload zsh/zprof
 fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+if [[ -z $ZSH_PROFILE ]] && [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
@@ -43,6 +41,7 @@ fi
 
 source "$ZDOTDIR/exports.zsh"
 source "$ZDOTDIR/options.zsh"
+source "$ZDOTDIR/plugins.zsh"
 source "$ZDOTDIR/completion.zsh"
 source "$ZDOTDIR/functions.zsh"
 source "$ZDOTDIR/alias.zsh"
@@ -66,9 +65,9 @@ done
 
 (( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 
-# Snytax highlighting needs to be loaded last
-source "$ZDOTDIR/plugins.zsh"
+# Syntax highlighting needs to be loaded last
+plugin-load $plugins_last
 
-if [[ $PROFILE == 1 ]]; then
+if [[ -n $ZSH_PROFILE ]]; then
     zprof
 fi

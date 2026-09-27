@@ -18,7 +18,8 @@ function plugin-load {
                 https://github.com/$repo $plugdir
         fi
 
-        if [[ -n "$ref" && -d "$ZPLUGINDIR/$repo/.git" ]]; then
+        # Fast path: a detached HEAD already at the pinned sha needs no git calls
+        if [[ -n "$ref" && -f "$plugdir/.git/HEAD" && "$(<$plugdir/.git/HEAD)" != "$ref" ]]; then
             current_ref=$(git -C "$ZPLUGINDIR/$repo" rev-parse HEAD)
             desired_ref=$(git -C "$ZPLUGINDIR/$repo" rev-parse "$ref" 2>/dev/null)
 
@@ -27,6 +28,9 @@ function plugin-load {
                 git -C "$ZPLUGINDIR/$repo" fetch -q --depth 1 origin "${ref}"
                 git -C "$ZPLUGINDIR/$repo" checkout -q "${ref}"
                 git -C "$ZPLUGINDIR/$repo" submodule update -q --init --recursive --depth 1
+            else
+                # Detach so the fast path above hits next time
+                git -C "$ZPLUGINDIR/$repo" checkout -q --detach
             fi
         fi
 
@@ -57,16 +61,16 @@ function zvm_config() {
 }
 
 plugins=(
-    # Async git prompt
-    woefe/git-prompt.zsh@0193adeb09fbc51fac738081a4718a3cf8427ff8
     zsh-users/zsh-completions@e07f6fb780725e9c0f50a7666700cf91ded30222
 
     # VI mode
     jeffreytse/zsh-vi-mode@80f78d9a3cc06843c776f60e4535b20bb857b1d4
 
     romkatv/powerlevel10k@9253fb1c5034410c43a0c681ff8294181c54016c
-
-    # Should be last
-    zsh-users/zsh-syntax-highlighting@5eb677bb0fa9a3e60f0eff031dc13926e093df92
 )
 plugin-load $plugins
+
+# Loaded at the very end of .zshrc, after all widgets are defined
+plugins_last=(
+    zsh-users/zsh-syntax-highlighting@5eb677bb0fa9a3e60f0eff031dc13926e093df92
+)

@@ -7,13 +7,16 @@ mkdir -p "$ZSH_COMPLETION_DIR"
 fpath+=("$ZSH_COMPLETION_DIR")
 
 autoload -Uz compinit
-# Rebuild the dump once every 24h, otherwise load it cheaply
-compdump=${ZDOTDIR:-$HOME}/.zcompdump
+# Rebuild the dump once every 24h, otherwise load the cache
+mkdir -p "$XDG_CACHE_HOME/zsh"
+compdump=$XDG_CACHE_HOME/zsh/zcompdump
 if [[ ! -e $compdump || -n $(print -r -- $compdump(N.mh+24)) ]]; then
-    compinit
+    compinit -d $compdump
+    touch $compdump
 else
-    compinit -C
+    compinit -C -d $compdump
 fi
+{ [[ $compdump.zwc -nt $compdump ]] || zcompile -R -- $compdump.zwc $compdump } &!
 unset compdump
 
 # Include .* and .. in completion results unprovoked
@@ -28,9 +31,8 @@ setopt always_to_end
 zstyle ':completion:*:*:*:*:*' menu select
 
 # Use cache for commands using cache
-mkdir -p "$XDG_CACHE_HOME/zsh"
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
 
 # Complete the alias when _expand_alias is used as a function
 zstyle ':completion:*' complete true
