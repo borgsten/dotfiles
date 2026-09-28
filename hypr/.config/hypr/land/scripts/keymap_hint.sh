@@ -3,6 +3,11 @@
 # A script to display Hyprland keybindings defined in your configuration
 # using walker for an interactive search menu.
 
+if ! command -v walker >/dev/null 2>&1; then
+  notify-send "Keybindings" "walker is not installed (./install_arch.sh walker)"
+  exit 1
+fi
+
 declare -A KEYCODE_SYM_MAP
 
 build_keymap_cache() {
