@@ -3,6 +3,22 @@ local act = wezterm.action
 
 local M = {}
 
+local opaque = false
+
+local toggle_opacity = wezterm.action_callback(function(window)
+  local config = window:get_config_overrides() or {}
+  if opaque then
+    config.window_background_opacity = 0.8
+    config.text_background_opacity = 0.8
+    opaque = false
+  else
+    config.window_background_opacity = 1.0
+    config.text_background_opacity = 1.0
+    opaque = true
+  end
+  window:set_config_overrides(config)
+end)
+
 function M.apply_to_config(config)
   config.keys = config.keys or {}
 
@@ -35,6 +51,11 @@ function M.apply_to_config(config)
       key = '-',
       mods = 'CTRL|SHIFT',
       action = act.SplitVertical({ domain = 'CurrentPaneDomain' }),
+    },
+    {
+      key = 'O',
+      mods = 'CTRL|SHIFT',
+      action = toggle_opacity,
     },
   }
 
