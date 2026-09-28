@@ -98,6 +98,10 @@ return {
       },
 
       opts = {
+        integrations = {
+          diffview = true,
+          telescope = true,
+        },
         show_untracked = false,
         enhanced_diff_hl = true,
         watch_index = true,
