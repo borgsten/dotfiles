@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Install the packages the dotfiles rely on.
 #
-# Usage: ./install_arch.sh [extra...]
+# Usage: bootstrap/arch.sh [extra...]
 
 usage() {
     sed -n '2,4s/^# \?//p' "${BASH_SOURCE[0]}"

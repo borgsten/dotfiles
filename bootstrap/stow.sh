@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+dotfiles="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
+
 configs=(
     "zsh"
     "tmux"
@@ -39,5 +41,5 @@ fi
 
 for config in "${configs[@]}"; do
 	echo "Stowing $config"
-	stow -R --target="${HOME}" "$config"
+	stow -R --dir="$dotfiles" --target="${HOME}" "$config"
 done

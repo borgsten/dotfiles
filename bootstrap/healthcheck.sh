@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Check that the tools the dotfiles rely on are installed.
 #
-# Usage: ./healthcheck.sh [section...]
+# Usage: bootstrap/healthcheck.sh [section...]
 #   Sections: shell neovim terminal desktop setup (default: all)
 #
 # Exits non-zero if anything marked required is missing; optional misses only
@@ -151,10 +151,10 @@ check_desktop() {
 check_setup() {
     section "Setup"
     local dotfiles
-    dotfiles="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-    check req "zsh config stowed" "run ./stow.sh" \
+    dotfiles="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
+    check req "zsh config stowed" "run bootstrap/stow.sh" \
         test "$(realpath "$HOME/.config/zsh/.zshrc")" = "$dotfiles/zsh/.config/zsh/.zshrc"
-    check req "ZDOTDIR via ~/.zshenv" "run ./stow.sh" test -e "$HOME/.zshenv"
+    check req "ZDOTDIR via ~/.zshenv" "run bootstrap/stow.sh" test -e "$HOME/.zshenv"
     check opt "login shell is zsh" "chsh -s $(command -v zsh || echo zsh)" \
         bash -c '[[ "$(getent passwd "$USER" | cut -d: -f7)" == */zsh ]]'
     check opt "ssh-agent.service enabled" "systemctl --user enable --now ssh-agent.service" \
