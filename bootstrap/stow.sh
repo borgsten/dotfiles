@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Stow the active configs into $HOME.
 #
-# Usage: ./stow.sh [extra...]
-#        ./stow.sh -D|--delete config...
+# Usage: bootstrap/stow.sh [extra...]
+#        bootstrap/stow.sh -D|--delete config...
 
 # Configs for the current setup, always stowed
 configs=(
@@ -18,14 +18,14 @@ configs=(
     "wallpapers"
 )
 
-scriptpath="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+dotfiles="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
 
 usage() {
     sed -n '2,5s/^# \?//p' "${BASH_SOURCE[0]}"
     local dir extra_names=()
-    for dir in "$scriptpath"/*/; do
+    for dir in "$dotfiles"/*/; do
         dir=$(basename "$dir")
-        [[ $dir == wallpapers || " ${configs[*]} " == *" $dir "* ]] && continue
+        [[ $dir == wallpapers || $dir == bootstrap || " ${configs[*]} " == *" $dir "* ]] && continue
         extra_names+=("$dir")
     done
     echo "  Extras: ${extra_names[*]} (default: none)"
@@ -38,7 +38,7 @@ for arg in "$@"; do
         -h|--help) usage; exit 0 ;;
         -D|--delete) delete=true; continue ;;
     esac
-    if [[ ! -d "$scriptpath/$arg" ]]; then
+    if [[ ! -d "$dotfiles/$arg" ]]; then
         echo "Unknown config: $arg" >&2
         usage >&2
         exit 2
@@ -55,7 +55,7 @@ if $delete; then
     fi
     for config in "${selected[@]}"; do
         echo "Unstowing $config"
-        stow -D --dir="$scriptpath" --target="${HOME}" "$config"
+        stow -D --dir="$dotfiles" --target="${HOME}" "$config"
     done
     exit 0
 fi
@@ -88,5 +88,5 @@ done
 
 for config in "${configs[@]}"; do
 	echo "Stowing $config"
-	stow -R --no-folding --dir="$scriptpath" --target="${HOME}" "$config"
+	stow -R --no-folding --dir="$dotfiles" --target="${HOME}" "$config"
 done
