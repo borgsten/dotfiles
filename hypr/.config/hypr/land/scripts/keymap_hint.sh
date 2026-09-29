@@ -4,7 +4,7 @@
 # using walker for an interactive search menu.
 
 if ! command -v walker >/dev/null 2>&1; then
-  notify-send "Keybindings" "walker is not installed (./install_arch.sh walker)"
+  notify-send "Keybindings" "walker is not installed (bootstrap/arch.sh walker)"
   exit 1
 fi
 
