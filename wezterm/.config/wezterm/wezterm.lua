@@ -29,4 +29,6 @@ require('tmux').apply_to_config(config)
 -- Needs to be after other key bindings
 require('smart-splits').apply_to_config(config)
 
+require('local').apply_to_config(config)
+
 return config
