@@ -15,6 +15,9 @@ config.default_cursor_style = 'SteadyBar'
 
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 
+-- Do not use custom ssh-agent
+config.mux_enable_ssh_agent = false
+
 -- tmux-style tab bar, coloured from config.color_scheme
 require('tabbar').apply_to_config(config)
 
