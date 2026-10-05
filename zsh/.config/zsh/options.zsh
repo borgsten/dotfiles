@@ -35,4 +35,4 @@ setopt longlistjobs         # print job notif in long format
 
 # Prompt
 setopt promptsubst          # allow prompt substitution
-setopt transientrprompt     # remove right prompt while accepting input
+unsetopt transientrprompt   # keep right prompt in scrollback after accepting input

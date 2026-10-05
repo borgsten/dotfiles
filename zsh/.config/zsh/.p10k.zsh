@@ -46,6 +46,8 @@
   # last prompt line gets hidden if it would overlap with left prompt.
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
+    newline                 # \n (keeps right prompt on the input line)
+    # =========================[ Line #2 ]=========================
     status                  # exit code of the last command
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
@@ -107,8 +109,6 @@
     per_directory_history   # Oh My Zsh per-directory-history local/global indicator
     # cpu_arch              # CPU architecture
     time                    # current time
-    # =========================[ Line #2 ]=========================
-    newline
     # ip                    # ip address and bandwidth usage for a specified network interface
     # public_ip             # public IP address
     # proxy                 # system-wide http/https/ftp proxy
@@ -1689,6 +1689,10 @@
   #   - same-dir: Trim down prompt when accepting a command line unless this is the first command
   #               typed after changing current working directory.
   typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=off
+
+  # Emit OSC 133 semantic prompt marks so the terminal knows where prompts, commands and
+  # outputs begin (enables WezTerm's ScrollToPrompt and SemanticZone selection).
+  typeset -g POWERLEVEL9K_TERM_SHELL_INTEGRATION=true
 
   # Instant prompt mode.
   #
