@@ -24,7 +24,17 @@ function M.apply_to_config(config)
 
   local keys = {
     -- <C-l> is used in smart-splits, use <C-S-l> instead
-    { key = 'L', mods = 'CTRL|SHIFT', action = act.SendKey({ key = 'l', mods = 'CTRL' }) },
+    -- wezterm drops the viewport on clear instead of keeping it in scrollback,
+    -- so scroll it up with newlines first. Newlines move the cursor to the bottom
+    -- and then scroll exactly the rows in use.
+    {
+      key = 'L',
+      mods = 'CTRL|SHIFT',
+      action = wezterm.action_callback(function(window, pane)
+        pane:inject_output(string.rep('\r\n', pane:get_dimensions().viewport_rows))
+        window:perform_action(act.SendKey({ key = 'l', mods = 'CTRL' }), pane)
+      end),
+    },
     -- moved off CTRL-SHIFT-L, which wezterm binds to this by default
     { key = 'D', mods = 'CTRL|SHIFT', action = act.ShowDebugOverlay },
     -- default zoom bindings, swapped for the version that refreshes the tab bar
@@ -57,6 +67,10 @@ function M.apply_to_config(config)
       mods = 'CTRL|SHIFT',
       action = toggle_opacity,
     },
+
+    -- jump between prompts (needs OSC 133 marks, see POWERLEVEL9K_TERM_SHELL_INTEGRATION)
+    { key = 'UpArrow', mods = 'SHIFT', action = act.ScrollToPrompt(-1) },
+    { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
   }
 
   for _, key in ipairs(keys) do
@@ -74,6 +88,13 @@ function M.apply_to_config(config)
       action = act.ScrollByLine(lines),
     })
   end
+
+  -- Triple-click selects the whole semantic zone (a command's output, or its input line)
+  table.insert(config.mouse_bindings, {
+    event = { Down = { streak = 3, button = 'Left' } },
+    mods = 'NONE',
+    action = act.SelectTextAtMouseCursor('SemanticZone'),
+  })
 
   -- vim-style forward/back search in copy-mode: '/' and '?'
   if wezterm.gui then
