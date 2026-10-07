@@ -47,6 +47,7 @@ source "$ZDOTDIR/functions.zsh"
 source "$ZDOTDIR/alias.zsh"
 source "$ZDOTDIR/keybindings.zsh"
 source "$ZDOTDIR/p10k.zsh"
+source "$ZDOTDIR/notify.zsh"
 source "$ZDOTDIR/try.zsh"
 
 for file in $ZDOTDIR/local/*.sh(N); do
