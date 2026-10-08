@@ -17,7 +17,7 @@ local M = {}
 local dbg = UTIL.dbg
 
 ---@type Config.Presenting
-local DEFAULTS = { enabled = false, unknown_monitors = true }
+local DEFAULTS = { enabled = true, unknown_monitors = true }
 
 --- Built-in panels never capture, whether or not `monitors.internal` is set.
 local INTERNAL_PREFIXES = { 'eDP-', 'LVDS-', 'DSI-' }

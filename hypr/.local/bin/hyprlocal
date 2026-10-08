@@ -1,0 +1,548 @@
+#!/usr/bin/env python3
+"""Manage the per-machine Hyprland config, land/local/config.lua.
+
+The file is gitignored, so it can vanish with a `git clean -x`; this makes it
+quick to recreate. It owns the file: every write regenerates it, so hand-written
+comments do not survive, but values edited by hand do.
+
+Only what you set is written; the module defaults fill in the rest.
+"""
+
+import argparse
+import json
+import os
+import re
+import readline
+import subprocess
+import sys
+from collections.abc import Callable
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, NoReturn, TypeVar
+
+CONFIG_HOME = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
+HYPR = CONFIG_HOME / "hypr"
+LAND = HYPR / "land"
+CONFIG = LAND / "local" / "config.lua"
+
+INTERNAL_PREFIXES = ("eDP-", "LVDS-", "DSI-")
+NAMED_MODES = {
+    "preferred": "display default",
+    "highres": "highest resolution",
+    "highrr": "highest refresh rate",
+    "maxwidth": "widest",
+}
+NAMED_POSITIONS = (
+    ["auto"]
+    + [f"auto-{d}" for d in ("right", "left", "up", "down")]
+    + [f"auto-center-{d}" for d in ("right", "left", "up", "down")]
+)
+
+# Keys first in this order, the rest alphabetically after them.
+KEY_ORDER = [
+    "shell",
+    "presenting",
+    "clamshell",
+    "battery",
+    "monitors",
+    "scratchpads",
+    "type",
+    "enabled",
+    "internal",
+    "external",
+    "fallback",
+    "output",
+    "mode",
+    "position",
+    "scale",
+]
+
+# The decoded Lua table: nested dicts, lists and scalars.
+Table = dict[str, Any]
+T = TypeVar("T")
+Choice = tuple[str, T]
+
+
+def die(msg: str) -> NoReturn:
+    sys.exit(f"hyprlocal: {msg}")
+
+
+def run(*cmd: str) -> str:
+    return subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
+
+
+# ------------------------------------------------------------------------------
+# Reading and writing Lua
+# ------------------------------------------------------------------------------
+
+# land/util/json.lua is plain Lua, so `lua` can load it outside Hyprland.
+LUA_DUMP = """
+package.path = arg[1] .. '/?.lua;' .. package.path
+local cfg = dofile(arg[2])
+assert(type(cfg) == 'table', 'did not return a table')
+print(require('land.util.json').encode(cfg))
+"""
+
+
+def load() -> Table:
+    if not CONFIG.exists():
+        return {}
+    proc = subprocess.run(
+        ["lua", "-", str(HYPR), str(CONFIG)],
+        input=LUA_DUMP,
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        die(f"cannot load {CONFIG}: {proc.stderr.strip()}")
+    return json.loads(proc.stdout)
+
+
+def lua_key(k: str) -> str:
+    return k if re.fullmatch(r"[A-Za-z_]\w*", k) else f"[{lua_value(k, 0)}]"
+
+
+def sort_keys(d: Table) -> list[str]:
+    rank = {k: i for i, k in enumerate(KEY_ORDER)}
+    return sorted(d, key=lambda k: (rank.get(k, len(rank)), k))
+
+
+def lua_value(v: Any, depth: int) -> str:
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, (int, float)):
+        return repr(v)
+    if isinstance(v, str):
+        return (
+            "'" + v.replace("\\", "\\\\").replace("'", "\\'").replace("\n", "\\n") + "'"
+        )
+    if not v:
+        return "{}"
+    if isinstance(v, list):
+        items: list[Any] = v
+        parts = [lua_value(x, depth + 1) for x in items]
+    else:
+        items = list(v.values())
+        parts = [f"{lua_key(k)} = {lua_value(v[k], depth + 1)}" for k in sort_keys(v)]
+    # Tables of scalars only go on one line, the way stylua lays them out.
+    flat = all(not isinstance(x, (dict, list)) for x in items)
+    line = "{ " + ", ".join(parts) + " }"
+    if flat and len(line) + depth * 4 <= 120:
+        return line
+    pad = "    " * (depth + 1)
+    return "{\n" + "".join(f"{pad}{p},\n" for p in parts) + "    " * depth + "}"
+
+
+def render(cfg: Table) -> str:
+    return f"---@type Config\nreturn {lua_value(cfg, 0)}\n"
+
+
+def save(cfg: Table) -> None:
+    text = render(cfg)
+    check = subprocess.run(
+        ["lua", "-e", 'assert(load(io.read("a")))'],
+        input=text,
+        capture_output=True,
+        text=True,
+    )
+    if check.returncode != 0:
+        die(f"generated invalid Lua, not writing:\n{check.stderr}")
+    # Through a symlink rather than replacing it: some machines link this file
+    # in from another repo.
+    target = CONFIG.resolve()
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text)
+    print(f"Wrote {CONFIG}", file=sys.stderr)
+
+
+def reload_hyprland() -> None:
+    if not os.environ.get("HYPRLAND_INSTANCE_SIGNATURE"):
+        return
+    run("hyprctl", "reload")
+    if errors := run("hyprctl", "configerrors"):
+        print(f"Hyprland config errors:\n{errors}", file=sys.stderr)
+
+
+# ------------------------------------------------------------------------------
+# Prompts
+# ------------------------------------------------------------------------------
+
+
+# Importing readline is what gives input() line editing. The call keeps the
+# import in use, so an unused-import cleanup cannot strip it.
+readline.set_auto_history(True)
+
+
+def ask(prompt: str, default: str | None = None) -> str | None:
+    """Reads a line with readline editing; Enter keeps `default`."""
+    shown = f" [{default}]" if default else ""
+    try:
+        answer = input(f"{prompt}{shown}: ").strip()
+    except EOFError:
+        sys.exit(1)
+    return answer or default
+
+
+def confirm(prompt: str, default: bool) -> bool:
+    answer = ask(prompt + (" (Y/n)" if default else " (y/N)"))
+    return default if not answer else answer.lower().startswith("y")
+
+
+def ask_setting(prompt: str, current: bool | None) -> bool | None:
+    """y/n for a boolean setting. Enter keeps it as is, `-` clears it so the
+    module default applies. Returns the new value, or None for unset."""
+    state = "default" if current is None else ("yes" if current else "no")
+    while True:
+        answer = (ask(f"{prompt} (y/n, - for default)", state) or "").lower()
+        if answer == state:
+            return current
+        if answer in ("-", "default"):
+            return None
+        if answer[:1] in ("y", "n"):
+            return answer[0] == "y"
+        print("Answer y, n or -", file=sys.stderr)
+
+
+def choose(
+    choices: list[Choice[T]],
+    header: str,
+    freetext: Callable[[str], bool] | None = None,
+) -> T | str | None:
+    """fzf over (label, value) pairs, the first being the default. With
+    `freetext`, Enter on text that matches nothing returns the text if
+    `freetext` accepts it. Returns None when cancelled."""
+    cmd = [
+        "fzf",
+        "--no-sort",
+        "--layout=reverse",
+        "--height=~20",
+        "--delimiter=\t",
+        "--with-nth=2..",
+        f"--header={header}",
+    ]
+    if freetext:
+        cmd += ["--print-query", "--bind=enter:accept-or-print-query"]
+    lines = "".join(f"{i}\t{label}\n" for i, (label, _) in enumerate(choices))
+    while True:
+        proc = subprocess.run(cmd, input=lines, stdout=subprocess.PIPE, text=True)
+        if proc.returncode == 130:
+            return None
+        last = (proc.stdout.strip().splitlines() or [""])[-1]
+        if m := re.match(r"^(\d+)\t", last):
+            return choices[int(m[1])][1]
+        if freetext and last and freetext(last):
+            return last
+        print(f"Not valid: {last}", file=sys.stderr)
+
+
+def current_first(
+    values: list[str], current: str | None, notes: dict[str, str] | None = None
+) -> list[Choice[str]]:
+    notes = notes or {}
+    choices = [(f"{current}  (current)", current)] if current else []
+    return choices + [
+        (f"{v}  ({notes[v]})" if v in notes else v, v) for v in values if v != current
+    ]
+
+
+def alias_values(name: str) -> list[str]:
+    """The `---| "value"` lines of a `---@alias`, e.g. the shell backends."""
+    values: list[str] = []
+    inside = False
+    for path in LAND.glob("*.lua"):
+        for line in path.read_text().splitlines():
+            if line.startswith(f"---@alias {name}"):
+                inside = True
+            elif inside and (m := re.match(r'^---\|\s*"([^"]+)"', line)):
+                values.append(m[1])
+            elif inside:
+                return values
+    return values
+
+
+# Picked to leave the shell unset, so the module default applies.
+DEFAULT: Choice[str] = ("default", "-")
+
+
+def is_mode(s: str) -> bool:
+    return s in NAMED_MODES or re.fullmatch(r"\d+x\d+(@[\d.]+)?", s) is not None
+
+
+def is_position(s: str) -> bool:
+    return s in NAMED_POSITIONS or re.fullmatch(r"-?\d+x-?\d+", s) is not None
+
+
+def pick_mode(current: str, available: list[str]) -> str | None:
+    choices = current_first(available + list(NAMED_MODES), current, NAMED_MODES)
+    return choose(choices, "Mode (or type WxH@Hz)", is_mode)
+
+
+def pick_position(current: str) -> str | None:
+    choices = current_first(NAMED_POSITIONS, current)
+    return choose(choices, "Position (or type XxY in pixels)", is_position)
+
+
+def ask_scale(current: float | str) -> float | str:
+    while True:
+        s = ask("Scale", str(current)) or str(current)
+        if s == "auto":
+            return s
+        try:
+            return int(s) if s.isdigit() else float(s)
+        except ValueError:
+            print("Scale is a number or auto", file=sys.stderr)
+
+
+# ------------------------------------------------------------------------------
+# Monitors
+# ------------------------------------------------------------------------------
+
+
+@dataclass
+class Monitor:
+    """A connected display, as `hyprctl monitors` reports it."""
+
+    name: str
+    description: str
+    mode: str
+    position: str
+    scale: float
+    modes: list[str]
+
+    @property
+    def internal(self) -> bool:
+        return self.name.startswith(INTERNAL_PREFIXES)
+
+    def __str__(self) -> str:
+        return (
+            f"{self.name:<10} {self.description}"
+            f"  ({self.mode}, {self.position}, scale {self.scale})"
+        )
+
+
+def tidy_mode(mode: str) -> str:
+    """1920x1080@60.00000 -> 1920x1080@60, 2560x1440@59.95100Hz -> ...@59.95"""
+    m = re.match(r"^(\d+x\d+)@([\d.]+)", mode)
+    return f"{m[1]}@{float(m[2]):.2f}".rstrip("0").rstrip(".") if m else mode
+
+
+def connected() -> list[Monitor]:
+    return [
+        Monitor(
+            name=m["name"],
+            description=m["description"],
+            mode=tidy_mode(f'{m["width"]}x{m["height"]}@{m["refreshRate"]}'),
+            position=f'{m["x"]}x{m["y"]}',
+            scale=m["scale"],
+            modes=[tidy_mode(x) for x in m.get("availableModes", [])],
+        )
+        for m in json.loads(run("hyprctl", "monitors", "all", "-j") or "[]")
+    ]
+
+
+def matches(spec: Table, mon: Monitor) -> bool:
+    """Same rule as `UTIL.output.matches`: connector name or a `desc:` prefix."""
+    out: str = spec.get("output", "")
+    if out.startswith("desc:"):
+        return mon.description.startswith(out[5:])
+    return out == mon.name
+
+
+def configured(cfg: Table, mon: Monitor) -> Table | None:
+    monitors: Table = cfg.get("monitors", {})
+    specs: list[Table] = [monitors["internal"]] if "internal" in monitors else []
+    specs += monitors.get("external", [])
+    return next((s for s in specs if matches(s, mon)), None)
+
+
+def edit_monitor(cfg: Table, mon: Monitor) -> bool:
+    """Asks for one monitor's settings and stores them, replacing any entry that
+    already describes the same display. Returns False when cancelled."""
+    existing = configured(cfg, mon) or {}
+
+    # desc: identifies the display itself; a connector name matches whatever
+    # gets plugged into it, so it is only the default for built-in panels.
+    by_desc = confirm(
+        f"Identify by EDID description rather than connector {mon.name}",
+        not mon.internal,
+    )
+    if not (mode := pick_mode(existing.get("mode", mon.mode), mon.modes)):
+        return False
+    if not (position := pick_position(existing.get("position", mon.position))):
+        return False
+    print(f"Mode {mode}, position {position}", file=sys.stderr)
+
+    spec: Table = {
+        "output": f"desc:{mon.description}" if by_desc else mon.name,
+        "mode": mode,
+        "position": position,
+        "scale": ask_scale(existing.get("scale", mon.scale)),
+    }
+    if not mon.internal and confirm(
+        "Does it capture the screen (meeting room hub)", existing.get("sharing", False)
+    ):
+        spec["sharing"] = True
+
+    monitors: Table = cfg.setdefault("monitors", {})
+    if mon.internal and confirm("Use as monitors.internal (clamshell)", True):
+        monitors["internal"] = spec
+        return True
+    external = [s for s in monitors.get("external", []) if not matches(s, mon)]
+    monitors["external"] = external + [spec]
+    return True
+
+
+def monitor_add() -> bool:
+    monitors = connected()
+    if not monitors:
+        die("no monitors reported by hyprctl")
+    mon = choose([(str(m), m) for m in monitors], "Monitor to add")
+    cfg = load()
+    if not isinstance(mon, Monitor) or not edit_monitor(cfg, mon):
+        return False
+    save(cfg)
+    return True
+
+
+def monitor_rm() -> bool:
+    cfg = load()
+    monitors: Table = cfg.get("monitors", {})
+    # External entries by index, the internal one by its key.
+    choices: list[Choice[int | str]] = [
+        (f'external  {s.get("output")}', i)
+        for i, s in enumerate(monitors.get("external", []))
+    ]
+    if "internal" in monitors:
+        choices.append((f'internal  {monitors["internal"].get("output")}', "internal"))
+    if not choices:
+        die("no monitors configured")
+    picked = choose(choices, "Monitor to remove")
+    if picked is None:
+        return False
+    if isinstance(picked, int):
+        del monitors["external"][picked]
+    else:
+        del monitors["internal"]
+    save(cfg)
+    return True
+
+
+# ------------------------------------------------------------------------------
+# Init
+# ------------------------------------------------------------------------------
+
+
+def set_or_clear(table: Table, key: str, value: Any) -> None:
+    if value is None:
+        table.pop(key, None)
+    else:
+        table[key] = value
+
+
+def init() -> bool:
+    """Asks for the settings that differ between machines. Battery warnings
+    need no setting, they run wherever a battery is found; scratchpads and the
+    rest are left for `edit`."""
+    cfg = load()
+
+    print("== shell", file=sys.stderr)
+    shell: Table = cfg.setdefault("shell", {})
+    picked = choose(
+        current_first(alias_values("ShellType"), shell.get("type")) + [DEFAULT],
+        "Shell",
+    )
+    if picked is not None:  # cancelled keeps it
+        set_or_clear(shell, "type", None if picked == "-" else picked)
+    print(f'shell.type: {shell.get("type", "default")}', file=sys.stderr)
+
+    print("\n== presenting (DND while the screen may be shared)", file=sys.stderr)
+    presenting: Table = cfg.setdefault("presenting", {})
+    set_or_clear(
+        presenting,
+        "enabled",
+        ask_setting("presenting.enabled", presenting.get("enabled")),
+    )
+    if presenting.get("enabled", True):
+        set_or_clear(
+            presenting,
+            "unknown_monitors",
+            ask_setting(
+                "Treat unknown monitors as sharing", presenting.get("unknown_monitors")
+            ),
+        )
+
+    if Path("/proc/acpi/button/lid").exists():
+        print("\n== clamshell", file=sys.stderr)
+        clamshell: Table = cfg.setdefault("clamshell", {})
+        set_or_clear(
+            clamshell,
+            "enabled",
+            ask_setting("clamshell.enabled", clamshell.get("enabled")),
+        )
+        if clamshell.get("enabled"):
+            devices = json.loads(run("hyprctl", "devices", "-j") or "{}")
+            switches = [s["name"] for s in devices.get("switches", [])]
+            switch = choose(
+                current_first(switches, clamshell.get("lid_switch")),
+                "Lid switch (or type a name)",
+                bool,
+            )
+            set_or_clear(clamshell, "lid_switch", switch or clamshell.get("lid_switch"))
+
+    print("\n== monitors", file=sys.stderr)
+    for mon in connected():
+        known = configured(cfg, mon) is not None
+        if confirm(("Reconfigure " if known else "Configure ") + str(mon), not known):
+            edit_monitor(cfg, mon)
+
+    # Sections the answers left empty would only be noise in the file.
+    cfg = {k: v for k, v in cfg.items() if v != {}}
+    print("\n== result", file=sys.stderr)
+    print(lua_value(cfg, 0), file=sys.stderr)
+    if not confirm("Write it", True):
+        return False
+    save(cfg)
+    return True
+
+
+# ------------------------------------------------------------------------------
+# Commands
+# ------------------------------------------------------------------------------
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        prog="hyprlocal", description=(__doc__ or "").split("\n\n")[0]
+    )
+    parser.add_argument(
+        "-n",
+        "--no-reload",
+        action="store_true",
+        help="do not reload Hyprland after a change",
+    )
+    sub = parser.add_subparsers(dest="cmd", metavar="command")
+    sub.add_parser("init", help="walk through the per-machine settings")
+    sub.add_parser("show", help="print the config")
+    sub.add_parser("edit", help="open the config in $EDITOR")
+    monitor = sub.add_parser("monitor", help="add or remove a monitor")
+    monitor.add_argument("action", choices=["add", "rm"])
+    args = parser.parse_args()
+
+    changed = False
+    if args.cmd in (None, "show"):
+        print(render(load()), end="")
+    elif args.cmd == "init":
+        changed = init()
+    elif args.cmd == "edit":
+        subprocess.run([os.environ.get("EDITOR", "nvim"), str(CONFIG)])
+        load()  # report a broken edit right away
+        changed = True
+    elif args.cmd == "monitor":
+        changed = monitor_add() if args.action == "add" else monitor_rm()
+
+    if changed and not args.no_reload:
+        reload_hyprland()
+
+
+if __name__ == "__main__":
+    main()
