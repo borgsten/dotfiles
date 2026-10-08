@@ -8,11 +8,21 @@
 ---@class Config.Monitors
 ---@field external Config.MonitorSpec[]
 ---@field internal? Config.MonitorSpec
+---@field fallback Config.MonitorSpec  rule for displays no other spec names; keep `output = ''`
 
 local M = {}
 
+---@type Config.Monitors
+local DEFAULTS = {
+    external = {},
+    -- Hyprland's own catch-all, declared so a machine can override parts of it.
+    fallback = { output = '', mode = 'preferred', position = 'auto', scale = '1.0' },
+}
+
 function M.setup()
-    local cfg = UTIL.config.section('monitors', { external = {} })
+    local cfg = UTIL.config.section('monitors', DEFAULTS)
+
+    UTIL.output.apply(cfg.fallback)
 
     for _, spec in ipairs(cfg.external) do
         UTIL.output.apply(spec)
