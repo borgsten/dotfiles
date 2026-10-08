@@ -6,9 +6,18 @@
 
 ---@class Config.Clamshell
 ---@field enabled boolean
----@field lid_switch string  switch name, from `hyprctl devices`
+---@field lid_switch? string  switch name, from `hyprctl devices`
 
 local M = {}
+
+---@type Config.Clamshell
+local DEFAULTS = { enabled = false }
+
+--- The only reader of the section, so its defaults never depend on load order.
+---@return Config.Clamshell
+function M.config()
+    return UTIL.config.section('clamshell', DEFAULTS)
+end
 
 local dbg = UTIL.dbg
 
@@ -25,15 +34,15 @@ local function readLidClosed()
 end
 
 function M.setup()
-    local cfg = UTIL.config.section('clamshell', { enabled = false })
+    local cfg = M.config()
     if not cfg.enabled then
         return
     end
 
     -- Misconfiguration disables the feature rather than asserting, which would
     -- abort the whole evaluation and take the session's keybinds with it.
-    local monitors = UTIL.config.section('monitors', { external = {} })
-    if monitors.internal == nil then
+    local internal = require('land.monitors').config().internal
+    if internal == nil then
         UTIL.notif.osd('clamshell: enabled, but monitors.internal is not set')
         return
     end
@@ -42,7 +51,6 @@ function M.setup()
         return
     end
 
-    local internal = monitors.internal
     local internal_on = UTIL.output.override(internal, { disabled = false })
     local internal_off = UTIL.output.override(internal, { disabled = true })
 

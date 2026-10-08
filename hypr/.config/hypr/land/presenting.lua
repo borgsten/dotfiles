@@ -35,7 +35,7 @@ end
 
 ---@return Config.MonitorSpec[]
 local function knownSpecs()
-    local monitors = UTIL.config.section('monitors', { external = {} })
+    local monitors = require('land.monitors').config()
     local specs = {}
     for i, spec in ipairs(monitors.external) do
         specs[i] = spec

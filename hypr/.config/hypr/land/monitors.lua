@@ -19,8 +19,14 @@ local DEFAULTS = {
     fallback = { output = '', mode = 'preferred', position = 'auto', scale = '1.0' },
 }
 
+--- The only reader of the section, so its defaults never depend on load order.
+---@return Config.Monitors
+function M.config()
+    return UTIL.config.section('monitors', DEFAULTS)
+end
+
 function M.setup()
-    local cfg = UTIL.config.section('monitors', DEFAULTS)
+    local cfg = M.config()
 
     UTIL.output.apply(cfg.fallback)
 
@@ -34,8 +40,8 @@ function M.setup()
 
     -- Clamshell owns the internal output when enabled; applying it here too
     -- would fight it. The contract is the config section, not the module.
-    local clamshell = UTIL.config.section('clamshell', { enabled = false })
-    if not clamshell.enabled then
+    -- Required here, not at the top: clamshell reads this module's config too.
+    if not require('land.clamshell').config().enabled then
         UTIL.output.apply(cfg.internal)
     end
 end
