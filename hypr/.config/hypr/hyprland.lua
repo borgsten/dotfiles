@@ -23,3 +23,4 @@ require('land.tiling')
 require('land.look')
 
 require('land.battery').setup()
+require('land.presenting').setup()

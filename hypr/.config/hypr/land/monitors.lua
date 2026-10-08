@@ -2,9 +2,12 @@
 ---                                 MONITORS                                 ---
 --------------------------------------------------------------------------------
 
+---@class Config.MonitorSpec: HL.MonitorSpec
+---@field sharing? boolean  this display captures the screen (e.g. a meeting room hub)
+
 ---@class Config.Monitors
----@field external HL.MonitorSpec[]
----@field internal? HL.MonitorSpec
+---@field external Config.MonitorSpec[]
+---@field internal? Config.MonitorSpec
 
 local M = {}
 

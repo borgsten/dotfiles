@@ -9,6 +9,7 @@
 ---@field monitors? Config.Monitors
 ---@field clamshell? Config.Clamshell
 ---@field battery? Config.Battery
+---@field presenting? Config.Presenting
 ---@field scratchpads? table<string, Config.Scratchpad>
 
 return {}

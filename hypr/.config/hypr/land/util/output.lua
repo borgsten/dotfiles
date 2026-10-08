@@ -15,7 +15,22 @@ local dbg = UTIL.dbg
 ---@type table<string, HL.MonitorSpec>
 local applied = {}
 
----@param spec HL.MonitorSpec
+--- Keys `Config.MonitorSpec` adds for our own modules. Hyprland never sees them.
+local OWN_KEYS = { sharing = true }
+
+---@param spec Config.MonitorSpec
+---@return HL.MonitorSpec
+local function toHyprland(spec)
+    local out = {}
+    for k, v in pairs(spec) do
+        if not OWN_KEYS[k] then
+            out[k] = v
+        end
+    end
+    return out
+end
+
+---@param spec Config.MonitorSpec
 ---@return boolean applied_now
 function M.apply(spec)
     local key = spec.output
@@ -26,7 +41,7 @@ function M.apply(spec)
     end
 
     dbg.trace(('output.apply: applying %s'):format(key or '<no output>'))
-    hl.monitor(spec)
+    hl.monitor(toHyprland(spec))
     if key then
         applied[key] = spec
     end
@@ -34,18 +49,18 @@ function M.apply(spec)
 end
 
 --- Apply even if the memo says it was already done this evaluation.
----@param spec HL.MonitorSpec
+---@param spec Config.MonitorSpec
 function M.force(spec)
     dbg.trace(('output.force: applying %s'):format(spec.output or '<no output>'))
-    hl.monitor(spec)
+    hl.monitor(toHyprland(spec))
     if spec.output then
         applied[spec.output] = spec
     end
 end
 
----@param spec HL.MonitorSpec
+---@param spec Config.MonitorSpec
 ---@param overrides table
----@return HL.MonitorSpec
+---@return Config.MonitorSpec
 function M.override(spec, overrides)
     local out = {}
     for k, v in pairs(spec) do
@@ -67,6 +82,19 @@ function M.othersThan(name)
         end
     end
     return others
+end
+
+--- Whether `spec` describes `mon`, by connector name or by a `desc:` prefix
+--- of the EDID description -- the same two forms Hyprland accepts.
+---@param spec Config.MonitorSpec
+---@param mon HL.Monitor
+---@return boolean
+function M.matches(spec, mon)
+    local desc = spec.output:match('^desc:(.*)$')
+    if desc then
+        return mon.description:sub(1, #desc) == desc
+    end
+    return spec.output == mon.name
 end
 
 return M

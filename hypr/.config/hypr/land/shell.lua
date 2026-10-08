@@ -31,6 +31,8 @@
 ---@field launcher          ShellAction
 ---@field bookmarks         ShellAction
 ---@field bluetooth         ShellAction
+---@field dnd_on            ShellAction
+---@field dnd_off           ShellAction
 
 local dms = UTIL.cmd.prefixed('dms ipc call')
 local noctalia = UTIL.cmd.prefixed('noctalia msg')
@@ -55,6 +57,8 @@ local bespoke = {
     launcher = raw('walker'),
     bookmarks = raw('walker -m bookmarks'),
     bluetooth = raw('walker -m bluetooth'),
+    dnd_on = raw('swaync-client -dn'),
+    dnd_off = raw('swaync-client -df'),
 }
 
 ---@type table<string, Actions>
@@ -77,6 +81,8 @@ backends.DMS = {
     launcher = raw('walker'),
     bookmarks = raw('walker -m bookmarks'),
     bluetooth = raw('walker -m bluetooth'),
+    dnd_on = dms('notifications enableDoNotDisturbIndefinitely'),
+    dnd_off = dms('notifications disableDoNotDisturb'),
 }
 
 backends.noctalia = {
@@ -96,6 +102,8 @@ backends.noctalia = {
     launcher = noctalia('panel-toggle launcher'),
     bookmarks = noctalia('panel-toggle launcher /bk'),
     bluetooth = noctalia('panel-toggle control-center bluetooth'),
+    dnd_on = noctalia('notification-dnd-set on'),
+    dnd_off = noctalia('notification-dnd-set off'),
 }
 
 local BINARY = { DMS = 'dms', noctalia = 'noctalia' }
