@@ -13,6 +13,20 @@ config.text_background_opacity = 0.8
 
 config.default_cursor_style = 'SteadyBar'
 
+config.audible_bell = 'Disabled'
+config.visual_bell = {
+    fade_in_function = 'Ease',
+    fade_in_duration_ms = 60,
+    fade_out_function = 'Ease',
+    fade_out_duration_ms = 200,
+}
+-- The default 10fps draws the bell in two or three steps
+config.animation_fps = 60
+local ok, scheme = pcall(wezterm.color.load_scheme, config.color_scheme_dirs[1] .. '/Noctalia.toml')
+if ok then
+    config.colors = { visual_bell = tostring(wezterm.color.parse(scheme.background):lighten(0.01)) }
+end
+
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 
 -- Do not use custom ssh-agent
