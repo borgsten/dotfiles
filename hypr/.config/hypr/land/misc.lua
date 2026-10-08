@@ -4,13 +4,13 @@
 
 -- https://wiki.hyprland.org/Configuring/Variables/#misc
 hl.config({
-  misc = {
-    force_default_wallpaper = 0,
-    disable_hyprland_logo = true,
-    disable_splash_rendering = true,
-  },
+    misc = {
+        force_default_wallpaper = 0,
+        disable_hyprland_logo = true,
+        disable_splash_rendering = true,
+    },
 
-  ecosystem = {
-    no_donation_nag = true,
-  }
+    ecosystem = {
+        no_donation_nag = true,
+    },
 })

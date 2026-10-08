@@ -10,28 +10,30 @@ local sections = {}
 
 ---@return table
 local function readLocal()
-  if raw then return raw end
+    if raw then
+        return raw
+    end
 
-  -- searchpath first: an absent local config is normal and stays quiet, a
-  -- present but broken one must be loud.
-  if not package.searchpath("land.local.config", package.path) then
-    raw = {}
+    -- searchpath first: an absent local config is normal and stays quiet, a
+    -- present but broken one must be loud.
+    if not package.searchpath('land.local.config', package.path) then
+        raw = {}
+        return raw
+    end
+
+    -- osd rather than notify-send: config evaluation can run before any
+    -- notification daemon is up.
+    local ok, cfg = pcall(require, 'land.local.config')
+    if not ok then
+        UTIL.notif.osd('Broken local config: ' .. tostring(cfg), { timeout = 15000 })
+        cfg = {}
+    elseif type(cfg) ~= 'table' then
+        UTIL.notif.osd('Local config did not return a table', { timeout = 15000 })
+        cfg = {}
+    end
+
+    raw = cfg
     return raw
-  end
-
-  -- osd rather than notify-send: config evaluation can run before any
-  -- notification daemon is up.
-  local ok, cfg = pcall(require, "land.local.config")
-  if not ok then
-    UTIL.notif.osd("Broken local config: " .. tostring(cfg), { timeout = 15000 })
-    cfg = {}
-  elseif type(cfg) ~= "table" then
-    UTIL.notif.osd("Local config did not return a table", { timeout = 15000 })
-    cfg = {}
-  end
-
-  raw = cfg
-  return raw
 end
 
 --- The machine's overrides laid over the defaults the calling module owns.
@@ -42,10 +44,10 @@ end
 ---@param defaults T
 ---@return T
 function M.section(name, defaults)
-  if sections[name] == nil then
-    sections[name] = UTIL.tbl.merge(defaults, readLocal()[name])
-  end
-  return sections[name]
+    if sections[name] == nil then
+        sections[name] = UTIL.tbl.merge(defaults, readLocal()[name])
+    end
+    return sections[name]
 end
 
 return M

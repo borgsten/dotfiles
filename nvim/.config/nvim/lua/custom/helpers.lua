@@ -6,11 +6,11 @@ local M = {}
 ---@param environ_key string Key of environment variable
 ---@return string[] List environment varaible split into list
 function M.envToList(environ_key)
-  local value = os.getenv(environ_key)
-  if value == nil then
-    return {}
-  end
-  return vim.split(value, ':', { trimempty = true })
+    local value = os.getenv(environ_key)
+    if value == nil then
+        return {}
+    end
+    return vim.split(value, ':', { trimempty = true })
 end
 
 --- Create table from list of envvar keys
@@ -19,14 +19,14 @@ end
 ---@param environ_keys string[] List of envvar keys
 ---@return table<string, string> Table with keys from argument and their corresponding envvar values
 function M.envListToTable(environ_keys)
-  local table = {}
-  for _, env_key in pairs(environ_keys) do
-    local env_value = os.getenv(env_key)
-    if env_value ~= nil then
-      table[env_key] = env_value
+    local table = {}
+    for _, env_key in pairs(environ_keys) do
+        local env_value = os.getenv(env_key)
+        if env_value ~= nil then
+            table[env_key] = env_value
+        end
     end
-  end
-  return table
+    return table
 end
 
 --- Read string from XResources
@@ -35,15 +35,15 @@ end
 ---@param key string XResources key
 ---@return string? string the value from the key
 function M.readFromXResources(key)
-  local result = io.popen('xrdb -query | grep ' .. key .. ' | cut -f 2')
-  if result == nil then
-    return nil
-  end
-  local value = result:read('*l')
-  if value == nil then
-    return nil
-  end
-  return value
+    local result = io.popen('xrdb -query | grep ' .. key .. ' | cut -f 2')
+    if result == nil then
+        return nil
+    end
+    local value = result:read('*l')
+    if value == nil then
+        return nil
+    end
+    return value
 end
 
 --- Try require module
@@ -52,12 +52,12 @@ end
 ---@param module_name string module name
 ---@return any? module the module or nil
 function M.tryRequire(module_name)
-  local success, module = pcall(require, module_name)
-  if success then
-    return module
-  else
-    return nil
-  end
+    local success, module = pcall(require, module_name)
+    if success then
+        return module
+    else
+        return nil
+    end
 end
 
 --- Check if one path is a subpath of another
@@ -67,9 +67,9 @@ end
 --- @param parent string Parent path
 --- @return boolean true if child is a subpath of parent
 function M.isSubDirectory(child, parent)
-  local norm_parent = parent:gsub('[/\\]+$', '')
-  local norm_child = child:gsub('[/\\]+$', '')
-  return norm_child == norm_parent or norm_child:sub(1, #norm_parent + 1) == norm_parent .. '/'
+    local norm_parent = parent:gsub('[/\\]+$', '')
+    local norm_child = child:gsub('[/\\]+$', '')
+    return norm_child == norm_parent or norm_child:sub(1, #norm_parent + 1) == norm_parent .. '/'
 end
 
 --- Check if current working directory is in a directory
@@ -78,8 +78,8 @@ end
 --- @param directory string Directory to check
 --- @return boolean true if cwd is in directory
 function M.isInDirectory(directory)
-  local cwd = vim.fn.getcwd()
-  return M.isSubDirectory(cwd, directory)
+    local cwd = vim.fn.getcwd()
+    return M.isSubDirectory(cwd, directory)
 end
 
 --- Remove duplicates from a list while preserving order
@@ -87,15 +87,15 @@ end
 ---@param list string[] list to de-duplicate
 ---@return string[] list with duplicates removed
 function M.deDuplicateList(list)
-  local seen = {}
-  local result = {}
-  for _, v in ipairs(list) do
-    if not seen[v] then
-      table.insert(result, v)
-      seen[v] = true
+    local seen = {}
+    local result = {}
+    for _, v in ipairs(list) do
+        if not seen[v] then
+            table.insert(result, v)
+            seen[v] = true
+        end
     end
-  end
-  return result
+    return result
 end
 
 return M

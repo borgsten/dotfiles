@@ -1,92 +1,92 @@
 return {
-  'saghen/blink.cmp',
-  dependencies = {
-    'fang2hou/blink-copilot',
-    {
-      'xzbdmw/colorful-menu.nvim',
-      config = function()
-        -- You don't need to set these options.
-        require('colorful-menu').setup({})
-      end,
-    },
-    {
-      'L3MON4D3/LuaSnip',
-      version = '2.*',
-      build = (function()
-        return 'make install_jsregexp'
-      end)(),
-      dependencies = {
+    'saghen/blink.cmp',
+    dependencies = {
+        'fang2hou/blink-copilot',
         {
-          'rafamadriz/friendly-snippets',
-          config = function()
-            require('luasnip.loaders.from_vscode').lazy_load()
-          end,
+            'xzbdmw/colorful-menu.nvim',
+            config = function()
+                -- You don't need to set these options.
+                require('colorful-menu').setup({})
+            end,
         },
-      },
-      opts = {},
-    },
-    {
-      'folke/lazydev.nvim',
-      ft = 'lua', -- only load on lua files
-      opts = {
-        library = {
-          -- Load luvit types when the `vim.uv` word is found
-          { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-        },
-      },
-    },
-  },
-
-  version = '1.*',
-
-  opts = {
-    -- See :h blink-cmp-config-keymap for defining your own keymap
-    keymap = { preset = 'default' },
-
-    appearance = {
-      nerd_font_variant = 'mono',
-    },
-
-    -- (Default) Only show the documentation popup when manually triggered
-    completion = {
-      documentation = { auto_show = false },
-      menu = {
-        draw = {
-          -- We don't need label_description now because label and label_description are already
-          -- combined together in label by colorful-menu.nvim.
-          columns = { { 'kind_icon' }, { 'label', gap = 1 } },
-          components = {
-            label = {
-              text = function(ctx)
-                return require('colorful-menu').blink_components_text(ctx)
-              end,
-              highlight = function(ctx)
-                return require('colorful-menu').blink_components_highlight(ctx)
-              end,
+        {
+            'L3MON4D3/LuaSnip',
+            version = '2.*',
+            build = (function()
+                return 'make install_jsregexp'
+            end)(),
+            dependencies = {
+                {
+                    'rafamadriz/friendly-snippets',
+                    config = function()
+                        require('luasnip.loaders.from_vscode').lazy_load()
+                    end,
+                },
             },
-          },
+            opts = {},
         },
-      },
+        {
+            'folke/lazydev.nvim',
+            ft = 'lua', -- only load on lua files
+            opts = {
+                library = {
+                    -- Load luvit types when the `vim.uv` word is found
+                    { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+                },
+            },
+        },
     },
 
-    -- Default list of enabled providers defined so that you can extend it
-    -- elsewhere in your config, without redefining it, due to `opts_extend`
-    sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer', 'copilot', 'lazydev' },
-      providers = {
-        lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
-        copilot = {
-          name = 'copilot',
-          module = 'blink-copilot',
-          score_offset = 100,
-          async = true,
+    version = '1.*',
+
+    opts = {
+        -- See :h blink-cmp-config-keymap for defining your own keymap
+        keymap = { preset = 'default' },
+
+        appearance = {
+            nerd_font_variant = 'mono',
         },
-      },
+
+        -- (Default) Only show the documentation popup when manually triggered
+        completion = {
+            documentation = { auto_show = false },
+            menu = {
+                draw = {
+                    -- We don't need label_description now because label and label_description are already
+                    -- combined together in label by colorful-menu.nvim.
+                    columns = { { 'kind_icon' }, { 'label', gap = 1 } },
+                    components = {
+                        label = {
+                            text = function(ctx)
+                                return require('colorful-menu').blink_components_text(ctx)
+                            end,
+                            highlight = function(ctx)
+                                return require('colorful-menu').blink_components_highlight(ctx)
+                            end,
+                        },
+                    },
+                },
+            },
+        },
+
+        -- Default list of enabled providers defined so that you can extend it
+        -- elsewhere in your config, without redefining it, due to `opts_extend`
+        sources = {
+            default = { 'lsp', 'path', 'snippets', 'buffer', 'copilot', 'lazydev' },
+            providers = {
+                lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+                copilot = {
+                    name = 'copilot',
+                    module = 'blink-copilot',
+                    score_offset = 100,
+                    async = true,
+                },
+            },
+        },
+        snippets = { preset = 'luasnip' },
+        signature = { enabled = true },
+        -- See the fuzzy documentation for more information
+        fuzzy = { implementation = 'prefer_rust_with_warning' },
     },
-    snippets = { preset = 'luasnip' },
-    signature = { enabled = true },
-    -- See the fuzzy documentation for more information
-    fuzzy = { implementation = 'prefer_rust_with_warning' },
-  },
-  opts_extend = { 'sources.default' },
+    opts_extend = { 'sources.default' },
 }

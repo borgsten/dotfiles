@@ -4,18 +4,18 @@
 -- reference UTIL.xxx for their own cross-deps regardless of load order.
 
 local ALIASES = {
-  dbg        = "debug",
-  notif      = "notif",
-  helpers    = "helpers",
-  bind       = "bind",
-  config     = "config",
-  output     = "output",
-  sys        = "sys",
-  cmd        = "cmd",
-  tbl        = "tbl",
-  scratchpad = "scratchpad",
-  watch      = "watch",
-  theme      = "theme",
+    dbg = 'debug',
+    notif = 'notif',
+    helpers = 'helpers',
+    bind = 'bind',
+    config = 'config',
+    output = 'output',
+    sys = 'sys',
+    cmd = 'cmd',
+    tbl = 'tbl',
+    scratchpad = 'scratchpad',
+    watch = 'watch',
+    theme = 'theme',
 }
 
 ---Type hints only: these resolve UTIL.dbg etc. to the real submodule class
@@ -34,15 +34,15 @@ local ALIASES = {
 ---@field watch Util.Watch
 ---@field theme Util.Theme
 local M = setmetatable({}, {
-  __index = function(t, key)
-    local modname = ALIASES[key]
-    if not modname then
-      error(("UTIL.%s: no such util module"):format(tostring(key)), 2)
-    end
-    local mod = require("land.util." .. modname)
-    rawset(t, key, mod) -- cache so subsequent lookups skip require()
-    return mod
-  end,
+    __index = function(t, key)
+        local modname = ALIASES[key]
+        if not modname then
+            error(('UTIL.%s: no such util module'):format(tostring(key)), 2)
+        end
+        local mod = require('land.util.' .. modname)
+        rawset(t, key, mod) -- cache so subsequent lookups skip require()
+        return mod
+    end,
 })
 
 _G.UTIL = M ---@type Util

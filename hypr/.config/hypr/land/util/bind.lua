@@ -1,10 +1,10 @@
 ---@class Util.Bind
 local M = {}
 
-M.ALT = "ALT"
-M.CTRL = "CONTROL"
-M.SHFT = "SHIFT"
-M.SPR = "SUPER"
+M.ALT = 'ALT'
+M.CTRL = 'CONTROL'
+M.SHFT = 'SHIFT'
+M.SPR = 'SUPER'
 
 ---@alias M.Mod
 ---| `M.ALT`
@@ -19,22 +19,26 @@ M.SPR = "SUPER"
 ---@param desc string?
 ---@param opts HL.BindOptions?
 function M.bind(mods, key, action, desc, opts)
-  opts = opts or {}
+    opts = opts or {}
 
-  if desc then
-    opts.desc = desc
-  end
+    if desc then
+        opts.desc = desc
+    end
 
-  if type(mods) == "string" then mods = { mods } end
-  if type(key) == "string" then key = { key } end
+    if type(mods) == 'string' then
+        mods = { mods }
+    end
+    if type(key) == 'string' then
+        key = { key }
+    end
 
-  local parts = table.concat(mods, " + ")
-  local prefix = parts ~= "" and parts .. " + " or ""
+    local parts = table.concat(mods, ' + ')
+    local prefix = parts ~= '' and parts .. ' + ' or ''
 
-  for _, k in ipairs(key) do
-    local combo = prefix .. k
-    hl.bind(combo, action, opts)
-  end
+    for _, k in ipairs(key) do
+        local combo = prefix .. k
+        hl.bind(combo, action, opts)
+    end
 end
 
 return M

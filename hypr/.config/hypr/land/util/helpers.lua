@@ -5,13 +5,14 @@ local M = {}
 ---@param cmd string
 ---@return boolean
 function M.cmdExists(cmd)
-  for dir in (os.getenv("PATH") or ""):gmatch("[^:]+") do
-    local f = io.open(dir .. "/" .. cmd, "r")
-    if f then
-      f:close(); return true
+    for dir in (os.getenv('PATH') or ''):gmatch('[^:]+') do
+        local f = io.open(dir .. '/' .. cmd, 'r')
+        if f then
+            f:close()
+            return true
+        end
     end
-  end
-  return false
+    return false
 end
 
 --- Check if a systemd service is active
@@ -19,17 +20,17 @@ end
 ---@param user boolean user or system service
 ---@return boolean
 function M.serviceActive(service, user)
-  local scope = user and "--user " or ""
-  local cmd = ("systemctl %sis-active %s 2>/dev/null"):format(scope, service)
-  local h = io.popen(cmd)
-  if h == nil then
-    print("Could not run systemctl command")
-    return false
-  end
-  local out = h:read("*a")
-  h:close()
-  -- `match` yields a string or nil; the annotation promises a boolean.
-  return out:match("^active") ~= nil
+    local scope = user and '--user ' or ''
+    local cmd = ('systemctl %sis-active %s 2>/dev/null'):format(scope, service)
+    local h = io.popen(cmd)
+    if h == nil then
+        print('Could not run systemctl command')
+        return false
+    end
+    local out = h:read('*a')
+    h:close()
+    -- `match` yields a string or nil; the annotation promises a boolean.
+    return out:match('^active') ~= nil
 end
 
 --- Resize floating window to percent of active monitor
@@ -38,30 +39,32 @@ end
 ---@param center boolean? center window as well
 ---@return function
 function M.resizePercent(width, height, center)
-  return function()
-    if center then
-      hl.dispatch(hl.dsp.window.center())
+    return function()
+        if center then
+            hl.dispatch(hl.dsp.window.center())
+        end
+
+        local mon = hl.get_active_monitor()
+        if mon == nil then
+            return
+        end
+
+        local scaled_width = math.floor(mon.width / mon.scale)
+        local scaled_height = math.floor(mon.height / mon.scale)
+
+        local w = math.floor(scaled_width * width)
+        local h = math.floor(scaled_height * height)
+
+        hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
     end
-
-    local mon = hl.get_active_monitor()
-    if mon == nil then return end
-
-    local scaled_width = math.floor(mon.width / mon.scale)
-    local scaled_height = math.floor(mon.height / mon.scale)
-
-    local w = math.floor(scaled_width * width)
-    local h = math.floor(scaled_height * height)
-
-    hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
-  end
 end
 
 --- Focus any urgent window that isn't already focused
 function M.focusUrgentWindow()
-  local urgent = hl.get_urgent_window()
-  if urgent and urgent ~= hl.get_active_window() then
-    hl.dispatch(hl.dsp.focus({ window = urgent }))
-  end
+    local urgent = hl.get_urgent_window()
+    if urgent and urgent ~= hl.get_active_window() then
+        hl.dispatch(hl.dsp.focus({ window = urgent }))
+    end
 end
 
 return M
