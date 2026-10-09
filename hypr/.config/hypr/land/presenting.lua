@@ -3,6 +3,8 @@
 --------------------------------------------------------------------------------
 --- Do Not Disturb while the screen may be seen by others: during a screen
 --- share through the compositor, or while a display that captures is attached.
+--- DND clears after five seconds without capture activity, since Hyprland's
+--- share-stop events also fire during brief pauses between frames.
 ---
 --- An HDMI capture device (a meeting room hub) is just a monitor to Hyprland,
 --- so it can only be recognised by its identity: specs in `monitors` marked
@@ -18,6 +20,7 @@ local dbg = UTIL.dbg
 
 ---@type Config.Presenting
 local DEFAULTS = { enabled = true, unknown_monitors = true }
+local STOP_DELAY_MS = 5000
 
 --- Built-in panels never capture, whether or not `monitors.internal` is set.
 local INTERNAL_PREFIXES = { 'eDP-', 'LVDS-', 'DSI-' }
@@ -99,15 +102,33 @@ function M.setup()
 
     --- Only acts on transitions, so toggling DND by hand mid-share sticks, and
     --- a reload with nothing to hide does not clear a DND set by hand.
-    ---@param gone string?
-    local function apply(gone)
-        local want = shares > 0 or capturingMonitor(gone)
+    ---@param want boolean
+    local function setActive(want)
         if want == active then
             return
         end
         active = want
         dbg.trace(('presenting: DND %s (shares=%d)'):format(want and 'on' or 'off', shares))
         run(want and shell.dnd_on or shell.dnd_off)
+    end
+
+    -- Reuse a disabled repeat timer: cancelled oneshots remain registered until
+    -- they fire, so creating one for every frame pause would accumulate timers.
+    local stopTimer
+    stopTimer = hl.timer(function()
+        stopTimer:set_enabled(false)
+        setActive(shares > 0 or capturingMonitor())
+    end, { timeout = STOP_DELAY_MS, type = 'repeat' })
+    stopTimer:set_enabled(false)
+
+    ---@param gone string?
+    local function apply(gone)
+        if shares > 0 or capturingMonitor(gone) then
+            stopTimer:set_enabled(false)
+            setActive(true)
+        elseif active and not stopTimer:is_enabled() then
+            stopTimer:set_enabled(true)
+        end
     end
 
     hl.on('screenshare.state', function(is_active, kind, name)
