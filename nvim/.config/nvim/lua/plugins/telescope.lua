@@ -22,6 +22,14 @@ local function find_git_root()
     return git_root
 end
 
+local dotfiles_dir = vim.fn.fnamemodify(vim.fn.resolve(vim.fn.stdpath('config') .. '/init.lua'), ':h:h:h:h')
+local function strip_stow_prefix(_, path)
+    if vim.fn.getcwd() ~= dotfiles_dir then
+        return path
+    end
+    return (path:gsub('^[^/]+/%.config/', ''):gsub('^[^/]+/%.local/', '.local/'))
+end
+
 local function telescope_live_grep_open_files()
     require('telescope.builtin').live_grep({
         grep_open_files = true,
@@ -65,6 +73,7 @@ return {
         telescope.setup({
             defaults = {
                 file_ignore_patterns = { '%.git/', '%.cache/', '%.o', '%.a', '%.out', '%.class', '%.pyc' },
+                path_display = strip_stow_prefix,
                 mappings = {
                     i = {
                         ['<C-u>'] = false,
