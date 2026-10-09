@@ -48,16 +48,18 @@ end
 
 --- Try require module
 ---
---- If not possible then will return nil
+--- Returns nil if the module does not exist, and also notifies if it failed to load
 ---@param module_name string module name
 ---@return any? module the module or nil
 function M.tryRequire(module_name)
-    local success, module = pcall(require, module_name)
+    local success, result = pcall(require, module_name)
     if success then
-        return module
-    else
-        return nil
+        return result
     end
+    if not result:find("module '" .. module_name .. "' not found", 1, true) then
+        vim.notify('Error loading ' .. module_name .. ':\n' .. result, vim.log.levels.ERROR)
+    end
+    return nil
 end
 
 --- Check if one path is a subpath of another

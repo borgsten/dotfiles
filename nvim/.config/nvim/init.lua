@@ -28,7 +28,13 @@ require('custom.run_file')
 require('custom.trailspace').setup()
 require('custom.snakify').setup()
 
-require('lazy').setup({ import = 'plugins' }, {
+local spec = { { import = 'plugins' } }
+-- Machine local plugin specs, lazy errors on a missing import dir
+if vim.uv.fs_stat(vim.fn.stdpath('config') .. '/lua/local/plugins') then
+    table.insert(spec, { import = 'local.plugins' })
+end
+
+require('lazy').setup(spec, {
     change_detection = {
         notify = false,
     },
@@ -37,5 +43,8 @@ require('lazy').setup({ import = 'plugins' }, {
         colorscheme = { 'kanagawa', 'habamax' },
     },
 })
+
+-- Machine local options, keymaps and autocmds
+require('custom.helpers').tryRequire('local')
 
 -- vim: ts=2 sts=2 sw=2 et

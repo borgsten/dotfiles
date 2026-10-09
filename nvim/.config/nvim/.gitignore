@@ -1,3 +1,4 @@
 lua/local/*
+!lua/local/README.md
 snippets
 spell
