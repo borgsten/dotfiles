@@ -81,5 +81,5 @@ fi
 
 for config in "${configs[@]}"; do
 	echo "Stowing $config"
-	stow -R --dir="$scriptpath" --target="${HOME}" "$config"
+	stow -R --no-folding --dir="$scriptpath" --target="${HOME}" "$config"
 done
