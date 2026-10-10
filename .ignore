@@ -1,0 +1,3 @@
+# Let rg/fd search hidden files (stow packages live in .config etc.)
+!.*
+.git/

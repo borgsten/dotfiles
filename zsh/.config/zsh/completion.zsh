@@ -60,9 +60,10 @@ zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
 
 # Group candidates under headers
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
-zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}-- %d (errors: %e) --%f'
-zstyle ':completion:*:warnings' format '%F{red}-- no matches found --%f'
+# Header colours follow the matugen theme (same as the prompt, see p10k.zsh)
+zstyle -e ':completion:*:*:*:*:descriptions' format 'reply=("%F{${P10K_DIR_FG:-green}}-- %d --%f")'
+zstyle -e ':completion:*:*:*:*:corrections' format 'reply=("%F{${P10K_VCS_MODIFIED_FG:-yellow}}-- %d (errors: %e) --%f")'
+zstyle -e ':completion:*:warnings' format 'reply=("%F{${P10K_ERROR_FG:-red}}-- no matches found --%f")'
 
 # Pick up newly installed binaries without a manual rehash
 zstyle ':completion:*' rehash true
