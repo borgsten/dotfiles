@@ -44,6 +44,27 @@ function plugin-load {
     done
 }
 
+# Source a tool's generated init script, cached and compiled until the tool is
+# reinstalled. Uses ctime: pacman restores the package mtime on binaries.
+function cached-init() {
+    local bin=${commands[$1]} cache=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/init/$1.zsh
+    local -a bin_ctime cache_mtime
+    [[ -n $bin ]] || return 1
+    zmodload -F zsh/stat b:zstat
+    zstat -A bin_ctime +ctime -- $bin
+    zstat -A cache_mtime +mtime -- $cache 2>/dev/null
+    if (( ${cache_mtime:-0} <= bin_ctime )); then
+        mkdir -p ${cache:h}
+        if ! "$@" >| $cache 2>/dev/null || [[ ! -s $cache ]]; then
+            rm -f $cache
+            print -P "%F{yellow}cached-init: '$*' failed, $1 shell integration not loaded%f" >&2
+            return 1
+        fi
+        zcompile -R $cache
+    fi
+    source $cache
+}
+
 ZPLUGINDIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh_plugins"
 mkdir -p "$ZPLUGINDIR"
 
@@ -53,9 +74,11 @@ function zvm_config() {
     ZVM_SYSTEM_CLIPBOARD_ENABLED=true
 
     # Reload fzf keybindings after VI mode plugin
+    # Sources the cache made by cached-init in .zshrc directly: zvm runs hooks
+    # with a local $commands, hiding the one cached-init looks tools up in
     function reload_fzf_keybinds() {
-        [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
-        [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+        local init=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/init/fzf.zsh
+        [[ -r $init ]] && source $init
     }
     zvm_after_init_commands+=(reload_fzf_keybinds)
 }

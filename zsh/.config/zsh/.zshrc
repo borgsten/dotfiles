@@ -59,12 +59,8 @@ for file in $ZDOTDIR/local/*.sh(N); do
     source "$file"
 done
 
-[ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
-[ -f /usr/share/doc/fzf/examples/completion.zsh ] && source /usr/share/doc/fzf/examples/completion.zsh
-[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
-[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
-
-(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
+cached-init fzf --zsh
+cached-init zoxide init zsh
 
 # Syntax highlighting needs to be loaded last
 plugin-load $plugins_last
