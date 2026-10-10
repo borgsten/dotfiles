@@ -65,6 +65,18 @@ cached-init zoxide init zsh
 # Syntax highlighting needs to be loaded last
 plugin-load $plugins_last
 
+# Compile all zsh files if needed.
+function zcompile-config() {
+    setopt local_options extended_glob
+    local f
+    for f in ~/.zshenv $ZDOTDIR/.zshrc $ZDOTDIR/{,.}*.zsh(N) $ZDOTDIR/local/*.sh(N) \
+             ~/.cache/theming/p10k.zsh(N) $ZPLUGINDIR/**/*.zsh~*/(test|tests|test-data)/*(N); do
+        [[ $f.zwc -nt $f ]] && zcompile -t $f.zwc &>/dev/null && continue
+        zcompile -R -- $f.$$.zwc $f 2>/dev/null && mv -f -- $f.$$.zwc $f.zwc
+    done
+}
+zcompile-config &!
+
 if [[ -n $ZSH_PROFILE ]]; then
     zprof
 fi
