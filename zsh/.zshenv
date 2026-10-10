@@ -15,6 +15,9 @@ export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 
 export GOPATH="$HOME/.local/go"
 
+# Keep path arrays free of duplicates (first occurrence wins)
+typeset -gU path fpath
+
 export PATH="$GOPATH/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
 if [[ -f "$HOME/.cargo/env" ]]; then

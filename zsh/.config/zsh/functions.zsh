@@ -1,12 +1,11 @@
 #!/usr/bin/env zsh
 
 function mkd() {
-    mkdir -p "$@" && cd "$@" || exit
+    mkdir -p -- "$1" && cd -- "$1"
 }
 
 function tmpc() {
-    dir=$(mktemp -d)
-    cd "$dir" || exit
+    cd -- "$(mktemp -d)"
 }
 
 function fo() {
@@ -44,7 +43,7 @@ function xml() {
 }
 
 function glog() {
-    LESS="${LESS[*]/--quit-if-one-screen /}"
+    local -x LESS="${LESS/--quit-if-one-screen}"
 
     git log --graph --color=always --abbrev-commit \
         --format='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' "$@" |
@@ -65,13 +64,6 @@ function venv() {
 
     echo "No virtual environment found"
     return 1
-}
-
-# Remove non-unique entries from an environment variable
-function remove_non_unique_env_list() {
-    variable_name=$1
-    unique_entries=$(echo "${!variable_name}" | tr ':' '\n' | awk '!seen[$0]++' | tr '\n' ':' | sed 's/:\+$//')
-    export "$variable_name=$unique_entries"
 }
 
 function gcm() {

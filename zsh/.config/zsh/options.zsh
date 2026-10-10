@@ -12,7 +12,6 @@ setopt pushdminus           # switch + and - when consuming stack with numbers
 setopt alwaystoend          # move cursor to end of completion
 setopt completeinword       # don't move cursor until completion is done
 setopt globcomplete         # do not expand globs until completion is done TODO
-setopt nullglob             # if glob pattern does not match remove pattern
 
 # History
 setopt extendedhistory      # save history with timestamp
@@ -23,6 +22,8 @@ setopt histignorespace      # do no record commands with leading space
 setopt histverify           # do not remove comand from history directly
 setopt sharehistory         # write history from multiple instances directly
 setopt histfcntllock        # use fcntl locking for concurrent history writes
+setopt histreduceblanks     # strip superfluous blanks before recording
+setopt histnostore          # do not record history/fc -l commands
 
 # Input/Output
 setopt noflowcontrol        # disable flow control. Why? TODO

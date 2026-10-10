@@ -45,8 +45,8 @@ zstyle ':completion:*' squeeze-slashes true
 
 zstyle ':completion:*' complete-options true
 
-# case insensitive completion
-zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|=*' 'l:|=* r:|=*'
+# case insensitive, then foo-bar from f-b (also . and _), then substring
+zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 # Autocomplete processes
 zstyle ':completion:*:*:*:*:processes' command "ps -u $USERNAME -o pid,user,comm -w -w"
@@ -54,7 +54,23 @@ zstyle ':completion:*:*:*:*:processes' command "ps -u $USERNAME -o pid,user,comm
 # disable named-directories autocompletion
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
 
-# Colors
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# Colors. Set on the default tag only: per-tag styles get copied once per
+# group, multiplying the ~700 LS_COLORS patterns and slowing menu redraws.
+zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
+
+# Group candidates under headers
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
+zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}-- %d (errors: %e) --%f'
+zstyle ':completion:*:warnings' format '%F{red}-- no matches found --%f'
+
+# Pick up newly installed binaries without a manual rehash
+zstyle ':completion:*' rehash true
+
+# Hide completion functions and hooks from command-name completion
+zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
+
+# Keep man sections apart, e.g. printf(1) vs printf(3)
+zstyle ':completion:*:manuals' separate-sections true
 
 autoload -U +X bashcompinit && bashcompinit
