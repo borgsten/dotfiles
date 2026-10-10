@@ -74,4 +74,29 @@ zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
 # Keep man sections apart, e.g. printf(1) vs printf(3)
 zstyle ':completion:*:manuals' separate-sections true
 
+# _man globs every man page (alot) on each Tab and has no cache. It only defines
+# its _man_pages helper when missing, so this one takes over: page names are
+# cached per man directory and rebuilt when the directory changes.
+function _man_pages() {
+    local d cache cachedir=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/man
+    local -a pages files
+
+    # Paths (man ./foo.1) complete as files
+    if [[ $PREFIX$SUFFIX == */* ]]; then
+        _path_files "$@"
+        return
+    fi
+
+    for d in ${(M)dirs:#*$sect_dirname/}; do
+        cache=$cachedir/${${d%/}//\//%}
+        if [[ ! $cache -nt $d ]]; then
+            files=( $d*(N:t) )
+            mkdir -p $cachedir
+            print -rl -- ${files%.((?|<->*|ntcl)(|.gz|.bz2|.z|.Z|.lzma))} >| $cache
+        fi
+        pages+=( ${(f)"$(<$cache)"} )
+    done
+    compadd "$@" - ${pages:#}
+}
+
 autoload -U +X bashcompinit && bashcompinit
