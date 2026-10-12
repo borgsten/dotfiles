@@ -15,6 +15,7 @@ configs=(
     "ghostty"
     "noctalia"
     "wezterm"
+    "wallpapers"
 )
 
 scriptpath="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
