@@ -37,7 +37,7 @@ for arg in "$@"; do
         -h|--help) usage; exit 0 ;;
         -D|--delete) delete=true; continue ;;
     esac
-    if [[ $arg == wallpapers || ! -d "$scriptpath/$arg" ]]; then
+    if [[ ! -d "$scriptpath/$arg" ]]; then
         echo "Unknown config: $arg" >&2
         usage >&2
         exit 2
