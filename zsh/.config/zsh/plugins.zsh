@@ -46,7 +46,14 @@ function plugin-load {
 
 # Source a tool's generated init script, cached and compiled until the tool is
 # reinstalled. Uses ctime: pacman restores the package mtime on binaries.
+# Usage: cached-init [-f fallback-function] command args...
+# The fallback's output is cached instead if the command fails.
 function cached-init() {
+    local fallback
+    if [[ $1 == -f ]]; then
+        fallback=$2
+        shift 2
+    fi
     local bin=${commands[$1]} cache=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/init/$1.zsh
     local -a bin_ctime cache_mtime
     [[ -n $bin ]] || return 1
@@ -55,7 +62,8 @@ function cached-init() {
     zstat -A cache_mtime +mtime -- $cache 2>/dev/null
     if (( ${cache_mtime:-0} <= bin_ctime )); then
         mkdir -p ${cache:h}
-        if ! "$@" >| $cache 2>/dev/null || [[ ! -s $cache ]]; then
+        if ! { "$@" || { [[ -n $fallback ]] && $fallback } } >| $cache 2>/dev/null \
+            || [[ ! -s $cache ]]; then
             rm -f $cache
             print -P "%F{yellow}cached-init: '$*' failed, $1 shell integration not loaded%f" >&2
             return 1
@@ -63,6 +71,17 @@ function cached-init() {
         zcompile -R $cache
     fi
     source $cache
+}
+
+# fzf < 0.48 (e.g. Ubuntu 24.04) has no --zsh, source the packaged scripts instead
+function fzf-zsh-fallback() {
+    local dir
+    for dir in /usr/share/fzf /usr/share/doc/fzf/examples; do
+        [[ -r $dir/key-bindings.zsh ]] || continue
+        cat $dir/key-bindings.zsh $dir/completion.zsh(N)
+        return
+    done
+    return 1
 }
 
 ZPLUGINDIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh_plugins"

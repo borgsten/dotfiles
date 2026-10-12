@@ -59,7 +59,7 @@ for file in $ZDOTDIR/local/*.sh(N); do
     source "$file"
 done
 
-cached-init fzf --zsh
+cached-init -f fzf-zsh-fallback fzf --zsh
 cached-init zoxide init zsh
 
 # Syntax highlighting needs to be loaded last
