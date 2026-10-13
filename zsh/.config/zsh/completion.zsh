@@ -22,6 +22,14 @@ unset compdump
 # Include .* and .. in completion results unprovoked
 # _comp_options+=(globdots)
 
+# When nothing else matches, retry with hidden files included, e.g. Tab in a
+# directory that only has dotfiles
+function _hidden_fallback() {
+    setopt local_options glob_dots
+    _complete
+}
+zstyle ':completion:*' completer _complete _ignored _hidden_fallback
+
 unsetopt menu_complete   # do not autoselect the first completion entry
 unsetopt flowcontrol
 setopt auto_menu         # show completion menu on successive tab press
