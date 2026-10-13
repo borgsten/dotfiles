@@ -44,12 +44,25 @@ function xml() {
 
 function glog() {
     local -x LESS="${LESS/--quit-if-one-screen}"
+    local -a all revs pos
+    local line
+    # -a: also draw every local and remote branch
+    zparseopts -D -E a=all && (( $#all )) && all=(HEAD --branches --remotes)
+    local -a gitlog=(git log --graph $all)
 
-    git log --graph --color=always --abbrev-commit \
+    # With -a, start the cursor on the topmost revision given instead of the newest commit
+    (( $#all )) && revs=(${(M)${(f)"$(git rev-parse --revs-only --no-flags "$@" 2>/dev/null)"}:#[^^]*})
+    if (( $#revs )); then
+        line=$($gitlog --format=%H "$@" | grep -n -m1 -F "${(F)revs}")
+        [[ -n $line ]] && pos=(--scroll-off=10 --bind "load:pos(${line%%:*})")
+    fi
+
+    $gitlog --color=always \
         --format='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' "$@" |
-        fzf --ansi --no-sort --reverse --tiebreak=index --toggle-sort=\` \
-        --bind "ctrl-m:execute: echo {} | grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % sh -c 'git show --color=always % | less -R'"
+        fzf --ansi --no-sort --reverse --tiebreak=index --toggle-sort=\` $pos \
+        --bind 'enter:execute:h=$(printf %s {} | grep -oE "[0-9a-f]{7,}" | head -1); [ -n "$h" ] && git show "$h"'
 }
+compdef _git glog=git-log
 
 function venv() {
     if [ -e venv ]; then
