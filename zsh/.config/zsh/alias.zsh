@@ -62,7 +62,6 @@ alias py='ipython3'
 alias history='fc -l 1'
 
 alias :q='exit'
-alias please='sudo !!'
 
 alias addkey='ssh-add ~/.ssh/id_rsa'
 
@@ -75,7 +74,8 @@ alias vact='source venv/bin/activate'
 alias lzd='lazydocker'
 alias lzg='lazygit'
 
-DOTFILES_DIR="$(dirname "$(realpath "$0")")/../../../"
-alias dot="cd "$DOTFILES_DIR" && ls"
+# This file is stowed from <dotfiles>/zsh/.config/zsh
+DOTFILES_DIR=${${(%):-%x}:A:h:h:h:h}
+alias dot='cd "$DOTFILES_DIR" && ls'
 
 alias zshrc='source ${ZDOTDIR}/.zshrc'

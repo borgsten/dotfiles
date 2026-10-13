@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 if [[ -f ~/.local/try.rb ]]; then
     eval "$(ruby ~/.local/try.rb init ~/dev/tries)"

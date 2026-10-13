@@ -39,7 +39,7 @@ function grp() {
 }
 
 function xml() {
-    xmllint --format $1 | bat
+    xmllint --format "$1" | bat
 }
 
 function glog() {
@@ -101,12 +101,12 @@ function gcm() {
 }
 
 function diffdelay() {
-    command="$1"
-    first=$($command)
+    local cmd=$1 first second
+    first=$(eval "$cmd")
     echo "Press any key to continue..."
-    read
-    second=$($command)
-    diff <(echo "$first") <(echo "$second")
+    read -k1 -s
+    second=$(eval "$cmd")
+    diff <(print -r -- "$first") <(print -r -- "$second")
 }
 
 function alert() {
