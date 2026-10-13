@@ -67,13 +67,24 @@ function venv() {
 }
 
 function gcm() {
-    if git show-ref --verify --quiet refs/remotes/origin/main; then
-        git checkout main
-    elif git show-ref --verify --quiet refs/remotes/origin/master; then
-        git checkout master
-    else
-      echo "Neither origin/main nor origin/master exists"
+    git rev-parse --git-dir >/dev/null || return
+    local branch b
+    # origin/HEAD tracks the remote's actual default branch
+    branch=$(git symbolic-ref --short -q refs/remotes/origin/HEAD) && branch=${branch#origin/}
+    if [[ -z $branch ]]; then
+        for b in main master; do
+            if git show-ref --verify --quiet refs/heads/$b ||
+               git show-ref --verify --quiet refs/remotes/origin/$b; then
+                branch=$b
+                break
+            fi
+        done
     fi
+    if [[ -z $branch ]]; then
+        echo "gcm: can't determine default branch (try: git remote set-head origin -a)" >&2
+        return 1
+    fi
+    git switch "$branch"
 }
 
 function diffdelay() {
