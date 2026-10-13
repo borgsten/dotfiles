@@ -1,8 +1,5 @@
 #!/usr/bin/env zsh
 
-# fzf-marker
-export MARKER_KEY_NEXT_PLACEHOLDER="^N"
-
 # Highlighting inside manpages and elsewhere.
 export LESS_TERMCAP_mb=$'\e[1;31m'          # start blinking
 export LESS_TERMCAP_md=$'\e[1;34m'          # start bold mode
@@ -37,5 +34,3 @@ fi
 
 # Ctrl+w deletes whole words
 WORDCHARS='-_'
-
-[[ -S "$XDG_RUNTIME_DIR/ssh-agent.socket" ]] && export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"

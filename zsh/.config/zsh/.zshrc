@@ -11,8 +11,6 @@ if [[ -z $ZSH_PROFILE ]] && [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-export skip_global_compinit=1
-
 # History settings should not be exported to child preocesses.
 typeset +x HISTFILE HISTSIZE SAVEHIST  # drop exports inherited from a parent
 HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"

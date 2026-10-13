@@ -9,6 +9,7 @@ export MANPAGER='nvim +Man!'
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
 
 # zsh
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
@@ -20,8 +21,8 @@ typeset -gU path fpath
 
 export PATH="$GOPATH/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
-if [[ -f "$HOME/.cargo/env" ]]; then
-    source "$HOME/.cargo/env"
+if [[ ! -S $SSH_AUTH_SOCK && -S $XDG_RUNTIME_DIR/ssh-agent.socket ]]; then
+    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 fi
 
 # Make debian stop fucking with my completion

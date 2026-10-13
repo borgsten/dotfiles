@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # https://thevaluable.dev/zsh-completion-guide-examples/
-export ZSH_COMPLETION_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/completions"
+ZSH_COMPLETION_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/completions"
 mkdir -p "$ZSH_COMPLETION_DIR"
 
 fpath+=("$ZSH_COMPLETION_DIR")
