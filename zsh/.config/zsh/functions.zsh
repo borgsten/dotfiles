@@ -5,7 +5,7 @@ function mkd() {
 }
 
 function tmpc() {
-    cd -- "$(mktemp -d)"
+    cd -- "$(mktemp -d --tmpdir "td.${1:-$(date +%H_%M)}.XXX")"
 }
 
 function fo() {
