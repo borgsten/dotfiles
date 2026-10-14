@@ -38,7 +38,8 @@ packages=(
     xdg-desktop-portal-gtk
     flameshot
     grim
-    kvantum
+    qt5ct
+    qt6ct
     # Theming
     matugen
     vivid

@@ -76,3 +76,7 @@ post_hook = "python3 ~/.config/matugen/clamp_patch.py --bg {{colors.background.d
 [templates.neovim]
 input_path = '~/.config/matugen/templates/neovim.lua'
 output_path = '~/.cache/theming/neovim.lua'
+
+[templates.qt]
+input_path = '~/.config/matugen/templates/qt-colors.conf'
+output_path = '~/.cache/theming/qt-colors.conf'
