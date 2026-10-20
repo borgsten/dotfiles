@@ -45,6 +45,26 @@ cmd() {
     report "$ok" "$level" "${bins%%|*}" "${why:+($why)}"
 }
 
+# libexec <name>: true if a helper binary such as a portal backend is installed
+# in one of the libexec dirs distros use.
+libexec() {
+    local d
+    for d in /usr/lib /usr/lib64 /usr/libexec /usr/local/lib /usr/local/libexec; do
+        [[ -x $d/$1 || -x $d/$1/$1 ]] && return 0
+    done
+    return 1
+}
+
+# qt6_plugin <type/libname.so>: true if a Qt 6 plugin is installed.
+qt6_plugin() {
+    local d
+    for d in "$(qtpaths6 --query QT_INSTALL_PLUGINS 2>/dev/null)" /usr/lib/qt6/plugins \
+        /usr/lib/*/qt6/plugins /usr/lib64/qt6/plugins; do
+        [[ -n $d && -e $d/$1 ]] && return 0
+    done
+    return 1
+}
+
 # check <req|opt> <name> <hint> <test command...>
 check() {
     local level=$1 name=$2 hint=$3
@@ -122,7 +142,7 @@ check_desktop() {
     cmd opt hyprlock
     cmd opt hyprpaper
     cmd opt hyprsunset
-    check opt "hyprpolkitagent" "" bash -c 'for d in /usr/lib /usr/lib64 /usr/libexec /usr/local/lib /usr/local/libexec; do [[ -x $d/hyprpolkitagent/hyprpolkitagent || -x $d/hyprpolkitagent ]] && exit 0; done; exit 1'
+    check opt "hyprpolkitagent" "" libexec hyprpolkitagent
     cmd opt noctalia "shell"
     cmd opt dms "shell"
     cmd opt waybar
@@ -132,6 +152,15 @@ check_desktop() {
     cmd opt swayosd-server
     cmd opt swayosd-client
     cmd opt matugen "theming"
+    check opt "xdg-desktop-portal" "" libexec xdg-desktop-portal
+    check opt "xdg-desktop-portal-hyprland" "" libexec xdg-desktop-portal-hyprland
+    check opt "xdg-desktop-portal-gtk" "file chooser" libexec xdg-desktop-portal-gtk
+    cmd opt qt6ct "qt theming"
+    cmd opt qt5ct "qt5 apps theming, needs a version that answers to qt6ct"
+    check opt "qt6ct platform theme" "QT_QPA_PLATFORMTHEME=qt6ct" \
+        qt6_plugin platformthemes/libqt6ct.so
+    check opt "qt6 xdgdesktopportal platform theme" "qt dialogs via portal, qt6-xdgdesktopportal-platformtheme on Debian/Ubuntu" \
+        qt6_plugin platformthemes/libqxdgdesktopportal.so
     cmd opt btop
     cmd opt playerctl
     cmd opt brightnessctl
