@@ -84,3 +84,7 @@ output_path = '~/.cache/theming/qt-check-disabled.svg'
 [theme.templates.user.qt-partial]
 input_path = '~/.config/matugen/templates/qt-partial.svg'
 output_path = '~/.cache/theming/qt-partial.svg'
+
+[theme.templates.user.kdeglobals]
+input_path = '~/.config/matugen/templates/kdeglobals'
+output_path = '~/.config/kdeglobals'
