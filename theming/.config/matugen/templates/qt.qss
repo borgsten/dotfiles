@@ -34,11 +34,13 @@ QAbstractItemView::indicator:checked:disabled {
 QGroupBox {
     border: 1px solid {{colors.outline_variant.default.hex}};
     border-radius: 4px;
-    margin-top: 1.4em;
-    padding-top: 0.4em;
+    margin-top: 0.5em;   /* frame line runs through the middle of the title */
+    padding-top: 0.5em;  /* clears the half of the title that sits inside the frame */
 }
 QGroupBox::title {
     subcontrol-origin: margin;
-    left: 8px;
+    subcontrol-position: top left;
+    left: 6px;
     padding: 0 4px;
+    background-color: palette(window);  /* hides the frame line behind the title */
 }
