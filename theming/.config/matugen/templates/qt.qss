@@ -2,7 +2,8 @@
  * Qt style sheet applied to all Qt apps through qt5ct/qt6ct.
  * Fusion draws checkbox and group box borders as a shade of the window
  * colour, which disappears on dark themes; draw them with the border roles.
- * Image URLs must be absolute, Qt resolves them against the working directory.
+ * Image URLs must be absolute, Qt resolves them against the working directory;
+ * @HOME@ is filled in by the post_hook.
  */
 QCheckBox::indicator, QGroupBox::indicator, QAbstractItemView::indicator {
     width: 12px;
@@ -14,12 +15,12 @@ QCheckBox::indicator, QGroupBox::indicator, QAbstractItemView::indicator {
 QCheckBox::indicator:checked, QGroupBox::indicator:checked, QAbstractItemView::indicator:checked {
     border-color: {{colors.primary.default.hex}};
     background: {{colors.primary.default.hex}};
-    image: url(/home/borgsten/.cache/theming/qt-check.svg);
+    image: url(@HOME@/.cache/theming/qt-check.svg);
 }
 QCheckBox::indicator:indeterminate, QAbstractItemView::indicator:indeterminate {
     border-color: {{colors.primary.default.hex}};
     background: {{colors.primary.default.hex}};
-    image: url(/home/borgsten/.cache/theming/qt-partial.svg);
+    image: url(@HOME@/.cache/theming/qt-partial.svg);
 }
 QCheckBox::indicator:disabled, QGroupBox::indicator:disabled, QAbstractItemView::indicator:disabled {
     border-color: {{colors.outline_variant.default.hex}};
@@ -28,7 +29,7 @@ QCheckBox::indicator:disabled, QGroupBox::indicator:disabled, QAbstractItemView:
 QCheckBox::indicator:checked:disabled, QGroupBox::indicator:checked:disabled,
 QAbstractItemView::indicator:checked:disabled {
     background: {{colors.surface_container_high.default.hex}};
-    image: url(/home/borgsten/.cache/theming/qt-check-disabled.svg);
+    image: url(@HOME@/.cache/theming/qt-check-disabled.svg);
 }
 QGroupBox {
     border: 1px solid {{colors.outline_variant.default.hex}};

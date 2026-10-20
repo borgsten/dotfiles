@@ -84,6 +84,17 @@ output_path = '~/.cache/theming/qt-colors.conf'
 [templates.qt-qss]
 input_path = '~/.config/matugen/templates/qt.qss'
 output_path = '~/.cache/theming/qt.qss'
+post_hook = 'sed -i "s|@HOME@|$HOME|g" ~/.cache/theming/qt.qss'
+
+[templates.qt5ct]
+input_path = '~/.config/matugen/templates/qtct.conf'
+output_path = '~/.config/qt5ct/qt5ct.conf'
+post_hook = 'sed -i "s|@HOME@|$HOME|g" ~/.config/qt5ct/qt5ct.conf'
+
+[templates.qt6ct]
+input_path = '~/.config/matugen/templates/qtct.conf'
+output_path = '~/.config/qt6ct/qt6ct.conf'
+post_hook = 'sed -i "s|@HOME@|$HOME|g" ~/.config/qt6ct/qt6ct.conf'
 
 [templates.qt-check]
 input_path = '~/.config/matugen/templates/qt-check.svg'
