@@ -80,3 +80,19 @@ output_path = '~/.cache/theming/neovim.lua'
 [templates.qt]
 input_path = '~/.config/matugen/templates/qt-colors.conf'
 output_path = '~/.cache/theming/qt-colors.conf'
+
+[templates.qt-qss]
+input_path = '~/.config/matugen/templates/qt.qss'
+output_path = '~/.cache/theming/qt.qss'
+
+[templates.qt-check]
+input_path = '~/.config/matugen/templates/qt-check.svg'
+output_path = '~/.cache/theming/qt-check.svg'
+
+[templates.qt-check-disabled]
+input_path = '~/.config/matugen/templates/qt-check-disabled.svg'
+output_path = '~/.cache/theming/qt-check-disabled.svg'
+
+[templates.qt-partial]
+input_path = '~/.config/matugen/templates/qt-partial.svg'
+output_path = '~/.cache/theming/qt-partial.svg'
