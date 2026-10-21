@@ -103,12 +103,6 @@ function gcm() {
 # This file is stowed from <dotfiles>/zsh/.config/zsh
 DOTFILES_DIR=${${(%):-%x}:A:h:h:h:h}
 
-# Every subcommand cds to the dotfiles first, so you are there to fix things
-# if it fails.
-# dot                    cd to the dotfiles and ls
-# dot stow [args...]     bootstrap/stow.sh
-# dot pull [-s]          pull the repo, -s also stows if the pull succeeded
-# dot install|update     run the bootstrap script for this distro
 function dot() {
     local cmd=$1
     (( $# )) && shift
@@ -136,8 +130,11 @@ function dot() {
                 *) echo "dot: no bootstrap script for '$id'" >&2; return 1 ;;
             esac
             ;;
+        check)
+            bootstrap/healthcheck.sh "$@"
+            ;;
         *)
-            echo "Usage: dot [stow [args...] | pull [-s] | install|update [args...]]" >&2
+            echo "Usage: dot [stow [args...] | pull [-s] | install|update [args...] | check [section...]]" >&2
             return 2
             ;;
     esac
@@ -149,6 +146,7 @@ function _dot() {
         'pull:pull the dotfiles repo'
         'install:install missing software for this distro'
         'update:install missing software for this distro'
+        'check:check that the tools the dotfiles rely on are installed'
     )
     if (( CURRENT == 2 )); then
         _describe command cmds
@@ -157,6 +155,7 @@ function _dot() {
     case $words[2] in
         stow) _arguments '(-D --delete)'{-D,--delete}'[unstow]' '*:config:_path_files -W $DOTFILES_DIR -/' ;;
         pull) _arguments '-s[stow after pulling]' ;;
+        check) _values -w section shell neovim terminal desktop setup ;;
     esac
 }
 compdef _dot dot
