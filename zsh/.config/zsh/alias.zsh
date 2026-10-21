@@ -74,8 +74,4 @@ alias vact='source venv/bin/activate'
 alias lzd='lazydocker'
 alias lzg='lazygit'
 
-# This file is stowed from <dotfiles>/zsh/.config/zsh
-DOTFILES_DIR=${${(%):-%x}:A:h:h:h:h}
-alias dot='cd "$DOTFILES_DIR" && ls'
-
 alias zshrc='source ${ZDOTDIR}/.zshrc'

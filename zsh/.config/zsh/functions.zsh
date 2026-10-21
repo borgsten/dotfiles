@@ -100,6 +100,67 @@ function gcm() {
     git switch "$branch"
 }
 
+# This file is stowed from <dotfiles>/zsh/.config/zsh
+DOTFILES_DIR=${${(%):-%x}:A:h:h:h:h}
+
+# Every subcommand cds to the dotfiles first, so you are there to fix things
+# if it fails.
+# dot                    cd to the dotfiles and ls
+# dot stow [args...]     bootstrap/stow.sh
+# dot pull [-s]          pull the repo, -s also stows if the pull succeeded
+# dot install|update     run the bootstrap script for this distro
+function dot() {
+    local cmd=$1
+    (( $# )) && shift
+    cd "$DOTFILES_DIR" || return
+    case $cmd in
+        '')
+            ls
+            ;;
+        stow)
+            bootstrap/stow.sh "$@"
+            ;;
+        pull)
+            local -a stow
+            zparseopts -D -F s=stow || return
+            git pull || return
+            if (( $#stow )); then
+                bootstrap/stow.sh
+            fi
+            ;;
+        install|update)
+            local id
+            id=$(source /etc/os-release && echo "$ID")
+            case $id in
+                arch|ubuntu) bootstrap/$id.sh "$@" ;;
+                *) echo "dot: no bootstrap script for '$id'" >&2; return 1 ;;
+            esac
+            ;;
+        *)
+            echo "Usage: dot [stow [args...] | pull [-s] | install|update [args...]]" >&2
+            return 2
+            ;;
+    esac
+}
+
+function _dot() {
+    local -a cmds=(
+        'stow:stow configs into $HOME'
+        'pull:pull the dotfiles repo'
+        'install:install missing software for this distro'
+        'update:install missing software for this distro'
+    )
+    if (( CURRENT == 2 )); then
+        _describe command cmds
+        return
+    fi
+    case $words[2] in
+        stow) _arguments '(-D --delete)'{-D,--delete}'[unstow]' '*:config:_path_files -W $DOTFILES_DIR -/' ;;
+        pull) _arguments '-s[stow after pulling]' ;;
+    esac
+}
+compdef _dot dot
+
 function diffdelay() {
     local cmd=$1 first second
     first=$(eval "$cmd")
