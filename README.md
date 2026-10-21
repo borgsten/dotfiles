@@ -1,14 +1,17 @@
 # Dotfiles
 
+## Install
+
+```sh
+git clone git@github.com:borgsten/dotfiles.git ~/dotfiles
+~/dotfiles/bootstrap/install.sh
+~/dotfiles/bootstrap/stow.sh
+```
+
+Afterwards: `dot update`, `dot stow`, `dot check`.
+
 ## Todo
-- [ ] Setup keyvault
-- [ ] Todo manager
-- [ ] bootstrap script
-    - Options
-        - Ansible
-        - bash
-        - Bare repo in $HOME
-    - [ ] Disk auto mount udiskie
-    - [ ] monitor manager?
-    - [ ] Setup ssh-agent
-    - [ ] Set gnome settings
+- Setup keyvault
+- Todo manager
+- Disk auto mount udiskie?
+- Setup ssh-agent

@@ -123,12 +123,7 @@ function dot() {
             fi
             ;;
         install|update)
-            local id
-            id=$(source /etc/os-release && echo "$ID")
-            case $id in
-                arch|ubuntu) bootstrap/$id.sh "$@" ;;
-                *) echo "dot: no bootstrap script for '$id'" >&2; return 1 ;;
-            esac
+            bootstrap/install.sh "$@"
             ;;
         check)
             bootstrap/healthcheck.sh "$@"
