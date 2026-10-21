@@ -130,7 +130,10 @@ has_extra() {
     [[ " ${extras[*]} " == *" $1 "* ]]
 }
 
-paru -S --needed "${packages[@]}"
+mapfile -t missing < <(pacman -T "${packages[@]}")
+if (( ${#missing[@]} )); then
+    paru -Syu --needed "${missing[@]}"
+fi
 
 if [[ ! -d ~/.cache/tmux/plugins/tpm ]]; then
     git clone https://github.com/tmux-plugins/tpm ~/.cache/tmux/plugins/tpm
