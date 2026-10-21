@@ -71,6 +71,8 @@ packages=(
     tmux
     unzip
     firefox
+    ristretto
+    nautilus
     nodejs
     libqalculate
     gnome-keyring

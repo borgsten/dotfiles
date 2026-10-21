@@ -66,6 +66,8 @@ packages=(
     eza
     fzf
     less
+    ristretto
+    nautilus
     ripgrep
     tmux
     jq

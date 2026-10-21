@@ -1,0 +1,19 @@
+# Defaults for apps the bootstrap scripts install. Read before mimeapps.list
+# when XDG_CURRENT_DESKTOP=Hyprland, and never written by apps, so choices
+# made in "open with" dialogs only win for types not listed here.
+# Each value is a fallback list: the first installed .desktop file is used.
+
+[Default Applications]
+inode/directory=org.gnome.Nautilus.desktop;
+text/html=firefox-developer-edition.desktop;firefox-devedition.desktop;firefox.desktop;firefox_firefox.desktop;
+application/xhtml+xml=firefox-developer-edition.desktop;firefox-devedition.desktop;firefox.desktop;firefox_firefox.desktop;
+x-scheme-handler/http=firefox-developer-edition.desktop;firefox-devedition.desktop;firefox.desktop;firefox_firefox.desktop;
+x-scheme-handler/https=firefox-developer-edition.desktop;firefox-devedition.desktop;firefox.desktop;firefox_firefox.desktop;
+image/png=org.xfce.ristretto.desktop;
+image/jpeg=org.xfce.ristretto.desktop;
+image/gif=org.xfce.ristretto.desktop;
+image/webp=org.xfce.ristretto.desktop;
+image/bmp=org.xfce.ristretto.desktop;
+image/tiff=org.xfce.ristretto.desktop;
+image/avif=org.xfce.ristretto.desktop;
+image/svg+xml=org.xfce.ristretto.desktop;

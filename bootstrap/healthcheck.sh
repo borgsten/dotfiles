@@ -172,6 +172,8 @@ check_desktop() {
     cmd opt gsettings "gtk theme reload"
     cmd opt xdg-open
     cmd opt firefox
+    cmd opt ristretto "image viewer"
+    cmd opt nautilus "file manager"
     cmd opt seahorse
     cmd opt secret-tool
     cmd opt gnome-keyring-daemon
