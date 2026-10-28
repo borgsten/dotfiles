@@ -68,7 +68,7 @@ zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
 
 # Group candidates under headers
 zstyle ':completion:*' group-name ''
-# Header colours follow the matugen theme (same as the prompt, see p10k.zsh)
+# Header colours are the prompt's palette slots (see p10k.zsh)
 zstyle -e ':completion:*:*:*:*:descriptions' format 'reply=("%F{${P10K_DIR_FG:-green}}-- %d --%f")'
 zstyle -e ':completion:*:*:*:*:corrections' format 'reply=("%F{${P10K_VCS_MODIFIED_FG:-yellow}}-- %d (errors: %e) --%f")'
 zstyle -e ':completion:*:warnings' format 'reply=("%F{${P10K_ERROR_FG:-red}}-- no matches found --%f")'

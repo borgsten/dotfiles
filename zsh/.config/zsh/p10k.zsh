@@ -1,8 +1,22 @@
 #!/usr/bin/env zsh
 
-_p10k_apply_matugen_colors() {
-  source ~/.cache/theming/p10k.zsh
+# Prompt colours are ANSI palette slots, not hex: the terminal resolves them
+# from the noctalia theme, so a theme change recolours open prompts with
+# nothing to regenerate or reload. Also read by completion.zsh.
+typeset -g P10K_DIR_FG=4             # blue
+typeset -g P10K_DIR_ANCHOR_FG=15     # bright white
+typeset -g P10K_OK_FG=2              # green
+typeset -g P10K_ERROR_FG=1           # red
+typeset -g P10K_VCS_CLEAN_FG=2       # green
+typeset -g P10K_VCS_MODIFIED_FG=3    # yellow
+typeset -g P10K_VCS_UNTRACKED_FG=6   # cyan
+typeset -g P10K_VCS_CONFLICTED_FG=1  # red
+typeset -g P10K_VCS_LOADING_FG=8     # bright black: muted while git status loads
+typeset -g P10K_TIME_FG=5            # magenta
+typeset -g P10K_CONTEXT_FG=3         # yellow
+typeset -g P10K_VENV_FG=6            # cyan
 
+_p10k_apply_colors() {
   # ---- Simple variable-driven segments (Lean style: plain text, no
   # colored background pills).
   typeset -g POWERLEVEL9K_DIR_FOREGROUND=$P10K_DIR_FG
@@ -94,20 +108,5 @@ _p10k_apply_matugen_colors() {
   functions -M my_git_formatter 2>/dev/null
 }
 
-_p10k_colors_check() {
-  local f=~/.cache/theming/p10k.zsh mtime
-  zstat -A mtime +mtime "$f" 2>/dev/null
-  if [[ "$mtime" != "$_p10k_colors_mtime" ]]; then
-    _p10k_colors_mtime=$mtime
-    p10k reload
-    _p10k_apply_matugen_colors
-    p10k reload
-  fi
-}
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd _p10k_colors_check
-
 source ${ZDOTDIR:-$HOME}/.p10k.zsh
-_p10k_apply_matugen_colors
-zmodload -F zsh/stat b:zstat
-zstat -A _p10k_colors_mtime +mtime ~/.cache/theming/p10k.zsh 2>/dev/null
+_p10k_apply_colors

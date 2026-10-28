@@ -56,11 +56,6 @@ input_path = '~/.config/matugen/templates/wezterm.toml'
 output_path = '~/.cache/theming/wezterm/Noctalia.toml'
 post_hook = '~/.config/matugen/reload_wezterm.sh'
 
-[theme.templates.user.p10k]
-input_path = '~/.config/matugen/templates/p10k.tpl'
-output_path = '~/.cache/theming/p10k.zsh'
-post_hook = "python3 ~/.config/matugen/clamp_patch.py ~/.cache/theming/p10k.zsh"
-
 [theme.templates.user.neovim]
 input_path = '~/.config/matugen/templates/neovim.lua'
 output_path = '~/.cache/theming/neovim.lua'
