@@ -11,6 +11,10 @@
 # quit them) are skipped, while e.g. `sudo make` still notifies after the
 # password prompt. Note the kernel only updates tty times with ~8s granularity.
 #
+# GUI programs don't read the tty either, so on Hyprland a background check
+# runs once the command has been going for the threshold, and skips the
+# notification if the command (or one of its children) has a window open.
+#
 # Nothing is sent while the terminal window (and on WezTerm, the pane) running
 # the shell is focused. Focus detection is currently only done on Hyprland.
 #
@@ -25,6 +29,7 @@ typeset -ga _longcmd_wrappers=(sudo doas env time nohup nice command builtin exe
 
 zmodload zsh/datetime
 zmodload -F zsh/stat b:zstat
+zmodload -F zsh/zselect b:zselect
 
 _longcmd_preexec() {
     emulate -L zsh
@@ -47,6 +52,35 @@ _longcmd_preexec() {
         [[ $word == *=* || $word == -* || ${_longcmd_wrappers[(Ie)$word]} -gt 0 ]] || break
     done
     (( ${LONGCMD_NOTIFY_IGNORE[(Ie)${word:t}]} )) && unset _longcmd_start
+    [[ -n $_longcmd_start ]] && _longcmd_watch_gui
+}
+
+# Whether $1 is $2 or one of its ancestors
+_longcmd_is_ancestor() {
+    local pid=$2 stat
+    while (( pid > 1 )); do
+        (( pid == $1 )) && return 0
+        [[ -r /proc/$pid/stat ]] || return 1
+        stat=$(</proc/$pid/stat)
+        pid=${${(s: :)${stat##*) }}[2]}
+    done
+    return 1
+}
+
+# After the threshold, mark the command as GUI if a window belongs to it.
+# Killed by precmd if the command finishes first.
+_longcmd_watch_gui() {
+    emulate -L zsh
+    [[ -n $HYPRLAND_INSTANCE_SIGNATURE ]] && (( $+commands[hyprctl] )) || return
+    typeset -g _longcmd_gui_file=${XDG_RUNTIME_DIR:-/tmp}/zsh-longcmd-gui.$$
+    {
+        zselect -t $(( LONGCMD_NOTIFY_THRESHOLD * 100 ))
+        local pid
+        for pid in ${${(M)${(f)"$(hyprctl clients 2>/dev/null)"}:#*pid: *}##*pid: }; do
+            [[ $pid == <-> ]] && _longcmd_is_ancestor $$ $pid && : > $_longcmd_gui_file && break
+        done
+    } &!
+    typeset -g _longcmd_gui_watcher=$!
 }
 
 # Whether the window running this shell is focused
@@ -65,14 +99,7 @@ _longcmd_focused() {
     fi
 
     # Otherwise it's ours if the focused window's process is one of our ancestors
-    local pid=$$ stat
-    while (( pid > 1 )); do
-        (( pid == active_pid )) && return 0
-        [[ -r /proc/$pid/stat ]] || return 1
-        stat=$(</proc/$pid/stat)
-        pid=${${(s: :)${stat##*) }}[2]}
-    done
-    return 1
+    _longcmd_is_ancestor $active_pid $$
 }
 
 _longcmd_precmd() {
@@ -82,6 +109,12 @@ _longcmd_precmd() {
     local now=$EPOCHREALTIME start=$_longcmd_start
     local elapsed=$(( now - start ))
     unset _longcmd_start
+
+    if [[ -n $_longcmd_gui_watcher ]]; then
+        kill $_longcmd_gui_watcher 2>/dev/null
+        unset _longcmd_gui_watcher
+        [[ -e $_longcmd_gui_file ]] && { rm -f $_longcmd_gui_file; return }
+    fi
 
     # Killed/stopped from the keyboard (^C, ^\, ^Z), so you were there to see it.
     # $signals[n+1] is the name of signal n
