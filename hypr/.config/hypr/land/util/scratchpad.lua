@@ -71,7 +71,7 @@ function M.new(spec)
 
     ---@param w HL.Window
     local function stash(w)
-        dbg.debug(('scratchpad %s: stashing %s(%d)'):format(name, w.title, w.stable_id))
+        dbg.debug(('scratchpad %s: stashing %s(%s)'):format(name, w.title, w.stable_id))
         hl.dispatch(hl.dsp.window.move({ workspace = workspace, follow = false, window = w }))
     end
 
@@ -82,7 +82,7 @@ function M.new(spec)
             dbg.error(('scratchpad %s: no active workspace'):format(name))
             return
         end
-        dbg.debug(('scratchpad %s: summoning %s(%d) to %s'):format(name, w.title, w.stable_id, active.name))
+        dbg.debug(('scratchpad %s: summoning %s(%s) to %s'):format(name, w.title, w.stable_id, active.name))
         hl.dispatch(hl.dsp.window.move({ workspace = active.name, follow = true, window = w }))
     end
 
@@ -100,7 +100,7 @@ function M.new(spec)
 
         if isStashed(w) or not isOnActiveWorkspace(w) then
             unstash(w)
-            hl.dispatch(hl.dsp.window.bring_to_top({ window = w }))
+            hl.dispatch(hl.dsp.window.alter_zorder({ mode = 'top', window = w }))
             hl.dispatch(hl.dsp.focus({ window = w }))
         else
             stash(w)
@@ -111,7 +111,7 @@ function M.new(spec)
     function S.empty()
         for _, w in ipairs(hl.get_workspace_windows(workspace)) do
             if not hasTag(w) then
-                dbg.warn(('scratchpad %s: evicting stray window %s(%d)'):format(name, w.title, w.stable_id))
+                dbg.warn(('scratchpad %s: evicting stray window %s(%s)'):format(name, w.title, w.stable_id))
                 unstash(w)
             end
         end
