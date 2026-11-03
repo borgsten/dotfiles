@@ -47,6 +47,7 @@ packages=(
     xdg-desktop-portal-gtk
     flameshot
     grim
+    slurp
     qt5-style-kvantum
     # Theming
     vivid

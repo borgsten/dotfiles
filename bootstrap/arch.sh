@@ -37,6 +37,7 @@ packages=(
     xdg-desktop-portal-gtk
     flameshot
     grim
+    slurp
     qt5ct
     qt6ct
     # Theming

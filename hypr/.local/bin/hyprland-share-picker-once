@@ -1,0 +1,73 @@
+#!/usr/bin/zsh -f
+# Screen-share picker for xdg-desktop-portal-hyprland that only asks once.
+#
+# Chromium/Electron apps (Slack, Teams, Discord, ...) open several portal
+# sessions per share, so XDPH spawns the picker multiple times. This replays
+# the last selection for a few seconds instead of asking again.
+
+ttl=${SHARE_PICKER_TTL:-2}
+cache=${XDG_RUNTIME_DIR:-/tmp}/hyprland-share-picker-once.selection
+
+# True if $list, a list of entries separated by $sep, has an entry
+# starting with $entry. An empty list means this XDPH version doesn't send
+# it, so there is nothing to check against: assume the target exists.
+list_has() {
+    local list=$1 sep=$2 entry=$3
+    [[ -z $list ]] && return 0
+    [[ "$sep$list" == *"$sep$entry"* ]]
+}
+
+# True if the window, output or workspace a selection points at still exists,
+# going by the lists XDPH passes the picker. Formats are from xdph 1.5.
+target_exists() {
+    local target=${1#*/}   # drop "[SELECTION]<flags>/"
+    local value=${target#*:}
+
+    case $target in
+        window:*)
+            # id[HC>]class[HT>]title[HE>]address[HA>]...
+            list_has "$XDPH_WINDOW_SHARING_LIST" '[HA>]' "${value}[HC>]"
+            ;;
+        screen:* | region:*)
+            # len:name:x:y:w:h;...  (a region is "output@x,y,w,h")
+            local output=${value%%@*}
+            list_has "$XDPH_OUTPUT_SHARING_LIST" ';' "${#output}:$output:"
+            ;;
+        workspace-id:*)
+            # id[HN>]name[HM>]outputs[HE>]...
+            list_has "$XDPH_WORKSPACE_SHARING_LIST_V3" '[HE>]' "${value}[HN>]"
+            ;;
+        workspace:*)
+            # name[HN>]...  (legacy, by name)
+            list_has "$XDPH_WORKSPACE_SHARING_LIST" '[HN>]' "${value}[HN>]"
+            ;;
+        *)
+            return 1 # unknown type: ask rather than guess
+            ;;
+    esac
+}
+
+# Concurrent requests queue up here, so later ones reuse the first answer
+zmodload zsh/system
+: >>$cache.lock
+zsystem flock -t 120 $cache.lock || exit
+
+# Replay the last selection if it was made less than $ttl seconds ago
+fresh=($cache(Nms-$ttl))
+if (( $#fresh )); then
+    selection=$(<$cache)
+    if target_exists $selection; then
+        print -r -- $selection
+        exit 0
+    fi
+fi
+
+# Otherwise ask. The picker may print other output around the selection line.
+output=$(hyprland-share-picker "$@") || exit
+[[ $output == *'[SELECTION]'* ]] || exit 1 # cancelled: nothing to cache
+
+selection="[SELECTION]${output#*'[SELECTION]'}"
+selection=${selection%%$'\n'*}
+
+print -r -- $selection >$cache
+print -r -- $selection
