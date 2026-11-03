@@ -26,10 +26,9 @@ home_keys=("${key[Home]}" $'\e[H' $'\eOH' $'\e[1~' $'\e[7~')
 end_keys=("${key[End]}" $'\e[F' $'\eOF' $'\e[4~' $'\e[8~')
 
 # load widgets
-autoload -U up-line-or-beginning-search down-line-or-beginning-search reverse-menu-complete
+autoload -U up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-zle -N reverse-menu-complete
 
 # setup key accordingly
 [[ -n "${key[Insert]}"     ]] && bindkey -- "${key[Insert]}"     overwrite-mode
