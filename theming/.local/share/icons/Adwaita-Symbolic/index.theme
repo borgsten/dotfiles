@@ -1,7 +1,7 @@
 [Icon Theme]
 Name=Adwaita-Symbolic
 Comment=Adwaita with symbolic icons
-Inherits=Adwaita
+Inherits=Adwaita,Yaru
 Directories=scalable/places
 
 [scalable/places]
