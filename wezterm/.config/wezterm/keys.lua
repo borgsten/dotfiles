@@ -53,6 +53,11 @@ function M.apply_to_config(config)
             action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }),
         },
         {
+            key = 'Q',
+            mods = 'CTRL|SHIFT',
+            action = act.CloseCurrentPane({ confirm = true }),
+        },
+        {
             key = '_',
             mods = 'CTRL|SHIFT',
             action = act.SplitVertical({ domain = 'CurrentPaneDomain' }),
