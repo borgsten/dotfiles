@@ -5,7 +5,7 @@
 # sessions per share, so XDPH spawns the picker multiple times. This replays
 # the last selection for a few seconds instead of asking again.
 
-ttl=${SHARE_PICKER_TTL:-2}
+ttl=${SHARE_PICKER_TTL:-4}
 cache=${XDG_RUNTIME_DIR:-/tmp}/hyprland-share-picker-once.selection
 
 # True if $list, a list of entries separated by $sep, has an entry
