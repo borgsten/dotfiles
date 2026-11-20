@@ -22,15 +22,13 @@ local function is_zoomed(tab)
     return false
 end
 
--- Force the tab bar on while a pane is zoomed so the Z flag is visible even
--- with a single tab.
-local function show_tab_bar_when_zoomed(window, zoomed)
+local function update_tab_bar_visibility(window, tab, zoomed)
     if zoomed == nil then
-        zoomed = is_zoomed(window:active_tab())
+        zoomed = is_zoomed(tab)
     end
 
     local want = nil -- nil falls back to config.hide_tab_bar_if_only_one_tab
-    if zoomed then
+    if zoomed or (tab and #tab:panes() > 1) then
         want = false
     end
 
@@ -50,7 +48,7 @@ M.toggle_zoom = wezterm.action_callback(function(window, pane)
     end
     local zoomed = not is_zoomed(tab)
     tab:set_zoomed(zoomed)
-    show_tab_bar_when_zoomed(window, zoomed)
+    update_tab_bar_visibility(window, tab, zoomed)
 end)
 
 function M.apply_to_config(config)
@@ -73,7 +71,7 @@ function M.apply_to_config(config)
 
     -- tmux-like right side (domain/host + time)
     wezterm.on('update-status', function(window, pane)
-        show_tab_bar_when_zoomed(window)
+        update_tab_bar_visibility(window, window:active_tab())
 
         local domain = pane:get_domain_name()
         -- like tmux's client_prefix: flag when the C-b key table is waiting
