@@ -3,7 +3,11 @@ end = [ "cpu", "ram", "notifications", "network", "bluetooth", "volume", "bright
 margin_edge = 0
 margin_ends = 0
 radius = 0
+center = [ "privacy", "clock", "widget" ]
 start = [ "wallpaper", "workspaces" ]
+
+[lockscreen]
+transition = [ "crt" ]
 
 [osd]
 offset_y = 80
@@ -34,3 +38,15 @@ label_source = "name"
 [hooks]
 session_locked = "playerctl pause"
 theme_mode_changed = "gsettings set org.gnome.desktop.interface color-scheme prefer-$NOCTALIA_THEME_MODE"
+
+[plugin_settings."dunarand/bookmarks"]
+data_path = "~/.config/noctalia/bookmarks.json"
+
+[plugins]
+enabled = [ "dunarand/bookmarks", "profidev/hypr-screen-mirror" ]
+
+[widget.widget]
+type = "profidev/hypr-screen-mirror:widget"
+
+[wallpaper]
+directory = "~/Pictures/wallpapers"
