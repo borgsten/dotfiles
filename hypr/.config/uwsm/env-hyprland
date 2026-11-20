@@ -22,6 +22,8 @@ export OZONE_PLATFORM=wayland
 # Java
 export _JAVA_AWT_WM_NONREPARENTING=1
 
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
+
 # NVIDIA — set if the driver is loaded
 if [ -e /dev/nvidia0 ]; then
     export NVD_BACKEND=direct
