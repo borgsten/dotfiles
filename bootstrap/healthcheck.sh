@@ -179,6 +179,16 @@ check_desktop() {
     cmd opt gnome-keyring-daemon
 }
 
+regional_locale_active() {
+    locale | awk -F= '
+        /^LC_(TIME|NUMERIC|MEASUREMENT|PAPER|MONETARY)=/ {
+            gsub(/"/, "", $2)
+            if (tolower($2) ~ /^en_se[.]utf-?8$/) matches++
+        }
+        END { exit (matches != 5) }
+    '
+}
+
 check_setup() {
     section "Setup"
     local dotfiles
@@ -190,6 +200,10 @@ check_setup() {
         bash -c '[[ "$(getent passwd "$USER" | cut -d: -f7)" == */zsh ]]'
     check opt "ssh-agent.service enabled" "systemctl --user enable --now ssh-agent.service" \
         systemctl --user is-enabled ssh-agent.service
+    check opt "en_SE.UTF-8 locale generated" "run bootstrap/arch.sh or bootstrap/ubuntu.sh" \
+        bash -c 'LC_ALL=C locale -a | grep -Fxq en_SE.utf8'
+    check opt "en_SE.UTF-8 regional formats in session" "log out and back in after bootstrapping; check for locale overrides" \
+        regional_locale_active
 }
 
 sections=("$@")

@@ -113,6 +113,11 @@ sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install -y "${packages[@]}"
 
+# Swedish regional formats with English date names; keep the existing LANG.
+sudo locale-gen en_SE.UTF-8
+sudo update-locale LC_TIME=en_SE.UTF-8 LC_NUMERIC=en_SE.UTF-8 \
+    LC_MEASUREMENT=en_SE.UTF-8 LC_PAPER=en_SE.UTF-8 LC_MONETARY=en_SE.UTF-8
+
 "$here/ubuntu/neovim.sh"
 
 # Nightly, the last stable release has no 26.04 build

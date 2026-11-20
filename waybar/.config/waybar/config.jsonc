@@ -54,7 +54,7 @@
         "format": "  {:%e %b %H:%M}",
         "format-alt": "{:%a W%V %d/%m/%y %R}",
         "tooltip-format": "<tt><big>{calendar}</big></tt>",
-        "locale": "en_DK.UTF-8",
+        "locale": "en_SE.UTF-8",
         "calendar": {
             "mode"          : "month",
             "mode-mon-col"  : 3,

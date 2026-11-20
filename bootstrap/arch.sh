@@ -136,6 +136,19 @@ if (( ${#missing[@]} )); then
     paru -Syu --needed "${missing[@]}"
 fi
 
+# Swedish regional formats with English date names; keep the existing LANG.
+if ! grep -Eq '^en_SE\.UTF-8[[:blank:]]+UTF-8[[:blank:]]*$' /etc/locale.gen; then
+    sudo sed -i -E 's/^#[[:blank:]]*en_SE\.UTF-8[[:blank:]]+UTF-8[[:blank:]]*$/en_SE.UTF-8 UTF-8/' /etc/locale.gen || exit 1
+    if ! grep -Eq '^en_SE\.UTF-8[[:blank:]]+UTF-8[[:blank:]]*$' /etc/locale.gen; then
+        printf '%s\n' 'en_SE.UTF-8 UTF-8' | sudo tee -a /etc/locale.gen >/dev/null || exit 1
+    fi
+fi
+if ! locale -a | grep -Fxq en_SE.utf8; then
+    sudo locale-gen || exit 1
+fi
+sudo localectl set-locale LC_TIME=en_SE.UTF-8 LC_NUMERIC=en_SE.UTF-8 \
+    LC_MEASUREMENT=en_SE.UTF-8 LC_PAPER=en_SE.UTF-8 LC_MONETARY=en_SE.UTF-8 || exit 1
+
 if [[ ! -d ~/.cache/tmux/plugins/tpm ]]; then
     git clone https://github.com/tmux-plugins/tpm ~/.cache/tmux/plugins/tpm
 fi
