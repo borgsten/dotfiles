@@ -1,10 +1,24 @@
 return {
     {
-        'mrjones2014/smart-splits.nvim',
+        'smart-splits-nvim/smart-splits.nvim',
+        version = '^3.0.0',
         lazy = false, -- must load at startup so WezTerm knows nvim is running
+        opts = {
+            mux = {
+                backend = 'smart-splits-backend-wezterm',
+            },
+        },
+        dependencies = {
+            {
+                'smart-splits-nvim/backend-wezterm',
+                opts = {
+                    cli_path = 'wezterm',
+                },
+            },
+        },
         config = function()
             local ss = require('smart-splits')
-            ss.setup()
+            ss.setup({})
             vim.keymap.set('n', '<C-h>', ss.move_cursor_left)
             vim.keymap.set('n', '<C-j>', ss.move_cursor_down)
             vim.keymap.set('n', '<C-k>', ss.move_cursor_up)
