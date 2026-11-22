@@ -101,6 +101,14 @@ function M.apply_to_config(config)
         action = act.SelectTextAtMouseCursor('SemanticZone'),
     })
 
+    -- Dragging after the triple-click extends by whole zones too, e.g. from the
+    -- output up onto its command (the default drag extends by Line instead)
+    table.insert(config.mouse_bindings, {
+        event = { Drag = { streak = 3, button = 'Left' } },
+        mods = 'NONE',
+        action = act.ExtendSelectionToMouseCursor('SemanticZone'),
+    })
+
     -- vim-style forward/back search in copy-mode: '/' and '?'
     if wezterm.gui then
         local search_action = act.Search({ CaseInSensitiveString = '' })

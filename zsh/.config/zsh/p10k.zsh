@@ -110,3 +110,13 @@ _p10k_apply_colors() {
 
 source ${ZDOTDIR:-$HOME}/.p10k.zsh
 _p10k_apply_colors
+
+# Move the rprompt up one line after submit. It needs to be on row 2 first to prevent terminal garbling when resizing.
+() {
+  local -a right=(${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS:#newline})
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=($right newline $right)
+}
+typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=$'%{\e]133;B\a%}'
+
+function p10k-on-pre-prompt()  { p10k display '1/(right|gap)'=hide '2/right'=show }
+function p10k-on-post-prompt() { p10k display '1/(right|gap)'=show '2/right'=hide }
