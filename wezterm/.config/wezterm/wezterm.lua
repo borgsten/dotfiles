@@ -37,6 +37,9 @@ require('tabbar').apply_to_config(config)
 
 require('keys').apply_to_config(config)
 
+-- URL detection, click-to-select vs ctrl+click-to-open, CTRL-SHIFT-G open url
+require('links').apply_to_config(config)
+
 -- CTRL-SHIFT-E: resize the tab's panes to equal widths
 require('equalize').apply_to_config(config)
 
